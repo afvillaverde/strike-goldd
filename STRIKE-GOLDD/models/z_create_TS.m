@@ -49,7 +49,7 @@ ics  = [];
 known_ics = [0,0]; 
 
 % Known input case (with parameterization as defined above):
-save('ToggleSwitch_known_inputs','x','p','u','w','h','f','ics','known_ics');
+save('TS_known_inputs','x','p','u','w','h','f','ics','known_ics');
 
 % Unknown input case (reparameterization):
 u = [];
@@ -61,4 +61,4 @@ f = [
 	k01 + k1/(1+(x2/(1+w1))^ntetr) - x1;
     k02 + k2/(1+(x1/(1+w2))^nlaci) - x2;
 ];
-save('ToggleSwitch_unknown_inputs_reparameterized','x','p','u','w','h','f','ics','known_ics');
+save('TS_unknown_inputs_reparameterized','x','p','u','w','h','f','ics','known_ics');

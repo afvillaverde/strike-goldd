@@ -33,4 +33,4 @@ f = [-(x3+x4)*x1+x5*x2+x6*u1;
 ics  = []; 
 known_ics = [0,0];
 
-save('two_compartment_unknown_input_known_b','x','p','h','f','u','w','ics','known_ics');
+save('C2M_unknown_input_known_b','x','p','h','f','u','w','ics','known_ics');

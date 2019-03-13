@@ -34,3 +34,7 @@ ics  = [600,33,1e5];
 known_ics = [0,0,1]; 
 
 save('HIV','x','p','u','w','h','f','ics','known_ics');
+
+u = eta;
+w = [];
+save('HIV_known_u','x','p','u','w','h','f','ics','known_ics');

@@ -27,5 +27,5 @@ f = [-(x3+x4)*x1+x5*x2+x6*u1;
 ics  = []; 
 known_ics = [1,0];
 
-save('two_compartment','x','p','h','f','u','ics','known_ics');
+save('C2M','x','p','h','f','u','ics','known_ics');
 

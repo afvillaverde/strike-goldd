@@ -11,7 +11,7 @@
 %
 %--------------------------------------------------------------------------
 % Version v8 
-% Last modified: 13/09/2018
+% Last modified: 13/03/2019
 % Alejandro Fernandez Villaverde (afvillaverde@iim.csic.es)
 %==========================================================================
 
@@ -404,45 +404,51 @@ fprintf('\n\n ------------------------ \n');
 fprintf(' >>> RESULTS SUMMARY:\n');
 fprintf(' ------------------------ \n');
 % load(modelname)
+if (numel(p_id) == numel(p)) && (numel(obs_states) == numel(x)) && (numel(obs_inputs) == numel(w))
+	fprintf('\n >>> The model is Fully Input-State-Parameter Observable (FISPO):');
+	if numel(w)>0, fprintf('\n     All its unknown inputs are observable.'); end
+	fprintf('\n     All its states are observable.');
+	fprintf('\n     All its parameters are locally structurally identifiable.');	
+else
+	if numel(p_id) == numel(p)
+		fprintf('\n >>> The model is structurally identifiable:');
+		fprintf('\n     All its parameters are structurally identifiable.');
+	else    
+		if unidflag == 1 
+			fprintf('\n >>> The model is structurally unidentifiable.');
+			fprintf('\n >>> These parameters are identifiable:\n      %s ',char(p_id));
+			fprintf('\n >>> These parameters are unidentifiable:\n      %s \n',char(p_un));
+		else             
+			fprintf('\n >>> These parameters are identifiable:\n      %s ',char(p_id));
+		end  
+		%==========================================================================
+		% Search for identifiable parameter combinations (combos):
+		if opts.findcombos == 1 && exist('onx','var') == 1
+			% Save results first, just in case the user kills the process:
+			resultsname = sprintf('id_results_%s',modelname);
+			fullresultsname = strcat(pwd,filesep,'results',filesep,resultsname);
+			save(fullresultsname)      
+			[parpde,stringpde] = combos(p_un,onx,n);
+			if numel(parpde) == 0
+				fprintf('\n\n >>> No identifiable combinations of parameters could be found');
+			else
+				fprintf('\n\n >>> There are identifiable combinations of parameters.');
+				fprintf('\n     They can be found by solving the following PDE(s):');
+				for numpdes = 1:numel(stringpde)
+					fprintf('\n     %s \n',char(stringpde));
+				end
+			end       
+		end
+	end
+		
+	if numel(obs_states)>0,    fprintf('\n >>> These states are observable (and their initial conditions, if considered unknown, are identifiable):\n      %s ',char(obs_states)); end
+	if numel(unobs_states)>0,  fprintf('\n >>> These states are unobservable (and their initial conditions, if considered unknown, are unidentifiable):\n      %s ',char(unobs_states)); end
+	if numel(meas_x)>0,        fprintf('\n >>> These states are directly measured:\n      %s ',char(meas_x)); end
 
-if numel(p_id) == numel(p)
-    fprintf('\n >>> The model is structurally identifiable:');
-    fprintf('\n     All its parameters are structurally identifiable. \n');
-else    
-    if unidflag == 1 
-        fprintf('\n >>> The model is structurally unidentifiable.');
-        fprintf('\n >>> These parameters are identifiable:\n      %s ',char(p_id));
-        fprintf('\n >>> These parameters are unidentifiable:\n      %s \n',char(p_un));
-    else             
-        fprintf('\n >>> These parameters are identifiable:\n      %s ',char(p_id));
-    end  
-    %==========================================================================
-    % Search for identifiable parameter combinations (combos):
-    if opts.findcombos == 1 && exist('onx','var') == 1
-        % Save results first, just in case the user kills the process:
-        resultsname = sprintf('id_results_%s',modelname);
-        fullresultsname = strcat(pwd,filesep,'results',filesep,resultsname);
-        save(fullresultsname)      
-        [parpde,stringpde] = combos(p_un,onx,n);
-        if numel(parpde) == 0
-            fprintf('\n\n >>> No identifiable combinations of parameters could be found');
-        else
-            fprintf('\n\n >>> There are identifiable combinations of parameters.');
-            fprintf('\n     They can be found by solving the following PDE(s):');
-            for numpdes = 1:numel(stringpde)
-                fprintf('\n     %s \n',char(stringpde));
-            end
-        end       
-    end
+	if numel(obs_inputs)>0,    fprintf('\n >>> These unmeasured inputs are observable:\n      %s ',char(obs_inputs)); end
+	if numel(unobs_inputs)>0,  fprintf('\n >>> These unmeasured inputs are unobservable:\n      %s ',char(unobs_inputs)); end
+	if numel(u)>0,             fprintf('\n >>> These inputs are known:\n      %s ',char(u)); end
 end
-    
-if numel(obs_states)>0,    fprintf('\n >>> These states are observable (and their initial conditions, if considered unknown, are identifiable):\n      %s ',char(obs_states)); end
-if numel(unobs_states)>0,  fprintf('\n >>> These states are unobservable (and their initial conditions, if considered unknown, are unidentifiable):\n      %s ',char(unobs_states)); end
-if numel(meas_x)>0,        fprintf('\n >>> These states are directly measured:\n      %s ',char(meas_x)); end
-
-if numel(obs_inputs)>0,    fprintf('\n >>> These unmeasured inputs are observable:\n      %s ',char(obs_inputs)); end
-if numel(unobs_inputs)>0,  fprintf('\n >>> These unmeasured inputs are unobservable:\n      %s ',char(unobs_inputs)); end
-if numel(u)>0,             fprintf('\n >>> These inputs are known:\n      %s ',char(u)); end
 
 %==========================================================================
 totaltime = toc(tStart);

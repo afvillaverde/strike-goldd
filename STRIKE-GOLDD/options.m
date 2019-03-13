@@ -5,7 +5,7 @@
 function [modelname,paths,opts,submodels,prev_ident_pars] = options()
 
 %%% (1) MODEL: 
-modelname = 'two_compartment'; 
+modelname = 'C2M'; 
 
 %%% (2) PATHS:
 paths.meigo     = '/home/alexandre/MEIGO_AMICI_Nov2016/MEIGO_Nov2016/MEIGO';      
