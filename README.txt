@@ -1,8 +1,8 @@
-This is the README file of the STRIKE-GOLDD 2.1.1 toolbox
+This is the README file of the STRIKE-GOLDD 2.1.2 toolbox
 (STRIKE-GOLDD = STRuctural Identifiability taKen as Extended-Generalized Observability with Lie Derivatives and Decomposition)
 --------------------------------------------------------------------------------------------------------------------------------
 Created:       07/12/2015
-Last modified: 13/03/2019
+Last modified: 23/04/2019
 Contact:       Alejandro F. Villaverde (afvillaverde@iim.csic.es; ale.fer.vi@gmail.com)
 
 --------------------------

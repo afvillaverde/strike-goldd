@@ -54,6 +54,7 @@ lastrank       = NaN;
 decomp_flag    = 0;
 unidflag       = 0;
 skip_elim      = 0;
+isFISPO        = 0;
     
 % ==========================================================================
 % Remove parameters that have already been classified as identifiable:
@@ -228,12 +229,13 @@ if opts.forcedecomp == 0
                 if numel(w)>0
                     [identifiables,nonidentif,obs_states,unobs_states,obs_inputs,unobs_inputs] = ...
                         elim_and_recalc(unmeas_x_indices,rango,numonx,opts);   
-                    intersect(w,obs_inputs);
-                    if ( numel(identifiables)==numel(p) && numel(obs_states)==numel(x) && numel(intersect(w,obs_inputs))==numel(w) )
+                    obs_in_no_der = intersect(w,obs_inputs);
+                    if ( numel(identifiables)==numel(p) && numel(obs_states)+numel(meas_x)==numel(x) && numel(obs_in_no_der)==numel(w) )
                         obs_states    = x;
-                        obs_inputs    = w;
+                        obs_inputs    = obs_in_no_der;
                         identifiables = p;
                         increaseLie   = 0; % -> with this we skip the next 'if' block and jump to the end of the algorithm 
+                        isFISPO       = 1;
                     end       
                 end
                 %----------------------------------------------------------  
@@ -331,7 +333,7 @@ if opts.forcedecomp == 0
                             end
                         end
                     end  
-                    if skip_elim == 0 
+                    if skip_elim == 0 && isFISPO == 0
                         % Eliminate columns one by one to check identifiability of the associated parameters: 
                         [identifiables,nonidentif,obs_states,unobs_states,obs_inputs,unobs_inputs] = ...
                              elim_and_recalc(unmeas_x_indices,rango,numonx,opts);
