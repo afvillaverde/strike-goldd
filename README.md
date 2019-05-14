@@ -1,6 +1,6 @@
 # About STRIKE-GOLDD
 
-STRIKE-GOLDD is a MATLAB toolbox that analyses analytic nonlinear models of ordinary differential equations. It performs a simultaneous assessment of:
+STRIKE-GOLDD is a MATLAB toolbox that analyses nonlinear models of ordinary differential equations. It performs a simultaneous assessment of:
 - state **observability**,
 - parameter structural local **identifiability**,  
 - unknown input **invertibility** (supported since v2.1.1). 
