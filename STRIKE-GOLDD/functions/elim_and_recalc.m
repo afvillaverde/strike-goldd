@@ -71,68 +71,70 @@ for ind=1:qreal % only the first 'qreal' elements of pred are parameters; the fo
     end
 end
 
-%==========================================================================
-% ELIMINATE A STATE:
-%==========================================================================
-% At each iteration we try removing a different state from 'xred':
-if opts.checkObser == 1
-    for ind=1:numel(unmeas_xred_indices) % for each unmeasured state
-        original_index = unmeas_xred_indices(ind); % in this script, 'original_index' refers to xred
-        isobservable = ismember(xred(original_index),obs_states);
-        if isobservable
-            fprintf('\n State %s has already been classified as observable.',char(xred(original_index)))
-        else              
-            indices = 1:r;
-            indices(original_index) = []; %indices(original_index==unmeas_xred_indices) = [];
-            num_rank = rank(numonx(:,indices));
-            if num_rank == rangoinicial
-                if (opts.unidentif == 1) || (opts.forcedecomp == 0 && opts.decomp == 0 && unidflag == 1) %%%
-                    fprintf('\n    => State %s is unobservable',char(xred(original_index)));
-                    new_unobs_states = [new_unobs_states; xred(original_index)];
+if nargin == 4 % if there is no decomposition
+    %==========================================================================
+    % ELIMINATE A STATE:
+    %==========================================================================
+    % At each iteration we try removing a different state from 'xred':
+    if opts.checkObser == 1
+        for ind=1:numel(unmeas_xred_indices) % for each unmeasured state
+            original_index = unmeas_xred_indices(ind); % in this script, 'original_index' refers to xred
+            isobservable = ismember(xred(original_index),obs_states);
+            if isobservable
+                fprintf('\n State %s has already been classified as observable.',char(xred(original_index)))
+            else              
+                indices = 1:r;
+                indices(original_index) = []; %indices(original_index==unmeas_xred_indices) = [];
+                num_rank = rank(numonx(:,indices));
+                if num_rank == rangoinicial
+                    if (opts.unidentif == 1) || (opts.forcedecomp == 0 && opts.decomp == 0 && unidflag == 1) %%%
+                        fprintf('\n    => State %s is unobservable',char(xred(original_index)));
+                        new_unobs_states = [new_unobs_states; xred(original_index)];
+                    else
+                        fprintf('\n    => We cannot decide about state %s at the moment',char(xred(original_index)));
+                    end 
                 else
-                    fprintf('\n    => We cannot decide about state %s at the moment',char(xred(original_index)));
-                end 
-            else
-                if opts.unidentif == 0
-                    fprintf('\n    => State %s is observable',char(xred(original_index)));
-                    new_obs_states = [new_obs_states; xred(original_index)];  
-                else
-                    fprintf('\n    => We cannot decide about state %s at the moment',char(xred(original_index)));
-                end   
+                    if opts.unidentif == 0
+                        fprintf('\n    => State %s is observable',char(xred(original_index)));
+                        new_obs_states = [new_obs_states; xred(original_index)];  
+                    else
+                        fprintf('\n    => We cannot decide about state %s at the moment',char(xred(original_index)));
+                    end   
+                end
             end
         end
     end
-end
 
-
-%==========================================================================
-% ELIMINATE AN UNKNOWN INPUT:
-%==========================================================================
-% At each iteration we try removing a different column from onx:
-for ind=1:nw 
-    isobservable = ismember(wred(ind),obs_inputs);
-    if isobservable
-        fprintf('\n Input %s has already been classified as observable.',char(wred(ind)))
-    else 
-        indices = 1:r;
-        indices(n+q+ind) = []; % remove the column whose identifiability we want to check
-        num_rank = rank(numonx(:,indices));
-        if num_rank == rangoinicial
-            if (opts.unidentif == 1) || (opts.forcedecomp == 0 && opts.decomp == 0 && unidflag == 1) %%%
-            	fprintf('\n    => Input %s is unobservable',char(wred(ind)));
-            	new_unobs_in = [new_unobs_in; wred(ind)];
+    %==========================================================================
+    % ELIMINATE AN UNKNOWN INPUT:
+    %==========================================================================
+    % At each iteration we try removing a different column from onx:
+    for ind=1:nw 
+        isobservable = ismember(wred(ind),obs_inputs);
+        if isobservable
+            fprintf('\n Input %s has already been classified as observable.',char(wred(ind)))
+        else 
+            indices = 1:r;
+            indices(n+q+ind) = []; % remove the column whose identifiability we want to check
+            num_rank = rank(numonx(:,indices));
+            if num_rank == rangoinicial
+                if (opts.unidentif == 1) || (opts.forcedecomp == 0 && opts.decomp == 0 && unidflag == 1) %%%
+                    fprintf('\n    => Input %s is unobservable',char(wred(ind)));
+                    new_unobs_in = [new_unobs_in; wred(ind)];
+                else
+                    fprintf('\n    => We cannot decide about input %s at the moment',char(wred(ind)));
+                end  
             else
-            	fprintf('\n    => We cannot decide about input %s at the moment',char(wred(ind)));
-            end  
-        else
-            if opts.unidentif == 0
-            	fprintf('\n    => Input %s is observable',char(wred(ind)));
-            	new_obs_in = [new_obs_in; wred(ind)];  
-            else
-            	fprintf('\n    => We cannot decide about input %s at the moment',char(wred(ind)));
-            end      
+                if opts.unidentif == 0
+                    fprintf('\n    => Input %s is observable',char(wred(ind)));
+                    new_obs_in = [new_obs_in; wred(ind)];  
+                else
+                    fprintf('\n    => We cannot decide about input %s at the moment',char(wred(ind)));
+                end      
+            end
         end
     end
+    
 end
 
 end

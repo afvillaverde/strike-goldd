@@ -82,15 +82,15 @@ init_STAT5];
 cyt = 0.4;
 nuc = 0.275;
 
-% (constant?) inputs (k):
+% (constant) inputs (k):
 syms ActD CISoe SOCS3oe SHP1oe Epo
 u = [ActD CISoe SOCS3oe SHP1oe Epo];
 w = [];
 
-% 15 outputs (20):
+% 14 outputs (originally 20, but repeated ones):
 h = [1 / init_EpoRJAK2 *  2 * (EpoRpJAK2 + p1EpoRpJAK2 + p2EpoRpJAK2 + p12EpoRpJAK2);
  1 / init_EpoRJAK2 *  16 * (p1EpoRpJAK2 + p2EpoRpJAK2 + p12EpoRpJAK2);
- 1 / CISEqc * CIS;
+%  1 / CISEqc * CIS;
  1 / SOCS3Eqc * SOCS3;
  1 / init_STAT5 * (STAT5+pSTAT5);
  1 / init_STAT5 * pSTAT5;
