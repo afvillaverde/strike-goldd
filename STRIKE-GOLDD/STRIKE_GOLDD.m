@@ -3,15 +3,15 @@
 % Observability with Lie Derivatives and Decomposition)
 %--------------------------------------------------------------------------
 %
-% A Matlab toolbox for structural identifiability analysis of nonlinear models
-%
+% A Matlab toolbox for structural identifiability and observability 
+% analysis of nonlinear models
 %--------------------------------------------------------------------------
 %
-% User input can be specified in file '/functions/options.m'
-%
+% User input can be specified in file 'options.m'
+% Documentation available in the 'doc' folder
 %--------------------------------------------------------------------------
-% Version v8 
-% Last modified: 13/03/2019
+% 
+% Version v2.1.4, last modified: 20/09/2019
 % Alejandro Fernandez Villaverde (afvillaverde@iim.csic.es)
 %==========================================================================
 
@@ -120,7 +120,7 @@ if opts.forcedecomp == 0
     %- Create array of known inputs and set certain derivatives to zero:
     if numel(u)>0
         for ind_u=1:numel(u) % create array of derivatives of the inputs
-            input_der(ind_u,:) = [u(ind_u),sym(strcat(char(u(ind_u)),sprintf('_d')),[1 nd-1])];  %[1 max(opts.nnzDerU)]
+            input_der(ind_u,:) = [u(ind_u),sym(strcat(char(u(ind_u)),sprintf('_d')),[1 nd])];  %[1 max(opts.nnzDerU)]
             input_der(ind_u,(opts.nnzDerU(ind_u)+2):end)=0;
         end          
     else
@@ -159,35 +159,33 @@ if opts.forcedecomp == 0
     
     %======================================================================
     % Build Oi:
+    ind        = 0; % Lie derivative index (k)
+    lasttime   = 0;     
+    past_Lie   = h; 
     onx        = zeros(m*(1+nd),n+q+numel(wlvector)); 
     onx        = sym(onx);
     onx(1:m,:) = jacobian(h,xaug); % 1st block
-    totaltime  = toc;
-    ind        = 0; % Lie derivative index (k)
-    lasttime   = 0;     
-    past_Lie   = h;        
+    totaltime  = toc;       
     %----------------------------------------------------------------------           
     while ind < nd && lasttime < opts.maxLietime % 2nd and subsequent blocks
         tic
-        Lieh = onx((ind*m+1):(ind+1)*m,:)*faug;
-        extra_term = 0;
-        if ind>0 
-            if numel(u) > 0
-                for i=1:ind 
-                    if i < size(input_der,2) 
-                        lo_u_der   = input_der(:,i);   
-                        hi_u_der   = input_der(:,i+1);
-                        lo_u_der   = subs(lo_u_der,0,zero_input_der_dummy_name);
-                        extra_term = extra_term + jacobian(past_Lie,lo_u_der)*hi_u_der;
-                    end                        
-                end
-            end
-        end       
-        past_Lie = Lieh + extra_term;         
-        onx(((ind+1)*m+1):((ind+2)*m),:) = jacobian(past_Lie,xaug); 
-        lasttime = toc;
-        totaltime = totaltime + lasttime;
         ind = ind+1;
+        Lieh = onx(((ind-1)*m+1):ind*m,:)*faug;
+        extra_term = 0;
+        if numel(u) > 0
+            for j=0:ind-1
+                if j < size(input_der,2) 
+                    lo_u_der   = input_der(:,j+1);   
+                    hi_u_der   = input_der(:,j+2);
+                    lo_u_der   = subs(lo_u_der,0,zero_input_der_dummy_name);
+                    extra_term = extra_term + jacobian(past_Lie,lo_u_der)*hi_u_der;
+                end                        
+            end
+        end    
+        past_Lie = Lieh + extra_term;         
+        onx((ind*m+1):((ind+1)*m),:) = jacobian(past_Lie,xaug);
+        lasttime = toc;
+        totaltime = totaltime + lasttime;        
         fprintf('%d ',ind); % index of the last derivative to be computed
     end
     if ind == nd
@@ -244,14 +242,13 @@ if opts.forcedecomp == 0
                     tic
                     nd = nd+1;  
                     ind = nd;  
-                    extra_term = 0; % reset for each new Lie derivative
-                    
+                    extra_term = 0; % reset for each new Lie derivative                    
                     %-  Known input derivatives: --------------------------
                     if numel(u) > 0 % Extra terms of extended Lie derivatives
                         % may have to add extra input derivatives (note that 'nd' has grown):
                         clear input_der
                         for ind_u=1:numel(u) 
-                            input_der(ind_u,:) = [u(ind_u),sym(strcat(char(u(ind_u)),sprintf('_d')),[1 nd-1])];
+                            input_der(ind_u,:) = [u(ind_u),sym(strcat(char(u(ind_u)),sprintf('_d')),[1 nd])];
                             input_der(ind_u,(opts.nnzDerU(ind_u)+2):end)=0;
                             if opts.numeric == 1 % numerical replacement of the new variable:
                                 if nd-1<=opts.nnzDerU(ind_u)
@@ -260,10 +257,10 @@ if opts.forcedecomp == 0
                                 end
                             end
                         end                        
-                        for i=1:ind-1 
-                            if i < size(input_der,2) 
-                                lo_u_der   = input_der(:,i);   
-                                hi_u_der   = input_der(:,i+1);
+                        for j=0:ind-1
+                            if j < size(input_der,2)
+                                lo_u_der   = input_der(:,j+1);
+                                hi_u_der   = input_der(:,j+2);
                                 lo_u_der   = subs(lo_u_der,0,zero_input_der_dummy_name);
                                 extra_term = extra_term + jacobian(past_Lie,lo_u_der)*hi_u_der;
                             end 
