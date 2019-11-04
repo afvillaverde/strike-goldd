@@ -206,7 +206,7 @@ function [identifiables,nonidentif,obs_states,unobs_states] = decomp(modelname,o
             
             %======================================================================
             % Input derivatives:
-
+            clear input_der
             %- Create array of known inputs and set certain derivatives to zero:
             if numel(ured)>0
                 for ind_u=1:numel(ured) % create array of derivatives of the inputs
