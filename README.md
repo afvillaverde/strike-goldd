@@ -28,13 +28,18 @@ Publication of the methodology (first version of STRIKE-GOLDD):
 
 [Villaverde AF, Barreiro A, Papachristodoulou A (2016). Structural Identifiability of Dynamic Systems Biology Models. *PLoS Computational Biology* 12(10): e1005153 doi:10.1371/journal.pcbi.1005153](http:dx.doi.org/doi:10.1371/journal.pcbi.1005153)
 
-Extension for time-varying inputs (STRIKE-GOLDD2):
+Extension for time-varying inputs (STRIKE-GOLDD 2):
 
 [Villaverde AF, Evans ND, Chappell MJ, Banga JR (2019). Input-dependent structural identifiability of nonlinear systems. *IEEE Control Systems Letters* 3(2):1–6 doi:10.1109/LCSYS.2018.2868608](http://dx.doi.org/doi:10.1109/LCSYS.2018.2868608)
 
-Extension for unknown inputs; FISPO analysis (STRIKE-GOLDD2.1):
+Extension for unknown inputs; FISPO analysis (STRIKE-GOLDD 2.1):
 
 [Villaverde AF, Tsiantis N, Banga JR (2019). Full observability and estimation of unknown inputs, states, and parameters of nonlinear biological models. *Journal of the Royal Society Interface* 16(156), doi:10.1098/rsif.2019.0043](http://dx.doi.org/doi:10.1098/rsif.2019.0043)
+
+Extension for finding Lie symmetries (STRIKE-GOLDD 2.1.6):
+
+Massonis G & Villaverde AF (2020). Finding and breaking Lie symmetries: implications for structural identifiability and observability in biological modelling. *Submitted*.
+
 
 ## Disclaimer
 

@@ -11,15 +11,15 @@
 % Documentation available in the 'doc' folder
 %--------------------------------------------------------------------------
 % 
-% Version v2.1.4, last modified: 20/09/2019
+% Version v2.1.6, last modified: 26/02/2020
 % Alejandro Fernandez Villaverde (afvillaverde@iim.csic.es)
 %==========================================================================
 
 function STRIKE_GOLDD(varargin)
 
-fprintf('\n\n ------------------------- \n');
-fprintf(' >>> StrIkE-GOLDD TOOLBOX \n');
-fprintf(' ------------------------- \n');
+fprintf('\n\n -------------------------------- \n');
+fprintf(' >>> STRIKE-GOLDD toolbox v2.1.6 \n');
+fprintf(' -------------------------------- \n');
 
 %==========================================================================
 % Read options and add folders to path:
