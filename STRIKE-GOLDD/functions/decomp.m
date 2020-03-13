@@ -244,7 +244,7 @@ function [identifiables,nonidentif,obs_states,unobs_states] = decomp(modelname,o
             %======================================================================
             % Define numerical equivalents of the symbolic variables:
             if opts.numeric == 1              
-                allvariables = symvar([xaugred;faugred;reshape(input_der,[],1)]);
+                allvariables = symvar([xaugred;hred;faugred;reshape(input_der,[],1)]);
                 numeros = vpa(0.1+rand(size(allvariables)));
             end   
             

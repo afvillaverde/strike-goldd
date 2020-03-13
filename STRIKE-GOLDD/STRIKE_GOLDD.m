@@ -70,8 +70,9 @@ end
 m    = numel(h); % number of outputs
 n    = numel(x); % number of states
 q    = numel(p); % number of unknown parameters
-if size(p,2)>size(p,1),p=p.';end
+if size(h,2)>size(h,1),h=h.';end
 if size(x,2)>size(x,1),x=x.';end
+if size(p,2)>size(p,1),p=p.';end
 if exist('w','var')
     nw = numel(w); % number of unknown inputs
 else 
@@ -153,7 +154,7 @@ if opts.forcedecomp == 0
     %======================================================================
     % Define numerical equivalents of the symbolic variables:
     if opts.numeric == 1              
-        allvariables = symvar([xaug;faug;reshape(input_der,[],1)]);
+        allvariables = symvar([xaug;h;faug;reshape(input_der,[],1)]);
         numeros = vpa(0.1+rand(size(allvariables)));
     end    
     
