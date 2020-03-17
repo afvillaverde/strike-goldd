@@ -26,11 +26,11 @@ More information can be found in the [STRIKE-GOLDD manual](STRIKE-GOLDD/doc/STRI
 
 Publication of the methodology (first version of STRIKE-GOLDD):
 
-[Villaverde AF, Barreiro A, Papachristodoulou A (2016). Structural Identifiability of Dynamic Systems Biology Models. *PLoS Computational Biology* 12(10): e1005153 doi:10.1371/journal.pcbi.1005153](http:dx.doi.org/doi:10.1371/journal.pcbi.1005153)
+[Villaverde AF, Barreiro A, Papachristodoulou A (2016). Structural Identifiability of Dynamic Systems Biology Models. *PLoS Computational Biology* 12(10):e1005153, doi:10.1371/journal.pcbi.1005153](http:dx.doi.org/doi:10.1371/journal.pcbi.1005153)
 
 Extension for time-varying inputs (STRIKE-GOLDD 2):
 
-[Villaverde AF, Evans ND, Chappell MJ, Banga JR (2019). Input-dependent structural identifiability of nonlinear systems. *IEEE Control Systems Letters* 3(2):1–6 doi:10.1109/LCSYS.2018.2868608](http://dx.doi.org/doi:10.1109/LCSYS.2018.2868608)
+[Villaverde AF, Evans ND, Chappell MJ, Banga JR (2019). Input-dependent structural identifiability of nonlinear systems. *IEEE Control Systems Letters* 3(2):1–6, doi:10.1109/LCSYS.2018.2868608](http://dx.doi.org/doi:10.1109/LCSYS.2018.2868608)
 
 Extension for unknown inputs; FISPO analysis (STRIKE-GOLDD 2.1):
 
@@ -38,7 +38,7 @@ Extension for unknown inputs; FISPO analysis (STRIKE-GOLDD 2.1):
 
 Extension for finding Lie symmetries (STRIKE-GOLDD 2.1.6):
 
-Massonis G & Villaverde AF (2020). Finding and breaking Lie symmetries: implications for structural identifiability and observability in biological modelling. *Submitted*.
+[Massonis G & Villaverde AF (2020). Finding and breaking Lie symmetries: implications for structural identifiability and observability in biological modelling. *Symmetry* 12(3), 469, doi:10.3390/sym12030469](https://doi.org/10.3390/sym12030469)
 
 
 ## Disclaimer
