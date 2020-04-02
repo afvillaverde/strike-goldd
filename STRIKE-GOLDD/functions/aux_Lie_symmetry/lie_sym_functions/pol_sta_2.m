@@ -20,7 +20,7 @@ function [A] = pol_sta_2(allVar,den_f,diffini,diff_den_f,diff_num_f,...
 %   OUTPUT:     A --> System matrix
 %%
     for k=1:l_f
-        % 1st polynomial || Construction
+        %   1er polinomio || Contruccion
         nv=0;
         nm=0;
         for i=1:l_in
@@ -32,9 +32,10 @@ function [A] = pol_sta_2(allVar,den_f,diffini,diff_den_f,diff_num_f,...
         end
          eq_a=nm-nv;
          
-        % System
-        eq_c1=collect(eq_a,allVar);
-        eq_ch1=children(eq_c1);
+         %  Sistema
+        [eq_c_num,~]=numden(eq_a);
+        eq_c_num=collect(eq_c_num,allVar);
+        eq_ch1=children(eq_c_num);
         l_eq_ch1=length(eq_ch1);
         eq_n1=[];
         for l=1:l_eq_ch1  
@@ -42,7 +43,7 @@ function [A] = pol_sta_2(allVar,den_f,diffini,diff_den_f,diff_num_f,...
             eq_n1=[eq_n1,c_p1];
         end
         
-        % Add to matrix
+        %   Añadir a la matriz
         [A1,~]=equationsToMatrix(eq_n1,rs_k);
         if k==1
             A=A1;
