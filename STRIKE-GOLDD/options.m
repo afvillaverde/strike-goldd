@@ -5,7 +5,7 @@
 function [modelname,paths,opts,submodels,prev_ident_pars] = options()
 
 %%% (1) MODEL: 
-modelname = '2DOF'; 
+modelname = 'C2M'; 
 
 %%% (2) PATHS:
 paths.meigo     = '/home/alexandre/MEIGO_AMICI_Nov2016/MEIGO_Nov2016/MEIGO';      
@@ -26,8 +26,8 @@ opts.decomp_user= 0;       % when decomposing model, use submodels specified by 
 opts.maxLietime = 1000;    % max. time allowed for calculating 1 Lie derivative.
 opts.maxOpttime = 300;     % max. time allowed for every optimization (if optimization-based decomposition is used).
 opts.maxstates  = 6;       % max. number of states in the submodels (if optimization-based decomposition is used).
-opts.nnzDerU    = inf;       % numbers of nonzero derivatives of the measured inputs (u); may be 'inf'
-opts.nnzDerW    = 5;       % numbers of nonzero derivatives of the unmeasured inputs (w); may be 'inf'
+opts.nnzDerU    = 1;       % numbers of nonzero derivatives of the measured inputs (u); may be 'inf'
+opts.nnzDerW    = 1;       % numbers of nonzero derivatives of the unmeasured inputs (w); may be 'inf'
 opts.nnzDerIn   = opts.nnzDerU; % deprecated option
 
 %%% (4) AFFINE SETTINGS:
