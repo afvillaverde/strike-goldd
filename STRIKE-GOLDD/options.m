@@ -5,7 +5,7 @@
 function [modelname,paths,opts,submodels,prev_ident_pars] = options()
 
 %%% (1) MODEL: 
-modelname = 'C2M'; 
+modelname = '2DOF'; 
 
 %%% (2) PATHS:
 paths.meigo     = '/home/alexandre/MEIGO_AMICI_Nov2016/MEIGO_Nov2016/MEIGO';      
@@ -26,19 +26,29 @@ opts.decomp_user= 0;       % when decomposing model, use submodels specified by 
 opts.maxLietime = 1000;    % max. time allowed for calculating 1 Lie derivative.
 opts.maxOpttime = 300;     % max. time allowed for every optimization (if optimization-based decomposition is used).
 opts.maxstates  = 6;       % max. number of states in the submodels (if optimization-based decomposition is used).
-opts.nnzDerU    = 1;       % numbers of nonzero derivatives of the measured inputs (u); may be 'inf'
-opts.nnzDerW    = 1;       % numbers of nonzero derivatives of the unmeasured inputs (w); may be 'inf'
+opts.nnzDerU    = inf;       % numbers of nonzero derivatives of the measured inputs (u); may be 'inf'
+opts.nnzDerW    = 5;       % numbers of nonzero derivatives of the unmeasured inputs (w); may be 'inf'
 opts.nnzDerIn   = opts.nnzDerU; % deprecated option
 
-%%% (4) User-defined submodels for decomposition (may be left = []):  
+%%% (4) AFFINE SETTINGS:
+opts.affine          = 0;  % use the ORC-DF algorithm for affine systems (1 = yes; 0 = no).
+opts.affine_tStage   = 100;% max. computation time for the last iteration.
+opts.affine_kmax     = 3;  % max. number of iterations.
+opts.affine_parallel = 0;  % use parallel toolbox (1 = yes; 0 = no).
+opts.affine_workers  = 4;  % number of workers for parallel pool.
+opts.affine_graphics = 1;  % Display graphics (1 = yes; 0 = no).
+
+%%% (5) User-defined submodels for decomposition (may be left = []): 
 submodels = []; 
-%%% Submodels are specified as a vector of states, as e.g.:
+%% Submodels are specified as a vector of states, as e.g.:
 %         submodels{1}  = [1 2];
 %         submodels{2}  = [1 3];
-        
-%%% (5) Parameters already classified as identifiable may be entered below.
-prev_ident_pars = [];
-%%% They must first be declared as symbolic variables. For example:
-%         syms lambda rho c
-%         prev_ident_pars = [lambda rho c];
+
+%%% (6) MULTI-EXPERIMENT OPTIONS:
+opts.multiexp = 0;         % Run  multi-experiment analysis (1 = yes; 0 = no).
+opts.numexp   = 3;         % Number of experiments.
+
+%%% (7) Parameters already classified as identifiable may be entered below.
+prev_ident_pars=[];
+
 end

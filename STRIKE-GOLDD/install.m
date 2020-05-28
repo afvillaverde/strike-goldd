@@ -11,4 +11,4 @@ else
     mkdir(fullfile(strikegoldd_path,'results'))
     addpath(fullfile(strikegoldd_path,'results'))
 end
-fprintf('\n STRIKE-GOLDD (v2.1.6) folders added to the path \n\n');
+fprintf('\n STRIKE-GOLDD (v2.2) folders added to the path \n\n');

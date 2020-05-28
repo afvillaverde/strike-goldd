@@ -11,14 +11,14 @@
 % Documentation available in the 'doc' folder
 %--------------------------------------------------------------------------
 % 
-% Version v2.1.6, last modified: 26/02/2020
+% Version v2.2, last modified: 28/05/2020
 % Alejandro Fernandez Villaverde (afvillaverde@iim.csic.es)
 %==========================================================================
 
 function STRIKE_GOLDD(varargin)
 
 fprintf('\n\n -------------------------------- \n');
-fprintf(' >>> STRIKE-GOLDD toolbox v2.1.6 \n');
+fprintf(' >>> STRIKE-GOLDD toolbox v2.2 \n');
 fprintf(' -------------------------------- \n');
 
 %==========================================================================
@@ -37,8 +37,26 @@ addpath(genpath(paths.results));
 addpath(genpath(paths.functions));
 
 %==========================================================================
+% Execute affine in inputs control system algorithm (Optional):
+if opts.affine==1
+    ORC_DF(modelname,opts);
+    return
+end
+
+%==========================================================================
 % Load model:
-load(modelname)
+
+% Convert model to multi-experiment form (Optional):
+if opts.multiexp==1
+    ME_analysis(modelname,opts);
+    modelname=strcat(modelname,'_',num2str(opts.numexp),'Exp');
+    load(modelname);
+    opts.nnzDerU=repmat(opts.nnzDerU,1,opts.numexp);
+    opts.nnzDerW=repmat(opts.nnzDerW,1,opts.numexp);
+else
+    load(modelname);
+end
+
 fprintf('\n Analyzing identifiability of %s ... \n', modelname);
 
 tic
