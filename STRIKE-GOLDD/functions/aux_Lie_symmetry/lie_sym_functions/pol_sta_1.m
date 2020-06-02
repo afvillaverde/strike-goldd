@@ -29,9 +29,8 @@ function [A] = pol_sta_1(allVar,den_f,diffini,diff_den_f,diff_num_f,...
          eq_a=num_f(i)*den_f(i)*diffini(i)-nv; 
 
          %  System
-        [eq_c_num,~]=numden(eq_a);
-        eq_c_num=collect(eq_c_num,allVar);
-        eq_ch1=children(eq_c_num);
+        eq_c1=collect(eq_a,allVar);
+        eq_ch1=children(eq_c1);
         l_eq_ch1=length(eq_ch1);
         eq_n1=[];
         for k=1:l_eq_ch1  

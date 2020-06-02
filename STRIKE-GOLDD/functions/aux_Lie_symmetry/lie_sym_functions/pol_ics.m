@@ -33,9 +33,8 @@ function [A] = pol_ics(allVar,den_ics,diff_den_ics,diff_num_ics,ics_n,...
             sum=subs(sum,x,ics_n);
 
             %   System
-            [eq_c_num,~]=numden(den_ics(i)^2*nv(i)-sum);
-            eq_c_num=collect(eq_c_num,allVar);
-            eq_ch=children(eq_c_num);
+            eq_c=collect(den_ics(i)^2*nv(i)-sum,allVar);
+            eq_ch=children(eq_c);
             l_eq_ch=length(eq_ch);
             eq_n=[];
             for k=1:l_eq_ch   

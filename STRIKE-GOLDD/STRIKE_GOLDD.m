@@ -11,7 +11,7 @@
 % Documentation available in the 'doc' folder
 %--------------------------------------------------------------------------
 % 
-% Version v2.2, last modified: 28/05/2020
+% Version v2.2, last modified: 02/06/2020
 % Alejandro Fernandez Villaverde (afvillaverde@iim.csic.es)
 %==========================================================================
 
@@ -47,15 +47,12 @@ end
 % Load model:
 
 % Convert model to multi-experiment form (Optional):
-if opts.multiexp==1
+if opts.multiexp == 1
     ME_analysis(modelname,opts);
-    modelname=strcat(modelname,'_',num2str(opts.numexp),'Exp');
-    load(modelname);
-    opts.nnzDerU=repmat(opts.nnzDerU,1,opts.numexp);
-    opts.nnzDerW=repmat(opts.nnzDerW,1,opts.numexp);
-else
-    load(modelname);
+    modelname=strcat(modelname,'_',num2str(opts.multiexp_numexp),'Exp');
 end
+
+load(modelname);
 
 fprintf('\n Analyzing identifiability of %s ... \n', modelname);
 
@@ -93,12 +90,18 @@ if size(x,2)>size(x,1),x=x.';end
 if size(p,2)>size(p,1),p=p.';end
 if exist('w','var')
     nw = numel(w); % number of unknown inputs
+    if opts.multiexp == 1
+        opts.nnzDerW=repmat(opts.nnzDerW,1,opts.multiexp_numexp);
+    end
 else 
     nw = 0;
     w = [];
 end
 if exist('u','var')
     nu = numel(u); % number of unknown inputs
+    if opts.multiexp == 1
+        opts.nnzDerU=repmat(opts.nnzDerU,1,opts.multiexp_numexp);
+    end
 else 
     nu = 0;
     u = [];

@@ -1,23 +1,17 @@
 %=========================================================================%
-%==ORC_DF: function for Observability-Identifiability-Invertibility===%
-%===============analysis of systems affine in the inputs==============%
+%====ORC-DF: An implementation of the Observability Rank Condition for====%
+%======================systems with Direct Feedthrough====================%
 
 function ORC_DF(modelname,opts)
 
 tStart=tic;
-
-%==================Read options, add folders to path======================%
-
-%[modelname,paths,opts,~,prev_ident_pars] = options;
-%addpath(genpath(paths.models));
-%addpath(genpath(paths.results));
 
 %============================Load model===================================%
 
 %(Optional) Create multi-experiment model:
 if opts.multiexp == 1
     ME_analysis(modelname,opts);
-    modelname=strcat(modelname,'_',num2str(opts.numexp),'Exp');
+    modelname=strcat(modelname,'_',num2str(opts.multiexp_numexp),'Exp');
 end
 
 affine_modelname = sprintf('affine_%s',modelname);
@@ -31,7 +25,7 @@ end
 
 load(modelname) %#ok<*LOAD>
 
-fprintf('\n >>> Analyzing observability of %s with the ORC-DF algorithm\n',modelname);
+fprintf('\n >>> Analyzing observability of %s with affine in control system algorithm\n',modelname);
 
 %======================Dimensions of the problem==========================%
 
@@ -49,6 +43,9 @@ end
 %Number of unknown inputs:
 if exist('w','var')&&numel(w)>0 %#ok<*NODEF>
     nw=numel(w);
+    if opts.multiexp == 1
+        opts.nnzDerW=repmat(opts.nnzDerW,1,opts.multiexp_numexp);
+    end
     if exist_affine_model~=2
     %Chek that system is affine in unknown inputs:    
         syms coeff_w coefh_w
@@ -228,8 +225,8 @@ fprintf('\n %d unknown inputs:\n %s',nw,char(w));
 fprintf('\n %d parameters:\n %s',np,char(p));
 
 %====================(Optional)Parallel preferences=======================%
-if opts.affine_parallel==1
-    fprintf('\n >>> Initializating parallel preferences...\n')
+if opts.affine_parallel_rank == 1 || opts.affine_parallel_Lie == 1
+    fprintf('\n >>> Initializating parallel preferences...')
     pool=gcp('nocreate');
     mycluster=parcluster('local');
     max_workers=mycluster.NumWorkers;
@@ -293,7 +290,7 @@ Delta_Omega=[hxw;hu];
 
 tDer=tic;
 %First derivative of codistribution vector (using parallel toolbox):
-if opts.affine_parallel==1
+if opts.affine_parallel_Lie==1
     parfor i=1:nxau(1)
         dif_Delta_omega(:,i)=jacobian(Delta_Omega,xau(i));
     end
@@ -310,6 +307,7 @@ dif_Omega=dif_Delta_omega;
 k=k+1;
 %0-stage computation time:
 stage_time(1)=toc(tStage);
+new_stage_time(1)=0;
 
 %(Optional) Define numerical equivalents of the symbolic variables:
 if opts.numeric == 1
@@ -320,8 +318,8 @@ if opts.numeric == 1
 end  
 
 %==============================Kth stage==================================%
-while k<opts.affine_kmax+1 && stage_time(k)<opts.affine_tStage
-    
+while k<opts.affine_kmax+1 && new_stage_time(k)<opts.affine_tStage
+
     fprintf('\n >>> Building observability matrix of %d-augmented system...',k)
     
     tStage=tic;
@@ -337,7 +335,7 @@ while k<opts.affine_kmax+1 && stage_time(k)<opts.affine_tStage
     nxau(k+1)=numel(xau);
     %Calculate partial derivatives of Delta_Omega (using parallel toolbox):
     tDer=tic;
-    if opts.affine_parallel==1
+    if opts.affine_parallel_Lie==1
         dif_Delta_omega=sym(zeros(numel(Delta_Omega),nxau(k+1)));
         parfor i=1:nxau(k+1)
             dif_Delta_omega(:,i)=jacobian(Delta_Omega,xau(i));
@@ -389,7 +387,8 @@ while k<opts.affine_kmax+1 && stage_time(k)<opts.affine_tStage
     %Comprobate if the model is FISPO:
     if rank_dif_omega(k)==nxau(k+1)
         %Print results if the model is FISPO:
-        stage_time(k+1)=stage_time(k)+toc(tStage);
+        new_stage_time(k+1)=toc(tStage);
+        stage_time(k+1)=stage_time(k)+new_stage_time(k+1);
         
         fprintf('\n\n ------------------------ \n');
         fprintf(' >>> RESULTS SUMMARY:\n');
@@ -439,7 +438,6 @@ while k<opts.affine_kmax+1 && stage_time(k)<opts.affine_tStage
         yticklabels(xau_ticks);
         title('Classification of states')
         hold off
-        
         dif_time=dif_time(1:k+1);
         stage_time=stage_time(1:k+1);
         rank_time=rank_time(1:k);
@@ -451,7 +449,6 @@ while k<opts.affine_kmax+1 && stage_time(k)<opts.affine_tStage
         xlabel('k')
         ylabel('t[s]')
         xticks(0:k)
-        sort(dif_time)
         yticks(sort(dif_time))
         title('Partial derivatives computation time.')
    
@@ -482,14 +479,6 @@ while k<opts.affine_kmax+1 && stage_time(k)<opts.affine_tStage
         xticks(0:k)
         yticks(sort(stage_time))
         title('Stage computation time')
-        %xlabel('Stage')
-        %ylabel('t[s]')
-        %xticks(0:k)
-        %[~,~,values]=find([dif_time;rank_time;partial_rank_time;stage_time]);
-        %yticks([0;sort(values)]);
-        %lgd=legend('Partial derivatives time','Rank time','Partial ranks time','Stage time','location','northwest');
-        %lgd.FontSize=7;
-        %title('Computation time')
         end
         %Save results if model is FISPO:
         resultsname = sprintf('id_results_%s',modelname);
@@ -500,12 +489,13 @@ while k<opts.affine_kmax+1 && stage_time(k)<opts.affine_tStage
     elseif nw==0 && k>1 && rank_dif_omega(k)==rank_dif_omega(k-1)
         
         %If rank(Omega_k)=rank(Omega_k-1), the rank will not increase anymore and system is not observable:
-        stage_time(k+1)=stage_time(k)+toc(tStage);
+        new_stage_time(k+1)=toc(tStage);
+        stage_time(k+1)=stage_time(k)+new_stage_time(k+1);
         fprintf('\n >>> Observability matrix dimension will not increase including further derivatives.')
         fprintf('\n >>> The control system is not k-row observable for k higher or equal to 1.')
         totaltime = toc(tStart);
         
-        if otps.affine_graphics == 1
+        if opts.affine_graphics == 1
         %Ticks including system states for labelling y-axis:
         xau_ticks=flip(arrayfun(@char, xau, 'uniform',0)); 
         
@@ -618,7 +608,7 @@ while k<opts.affine_kmax+1 && stage_time(k)<opts.affine_tStage
     fprintf('\n >>> Investigating partial observability of %d -augmented system...',k)
     tPartial=tic;
     %Partial rank computation (using parallel toolbox):
-    if opts.affine_parallel==1
+    if opts.affine_parallel_rank
         %For the (k-1)-row unobs.states, remove its column and recalculate rank: 
         parfor i=1:numel(nf_unobs)                  
             elim_dif_omega=num_dif_omega;
@@ -633,7 +623,7 @@ while k<opts.affine_kmax+1 && stage_time(k)<opts.affine_tStage
             end
         end
         partial_rank_time(k)=partial_rank_time(k)+toc(tPartial);
-        partial_rank_time(k+1)=partial_rank(k);
+        partial_rank_time(k+1)=partial_rank_time(k);
         %Partial rank calculation (without parallel toolbox):    
     else
         for i=1:numel(nf_unobs)
@@ -654,7 +644,8 @@ while k<opts.affine_kmax+1 && stage_time(k)<opts.affine_tStage
     %Actualization of known inputs contribution to system dynamics:
     fu=[fu;zeros(nxau(k+1)-nxau(k),nu)];
     %Actualization of stage computation time:
-    stage_time(k+1)=stage_time(k)+toc(tStage);
+    new_stage_time(k+1)=toc(tStage);
+    stage_time(k+1)=stage_time(k)+new_stage_time(k+1);
     %Index actualization:
     k=k+1;
 end 

@@ -25,9 +25,8 @@ function [A] = pol_obs(allVar,den_h,diff_den_h,diff_num_h,...
                num_h(i)*diff_den_h(i,j)); 
         end
         %   System
-        [eq_c_num,~]=numden(nv);
-        eq_c_num=collect(eq_c_num,allVar);
-        eq_ch=children(eq_c_num);
+        eq_c=collect(nv,allVar);
+        eq_ch=children(eq_c);
         l_eq_ch=length(eq_ch);
         eq_n=[];
         for k=1:l_eq_ch   

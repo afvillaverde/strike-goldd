@@ -25,43 +25,19 @@ else
     w=[];
     nw=0;
 end
-% Number of initial conditions:
-if exist('ics','var')
-    nics=numel(ics);
-else
-    ics=[];
-    nics=0;
-end
 %========================Initialize variables=============================%
 
-me_x   = sym(zeros(n*opts.numexp,1));
-me_h   = sym(zeros(m*opts.numexp,1));
-me_f   = sym(zeros(n*opts.numexp,1));
-me_u   = sym(zeros(nu*opts.numexp,1));
-me_w   = sym(zeros(nw*opts.numexp,1));
-if exist('ics','var')
-    me_ics = zeros(nics*opts.numexp,1);
-    if exist('known_ics','var')
-        me_known_ics=zeros(nics*opts.numexp,1);
-    else
-        me_known_ics=[];
-    end
-else
-    me_ics=[];
-end
-
-% Replicate initial conditions:
-for ind_ics=1:nics
-    me_ics=repmat(ics,1,opts.numexp);
-    me_known_ics=repmat(known_ics,1,opts.numexp);
-end
-
+me_x   = sym(zeros(n*opts.multiexp_numexp,1));
+me_h   = sym(zeros(m*opts.multiexp_numexp,1));
+me_f   = sym(zeros(n*opts.multiexp_numexp,1));
+me_u   = sym(zeros(nu*opts.multiexp_numexp,1));
+me_w   = sym(zeros(nw*opts.multiexp_numexp,1));
 
 %========================Multi-experiment model===========================%
 
 variables=[x;w;u];
 
-for i=1:opts.numexp
+for i=1:opts.multiexp_numexp
     
     num_exp=strcat('Exp',num2str(i));
     
@@ -79,15 +55,28 @@ end
 u=me_u;
 w=me_w;
 x=me_x;
-ics=me_ics;
-known_ics=me_known_ics;
 % Multi-experiment dynamics:
 f=me_f;
 % Multi-experiment output:
 h=me_h;
 
+% Initial conditions:
+if exist('ics','var')
+    if opts.multiexp_user_ics == 0
+        % Replicate initial conditions:
+        ics=repmat(ics,1,opts.multiexp_numexp);
+        known_ics=repmat(known_ics,1,opts.multiexp_numexp);
+    else
+        ics=reshape(opts.multiexp_ics,1,[]);
+        known_ics=reshape(opts.multiexp_known_ics,1,[]);
+    end
+else
+    ics=[];
+    known_ics=[];
+end
+
 if exist('p','var')==0
     p=[];
 end
 
-save(strcat(pwd,filesep,'models',filesep,strcat(modelname,'_',num2str(opts.numexp)),'Exp'),'x','p','u','w','ics','known_ics','f','h')  
+save(strcat(pwd,filesep,'models',filesep,strcat(modelname,'_',num2str(opts.multiexp_numexp)),'Exp'),'x','p','u','w','f','h','ics','known_ics')  
