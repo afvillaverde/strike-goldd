@@ -16,7 +16,7 @@ paths.functions = strcat(pwd,filesep,'functions');
 %%% (3) IDENTIFIABILITY OPTIONS:
 opts.numeric    = 0;       % calculate rank numerically (= 1) or symbolically (= 0)
 opts.replaceICs = 0;       % replace states with known initial conditions (= 1) or use generic values (= 0) when calculating rank
-opts.checkObser = 1;       % check identifiability of initial conditions (1 = yes; 0 = no).
+opts.checkObser = 1;       % check state observability, i.e. identifiability of initial conditions (1 = yes; 0 = no).
 opts.checkObsIn = 1;       % check input observability (1 = yes; 0 = no).
 opts.findcombos = 0;       % try to find identifiable combinations? (1 = yes; 0 = no).
 opts.unidentif  = 0;       % use method to try to establish unidentifiability instead of identifiability, when using decomposition. 
