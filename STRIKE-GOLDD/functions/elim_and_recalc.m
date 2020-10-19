@@ -7,36 +7,51 @@ function [new_ident_pars,new_nonid_pars,new_obs_states,new_unobs_states,new_obs_
 
 global p x unidflag wlvector
 
-if nargin == 4      
-    pred          = p;
-    xred          = x; 
-    wred          = wlvector;
-    identifiables = [];
-    obs_states    = [];
-    obs_inputs    = [];
-    q             = numel(pred);
-    n             = numel(xred);
-    nw            = numel(wred);
-    qreal         = q;
-else% In case of decomposition
-    % varargin: qreal,pred,xred,identifiables,obs_states,obs_inputs
-    qreal         = varargin{1};
-    pred          = varargin{2};
-    xred          = varargin{3};
-    identifiables = varargin{4};
-    obs_states    = varargin{5};    
-    obs_inputs    = varargin{6};
-    wred          = varargin{7};
-    q             = numel(pred);
-    n             = numel(xred);
-    nw            = numel(wred);
+switch nargin 
+    case 4 
+        % called when there is no decomposition nor 'w'      
+        pred          = p;
+        xred          = x; 
+        wred          = wlvector;
+        identifiables = [];
+        obs_states    = [];
+        obs_inputs    = [];
+        q             = numel(pred);
+        n             = numel(xred);
+        nw            = numel(wred);
+        qreal         = q;
+    case 7 
+        % called when there are 'w', but no decomposition
+        pred          = p;
+        xred          = x; 
+        wred          = wlvector;
+        identifiables = varargin{1};
+        obs_states    = varargin{2};    
+        obs_inputs    = varargin{3};
+        q             = numel(pred);
+        n             = numel(xred);
+        nw            = numel(wred); 
+        qreal         = q;
+    otherwise
+        % called in case of decomposition
+        % varargin: qreal,pred,xred,identifiables,obs_states,obs_inputs
+        qreal         = varargin{1};
+        pred          = varargin{2};
+        xred          = varargin{3};
+        identifiables = varargin{4};
+        obs_states    = varargin{5};    
+        obs_inputs    = varargin{6};
+        wred          = varargin{7};
+        q             = numel(pred);
+        n             = numel(xred);
+        nw            = numel(wred);
 end
-r  = size(numonx,2); %before: q+n+nw; but with unknown inputs there may also be derivatives
-new_ident_pars   = [];
+r  = size(numonx,2); % before: q+n+nw; but with unknown inputs there may also be derivatives
+new_ident_pars   = identifiables;
 new_nonid_pars   = [];
-new_obs_states   = [];
+new_obs_states   = obs_states;
 new_unobs_states = [];
-new_obs_in       = [];
+new_obs_in       = obs_inputs;
 new_unobs_in     = [];
     
 
@@ -44,7 +59,7 @@ new_unobs_in     = [];
 % ELIMINATE A PARAMETER:
 %==========================================================================
 % At each iteration we try removing a different column from onx:
-for ind=1:qreal % only the first 'qreal' elements of pred are parameters; the following 'q-qreal' are states considered as parameters--we are not interested in their identifiability 
+for ind=1:qreal % only the first 'qreal' elements of pred are parameters; the following 'q-qreal' are states considered as parameters 
     isidentifiable = ismember(pred(ind),identifiables);
     if isidentifiable
         fprintf('\n Parameter %s has already been classified as identifiable.',char(pred(ind)))
@@ -71,7 +86,7 @@ for ind=1:qreal % only the first 'qreal' elements of pred are parameters; the fo
     end
 end
 
-if nargin == 4 % if there is no decomposition
+if nargin == 4 || 7 % if there is no decomposition
     %==========================================================================
     % ELIMINATE A STATE:
     %==========================================================================
