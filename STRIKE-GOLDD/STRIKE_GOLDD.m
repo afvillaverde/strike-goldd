@@ -11,25 +11,27 @@
 % Documentation available in the 'doc' folder
 %--------------------------------------------------------------------------
 % 
-% Version v2.2, last modified: 02/06/2020
+% Version 3.0, last modified: 19/10/2020
 % Alejandro Fernandez Villaverde (afvillaverde@iim.csic.es)
 %==========================================================================
 
 function STRIKE_GOLDD(varargin)
 
 fprintf('\n\n -------------------------------- \n');
-fprintf(' >>> STRIKE-GOLDD toolbox v2.2 \n');
+fprintf(' >>> STRIKE-GOLDD toolbox 3.0 \n');
 fprintf(' -------------------------------- \n');
 
 %==========================================================================
 % Read options and add folders to path:
 tStart = tic;
+clearvars -global
 global x f p maxstates u unidflag w wlvector 
 if nargin > 0
     [modelname,paths,opts,submodels,prev_ident_pars] = run(varargin{1});
 else
     [modelname,paths,opts,submodels,prev_ident_pars] = options;
 end
+nmf = pwd;
 maxstates = opts.maxstates;
 addpath(genpath(paths.meigo));
 addpath(genpath(paths.models));
@@ -37,11 +39,11 @@ addpath(genpath(paths.results));
 addpath(genpath(paths.functions));
 
 %==========================================================================
-% Execute affine in inputs control system algorithm (Optional):
+% ORC-DF algorithm (only for affine-in-inputs systems):
 if opts.affine==1
     ORC_DF(modelname,opts);
     return
-end
+end % If not, run the FISPO algorithm:
 
 %==========================================================================
 % Load model:
@@ -54,7 +56,7 @@ end
 
 load(modelname);
 
-fprintf('\n Analyzing identifiability of %s ... \n', modelname);
+fprintf('\n Analyzing the %s model... \n', modelname);
 
 tic
 %==========================================================================
@@ -98,7 +100,7 @@ else
     w = [];
 end
 if exist('u','var')
-    nu = numel(u); % number of unknown inputs
+    nu = numel(u); % number of known inputs
     if opts.multiexp == 1
         opts.nnzDerU=repmat(opts.nnzDerU,1,opts.multiexp_numexp);
     end
@@ -212,7 +214,7 @@ if opts.forcedecomp == 0
     end
     if ind == nd
         obsidentmatrix = sprintf('obs_ident_matrix_%s_%d_Lie_deriv',modelname,nd);
-        obsidentfile = strcat(pwd,filesep,'results',filesep,obsidentmatrix);
+        obsidentfile = strcat(nmf,filesep,'results',filesep,obsidentmatrix);
         save(obsidentfile);
         increaseLie = 1;
         while increaseLie == 1
@@ -248,7 +250,7 @@ if opts.forcedecomp == 0
                 % If there are unknown inputs, we may want to check id/obs of (x,p,w) and not of dw/dt:
                 if numel(w)>0
                     [identifiables,nonidentif,obs_states,unobs_states,obs_inputs,unobs_inputs] = ...
-                        elim_and_recalc(unmeas_x_indices,rango,numonx,opts);   
+                        elim_and_recalc(unmeas_x_indices,rango,numonx,opts,identifiables,obs_states,obs_inputs);   
                     obs_in_no_der = intersect(w,obs_inputs);
                     if ( numel(identifiables)==numel(p) && numel(obs_states)+numel(meas_x)==numel(x) && numel(obs_in_no_der)==numel(w) )
                         obs_states    = x;
@@ -326,7 +328,7 @@ if opts.forcedecomp == 0
                     lasttime  = toc;
                     totaltime = totaltime + lasttime;
                     obsidentmatrix = sprintf('obs_ident_matrix_%s_%d_Lie_deriv',modelname,nd);
-                    obsidentfile = strcat(pwd,filesep,'results',filesep,obsidentmatrix);
+                    obsidentfile = strcat(nmf,filesep,'results',filesep,obsidentmatrix);
                     save(obsidentfile);
                     lastrank = rango;                                             
                 % If that is not possible, there are several possible causes:
@@ -355,7 +357,15 @@ if opts.forcedecomp == 0
                     if skip_elim == 0 && isFISPO == 0
                         % Eliminate columns one by one to check identifiability of the associated parameters: 
                         [identifiables,nonidentif,obs_states,unobs_states,obs_inputs,unobs_inputs] = ...
-                             elim_and_recalc(unmeas_x_indices,rango,numonx,opts);
+                             elim_and_recalc(unmeas_x_indices,rango,numonx,opts,identifiables,obs_states,obs_inputs);                            
+                         obs_in_no_der = intersect(w,obs_inputs);
+                         if ( numel(identifiables)==numel(p) && numel(obs_states)+numel(meas_x)==numel(x) && numel(obs_in_no_der)==numel(w) )
+                            obs_states    = x;
+                            obs_inputs    = obs_in_no_der;
+                            identifiables = p;
+                            increaseLie   = 0; % -> with this we skip the next 'if' block and jump to the end of the algorithm 
+                            isFISPO       = 1;
+                         end   
                          increaseLie = 0;
                     end
                 end
@@ -384,7 +394,7 @@ if opts.forcedecomp == 0
                 rango = double(rank(numonx));
                 fprintf('\n     Rank = %d (calculated in %d seconds)',rango,toc); 
                 [identifiables,nonidentif,obs_states,unobs_states,obs_inputs,unobs_inputs] = ...
-                elim_and_recalc(unmeas_x_indices,rango,numonx,opts);
+                    elim_and_recalc(unmeas_x_indices,rango,numonx,opts,identifiables,obs_states,obs_inputs);                             
             else
                 decomp_flag = 1; 
             end
@@ -447,7 +457,7 @@ else
 		if opts.findcombos == 1 && exist('onx','var') == 1
 			% Save results first, just in case the user kills the process:
 			resultsname = sprintf('id_results_%s',modelname);
-			fullresultsname = strcat(pwd,filesep,'results',filesep,resultsname);
+			fullresultsname = strcat(nmf,filesep,'results',filesep,resultsname);
 			save(fullresultsname)      
 			[parpde,stringpde] = combos(p_un,onx,n);
 			if numel(parpde) == 0
@@ -483,7 +493,7 @@ else
     resultsname = sprintf('id_results_%s_maxstates_%d_%s',modelname,maxstates,date);
     delete VNS_report.mat
 end    
-fullresultsname = strcat(pwd,filesep,'results',filesep,resultsname);
+fullresultsname = strcat(nmf,filesep,'results',filesep,resultsname);
 save(fullresultsname);
 
 end    
