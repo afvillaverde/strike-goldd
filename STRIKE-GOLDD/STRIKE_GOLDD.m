@@ -40,7 +40,7 @@ addpath(genpath(paths.functions));
 
 %==========================================================================
 % ORC-DF algorithm (only for affine-in-inputs systems):
-if opts.affine==1
+if opts.affine
     ORC_DF(modelname,opts);
     return
 end % If not, run the FISPO algorithm:
@@ -49,7 +49,7 @@ end % If not, run the FISPO algorithm:
 % Load model:
 
 % Convert model to multi-experiment form (Optional):
-if opts.multiexp == 1
+if opts.multiexp
     ME_analysis(modelname,opts);
     modelname=strcat(modelname,'_',num2str(opts.multiexp_numexp),'Exp');
 end
@@ -92,8 +92,12 @@ if size(x,2)>size(x,1),x=x.';end
 if size(p,2)>size(p,1),p=p.';end
 if exist('w','var')
     nw = numel(w); % number of unknown inputs
-    if opts.multiexp == 1
-        opts.nnzDerW=repmat(opts.nnzDerW,1,opts.multiexp_numexp);
+    if opts.multiexp
+        if multiexp_user_nnzDerU
+            opts.nnzDerW=opts.multiexp_nnzDerW;
+        else
+            opts.nnzDerW=repmat(opts.nnzDerU,1,opts.multiexp_numexp);
+        end
     end
 else 
     nw = 0;
@@ -101,8 +105,12 @@ else
 end
 if exist('u','var')
     nu = numel(u); % number of known inputs
-    if opts.multiexp == 1
-        opts.nnzDerU=repmat(opts.nnzDerU,1,opts.multiexp_numexp);
+    if opts.multiexp
+        if multiexp_user_nnzDerU
+            opts.nnzDerU=opts.multiexp_nnzDerU;
+        else
+            opts.nnzDerU=repmat(opts.nnzDerU,1,opts.multiexp_numexp);
+        end
     end
 else 
     nu = 0;
