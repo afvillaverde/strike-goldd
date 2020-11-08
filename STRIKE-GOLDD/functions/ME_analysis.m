@@ -25,8 +25,8 @@ else
     w=[];
     nw=0;
 end
-%========================Initialize variables=============================%
 
+%========================Initialize variables=============================%
 me_x   = sym(zeros(n*opts.multiexp_numexp,1));
 me_h   = sym(zeros(m*opts.multiexp_numexp,1));
 me_f   = sym(zeros(n*opts.multiexp_numexp,1));
@@ -34,7 +34,6 @@ me_u   = sym(zeros(nu*opts.multiexp_numexp,1));
 me_w   = sym(zeros(nw*opts.multiexp_numexp,1));
 
 %========================Multi-experiment model===========================%
-
 variables=[x;w;u];
 
 for i=1:opts.multiexp_numexp
