@@ -42,7 +42,7 @@ Extension for finding Lie symmetries (STRIKE-GOLDD 2.1.6):
 
 Extension for multi-experiment analysis and implementation of the ORC-DF algorithm (STRIKE-GOLDD 2.2):
 
-[Martínez N & Villaverde AF (2020). Nonlinear observability algorithms with known and unknown inputs: analysis and implementation. *Mathematics* (accepted), arxiv:2006.00859 [eess.SY]](https://arxiv.org/abs/2006.00859)
+[Martínez N & Villaverde AF (2020). Nonlinear observability algorithms with known and unknown inputs: analysis and implementation. *Mathematics* 8(11), 1876, doi:10.3390/math8111876](https://doi.org/10.3390/math8111876)
 
 
 ## Disclaimer
