@@ -18,7 +18,6 @@ opts.numeric    = 0;       % calculate rank numerically (= 1) or symbolically (=
 opts.replaceICs = 0;       % replace states with specific initial conditions (= 1) or use generic values (= 0) when calculating rank
 opts.checkObser = 1;       % check state observability, i.e. identifiability of initial conditions (1 = yes; 0 = no).
 opts.checkObsIn = 1;       % check input observability (1 = yes; 0 = no).
-opts.findcombos = 0;       % try to find identifiable combinations? (1 = yes; 0 = no).
 opts.unidentif  = 0;       % use method to try to establish unidentifiability instead of identifiability, when using decomposition. 
 opts.forcedecomp= 0;       % always decompose model (1 = yes; 0 = no).
 opts.decomp     = 0;       % decompose model if the whole model is too large (1 = yes; 0 = no: instead, calculate rank with few Lie derivatives).
