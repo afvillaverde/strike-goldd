@@ -27,7 +27,9 @@ tStart = tic;
 clearvars -global
 global x f p maxstates u unidflag w wlvector 
 if nargin > 0
-    [modelname,paths,opts,submodels,prev_ident_pars] = run(varargin{1});
+    copyfile(varargin{1},"current_options.m");
+    [modelname,paths,opts,submodels,prev_ident_pars] = current_options;
+    delete("current_options.m");
 else
     [modelname,paths,opts,submodels,prev_ident_pars] = options;
 end
@@ -40,7 +42,7 @@ addpath(genpath(paths.functions));
 
 %==========================================================================
 % ORC-DF algorithm (only for affine-in-inputs systems):
-if opts.affine
+if opts.affine==1
     ORC_DF(modelname,opts);
     return
 end % If not, run the FISPO algorithm:
@@ -49,7 +51,7 @@ end % If not, run the FISPO algorithm:
 % Load model:
 
 % Convert model to multi-experiment form (Optional):
-if opts.multiexp
+if opts.multiexp == 1
     ME_analysis(modelname,opts);
     modelname=strcat(modelname,'_',num2str(opts.multiexp_numexp),'Exp');
 end
@@ -92,12 +94,8 @@ if size(x,2)>size(x,1),x=x.';end
 if size(p,2)>size(p,1),p=p.';end
 if exist('w','var')
     nw = numel(w); % number of unknown inputs
-    if opts.multiexp
-        if multiexp_user_nnzDerU
-            opts.nnzDerW=opts.multiexp_nnzDerW;
-        else
-            opts.nnzDerW=repmat(opts.nnzDerU,1,opts.multiexp_numexp);
-        end
+    if opts.multiexp == 1
+        opts.nnzDerW=repmat(opts.nnzDerW,1,opts.multiexp_numexp);
     end
 else 
     nw = 0;
@@ -105,12 +103,8 @@ else
 end
 if exist('u','var')
     nu = numel(u); % number of known inputs
-    if opts.multiexp
-        if multiexp_user_nnzDerU
-            opts.nnzDerU=opts.multiexp_nnzDerU;
-        else
-            opts.nnzDerU=repmat(opts.nnzDerU,1,opts.multiexp_numexp);
-        end
+    if opts.multiexp == 1
+        opts.nnzDerU=repmat(opts.nnzDerU,1,opts.multiexp_numexp);
     end
 else 
     nu = 0;

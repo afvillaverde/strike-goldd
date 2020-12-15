@@ -1,15 +1,24 @@
 
-function Lie_Symmetry(varargin)
+function [transf,nuevas_variables,allVar,z_v]=Lie_Symmetry(varargin)
 
-if nargin > 0
-    modelname = varargin;
-    load(modelname{1});
-else
-    modelname = options;
-    load(modelname);
-end
+    if nargin > 0
+        modelname = varargin;
+        load(modelname{1});
+        [~,paths,opts,submodels,prev_ident_pars] = options();
+        ansatz=opts.ansatz;
+        pMax=opts.degree;
+        tmax=opts.tmax;
+        ode_n=opts.ode_n;
+    else
+        [modelname,paths,opts,submodels,prev_ident_pars] = options();
+        load(modelname);
+        ansatz=opts.ansatz;
+        pMax=opts.degree;
+        tmax=opts.tmax;
+        ode_n=opts.ode_n;
+    end
 
-
+addpath(strcat(pwd,filesep,'aux_Lie_symmetry\lie_sym_functions'));
 %%  SYMMETRY SEARCH ALGORITHM WITH INFINITESIMALS
 %   Code for symmetry search algorithm with infinitesimals generators.
 %   This is the procedure that is followed:
@@ -21,24 +30,22 @@ end
 %   7. System resolution.
 %   8. Calculate generators and transformations (if exist).
 % 
-%%  ANSATZ TYPE
-%   You must manually choose what type of polynomial you want to use.
-%   uni -> Univariate (1)
-%   par -> Partially variate (2)
-%   multi -> Multivariate (3)
-ansatz=2;
 
-%%  DATA READING AND PARAMETER DEFINITION
-%   The first two parameters defined can be modified.
-pMax=2; %   Maximum degree of Ansatz polynomials
-tmax=7; %   Maximum degree of Lie series
-
-%   Reading data
+%%   Reading data
 if exist('u') && isempty(u)==0
     assume(u,'real');
 end
-
-if exist('w','var')
+%   Check if are columns or rows
+if isrow(p)==1
+    p=transpose(p);
+end
+if isrow(x)==1
+   x=transpose(x); 
+end
+if exist('w','var') && isempty(w)==1
+    if isrow(w)==1
+        w=transpose(w);
+    end
     allVar=[x;w;p];
     nw=length(w);
 else
@@ -48,7 +55,9 @@ end
 if exist('ics','var') && isempty(ics)==0
     nics=length(ics);
     ic=[];
-    ics=transpose(ics);
+    if 1==iscolumn(ics)
+        ics=transpose(ics);
+    end
     %   Numerator and denominator
     [num_ics,den_ics]=numden(sym(ics));
     ind=zeros(nics,1);
@@ -117,8 +126,6 @@ elseif (ansatz==2)
 else
     [infi,rs_k] = create_multi(allVar,m_aux,l_p,l_x,p,pMax,nw,x);
 end
-
-fprintf('Ansatz --> OK \n');
 l_rs=length(rs_k);
 
 %%  ANSATZ DERIVATIVES
@@ -136,13 +143,9 @@ else
         diffini=[diffini,diff(infi(i),allVar(i))];
     end
 end
-
-fprintf('Ansatz derivatives --> OK \n');
-
 %% NUMERATOR AND DENOMINATOR
 [num_f,den_f]= numden(f);
 [num_h,den_h]= numden(h);
-fprintf('Numerator and denominator --> OK \n');
 
 %% DERIVATIVES OF THE NUMERATOR, DENOMINATOR AND ICS
 diff_num_f = [];
@@ -168,7 +171,6 @@ else
        diff_den_h = [diff_den_h,diff(den_h,allVar(i))];
     end
 end    
-fprintf('Derivatives of the numerator, denominator and ICS --> OK \n');  
 
 %% CONSTRUCTION OF POLYNOMIES AND SYSTEM
 l_in=length(infi);
@@ -181,13 +183,9 @@ else
                         infi,l_f,l_in,num_f,rs_k);
 end
 
-fprintf('States Polynomial --> OK \n');
-
 %   POL. OBS.
 [A_obs] = pol_obs(allVar,den_h,diff_den_h,diff_num_h,...
-                        infi,l_h,l_in,num_h,rs_k);
-
-fprintf('Observation Polynomial --> OK \n');                    
+                        infi,l_h,l_in,num_h,rs_k);                  
                     
 %   ICS
 if isempty(ics)==0 
@@ -200,29 +198,24 @@ else
     A=[A_sta;A_obs];
 end
 
-fprintf('System --> OK \n');
-
 %%  SYSTEM RESOLUTION
 V=null(A);
-fprintf('Kernel --> OK \n');
 si2=size(V);
 ind=si2(2);
 
 %%  TRANSFORMATIONS (IF THEY EXIST)
-if ind~=0       
-    [transf,nuevas_variables] = new_var(V,ind,infi,rs_k,allVar,l_allVar,tmax);
-    fprintf('\n\n ------------------------- \n');
-    fprintf('>>> Exist Symmetry\n');
-    fprintf(' ------------------------- \n');
-    fprintf(' ------------------------- \n');
-    fprintf('>>> Generators \n');
-    disp(transf);
-    fprintf(' ------------------------- \n');
-    fprintf('>>> Transformations \n');
-    disp(nuevas_variables);
+if ind~=0
+    % There is/are transformation(s) with this Ansatz and degree
+    [transf,nuevas_variables,z_v] = new_var(V,ind,infi,rs_k,allVar,l_allVar,tmax,ode_n);    
 else
-%   There is no infinitesimal generator    
-    fprintf('----No symmetry---- \n');
+    fprintf('\n--------------------------------------------------\n');
+    fprintf('>>> There are no transformations with these degree and/or Ansatz \n')
+    fprintf('\n--------------------------------------------------\n');
+    transf=[];
+    nuevas_variables=[];
+    allVar=[];
+    z_v=[];
+    return
 end
 toc
 
