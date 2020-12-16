@@ -21,7 +21,7 @@ parentpath = cd(cd('..'));
 if 0==isfolder(strcat(parentpath,filesep,'functions'))
     parentpath=strcat(pwd,filesep,'functions');
     cd(parentpath) 
-    fprintf('Changed working directory to functions folder. \n')
+    fprintf('Your folder has been changed. \n')
 end
 parentpath = cd(cd('..'));
 modelspath = strcat(parentpath,filesep,'models');

@@ -54,12 +54,12 @@ opts.multiexp_ics       = [ [1,0,0,1,0,1,0,0,0].', [1,0,0,1,0,1,0,0,0].' ];
 opts.multiexp_known_ics = [ [0,1,1,0,1,0,1,1,1].', [0,1,1,0,1,0,1,1,1].' ];
 
 %%% (7) LIE SYMMETRIES & REPARAMETERIZATION OPTIONS:
-opts.ansatz     = 3; % Type of Ansatz: %  uni -> Univariate (1)
+opts.ansatz     = 2; % Type of Ansatz: %  uni -> Univariate (1)
                                        %  par -> Partially variate (2)
                                        %  multi -> Multivariate (3)
 opts.degree     = 2; % Degree of Ansatz Polynomial
 opts.tmax       = 4; % Maximum degree of Lie series
-opts.ode_n      = 0; % use ode solver (=1) or not (=0)
+opts.ode_n      = 1; % (Only in Matlab R2020a and later:) use ode solver (=1) or not (=0)
 opts.use_existing_results = 0; % if the model has already been analysed with STRIKE-GOLDD (=1) or not (=0)
 opts.results_file = 'id_results_1D_BIG_p_16-Oct-2020.mat'; % .mat file to use if use_existing_results = 1                              
 

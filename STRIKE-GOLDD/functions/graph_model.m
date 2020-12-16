@@ -5,7 +5,7 @@
 clear;
 
 % Choose model and way of plotting it:
-modelname = 'Arabidopsis';
+modelname = '1D_BIG';
 plot_states_names = 1; %1: names, 0: indices
 
 % Add paths and load model:

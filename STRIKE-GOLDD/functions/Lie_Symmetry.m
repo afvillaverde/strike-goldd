@@ -42,10 +42,11 @@ end
 if isrow(x)==1
    x=transpose(x); 
 end
-if exist('w','var') && isempty(w)==1
+if exist('w','var') && isempty(w)==0
     if isrow(w)==1
         w=transpose(w);
     end
+    assume(w,'real');
     allVar=[x;w;p];
     nw=length(w);
 else
@@ -55,8 +56,8 @@ end
 if exist('ics','var') && isempty(ics)==0
     nics=length(ics);
     ic=[];
-    if 1==iscolumn(ics)
-        ics=transpose(ics);
+    if isrow(ics)==1
+         ics=transpose(ics); 
     end
     %   Numerator and denominator
     [num_ics,den_ics]=numden(sym(ics));
