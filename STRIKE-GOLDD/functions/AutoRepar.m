@@ -131,6 +131,11 @@ for it=1:num_repar
        fprintf('   Generator #%d has %d possible reparameterization(s) \n',j,length(col));
        dim=[dim;length(col)];
     end
+    [row1,~]=find(A==1);    %   Positions with scaling transf.
+    [row2,~]=find(A==2);    %   Positions with other type of elementary transf.
+    [val,~]=intersect(row1,row2);   %   Both
+    l_val=length(val);
+
     %% CHOOSE POSSIBLE PARAMETERS TO REMOVE
     sum_num_par=[];
     for j=1:c
@@ -219,6 +224,9 @@ for it=1:num_repar
         end
         epsilon_a=epsilon_t;
         chh=children(epsilon_t);
+        if iscell(chh)==1
+            chh=[chh{:}];
+        end
         epsilon_t=chh(1,1);
         leq1=simplify(log(epsilon_t),'IgnoreAnalyticConstraints',true);
         ceq1=coeffs(leq1,epsilon);
@@ -232,6 +240,9 @@ for it=1:num_repar
             aux2(col_z_v_3)=simplify(subs(aux2(col_z_v_3),exp_e,exp_p));
         elseif isempty(col_z_v_2)==0
             chh_2=children(isolate(epsilon_a,epsilon));
+            if iscell(chh_2)==1 % For R2020b
+                chh_2=[chh_2{:}];
+            end
             aux2=subs(aux2,epsilon,chh_2(1,2));
         end
         %------------------------------------------------------------------
@@ -260,6 +271,9 @@ for it=1:num_repar
             aux3(cols(num_par))=1;
         end
         chh=children(epsilon_t);
+        if iscell(chh)==1
+            chh=[chh{:}];
+        end
         epsilon_t=chh(1,2);
         aux1=subs(nv_new(num_gen,:),epsilon,epsilon_t);
         %------------------------------------------------------------------
@@ -270,6 +284,9 @@ for it=1:num_repar
             aux2(col_z_v_3)=simplify(subs(aux2(col_z_v_3),exp_e,exp_p));
         elseif isempty(col_z_v_2)==0
             chh_2=children(isolate(epsilon_a,epsilon));
+            if iscell(chh_2)==1 % For R2020b
+                chh_2=[chh_2{:}];
+            end
             aux2=subs(aux2,epsilon,chh_2(1,2));
         end
         %------------------------------------------------------------------
