@@ -131,11 +131,6 @@ for it=1:num_repar
        fprintf('   Generator #%d has %d possible reparameterization(s) \n',j,length(col));
        dim=[dim;length(col)];
     end
-    [row1,~]=find(A==1);    %   Positions with scaling transf.
-    [row2,~]=find(A==2);    %   Positions with other type of elementary transf.
-    [val,~]=intersect(row1,row2);   %   Both
-    l_val=length(val);
-
     %% CHOOSE POSSIBLE PARAMETERS TO REMOVE
     sum_num_par=[];
     for j=1:c
@@ -209,7 +204,7 @@ for it=1:num_repar
     else
         cl  =   find(allVar(cols(num_par))==allVar);
     end
-    if ( A(num_gen,cl)==1 && isempty(find(num_gen==val,1))==1)
+    if ( A(num_gen,cl)==1 )
         % Scaling
         if num_gen~=1
             eq1=nv_new(num_gen,cl)==1;
@@ -251,7 +246,7 @@ for it=1:num_repar
         disp(f_s)
         fprintf('h:\n')
         disp(h_s)
-    elseif ( A(num_gen,cl)==2 && isempty(find(num_gen==val,1))==1)
+    elseif ( A(num_gen,cl)==2 )
         % Other elementary transformations (excluding scaling)
         if num_gen~=1
             eq1=cnbs(num_par+sum(dim(1:num_gen-1)))==1;

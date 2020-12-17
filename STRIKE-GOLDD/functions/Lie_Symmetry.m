@@ -18,7 +18,7 @@ function [transf,nuevas_variables,allVar,z_v]=Lie_Symmetry(varargin)
         ode_n=opts.ode_n;
     end
 
-addpath(strcat(pwd,filesep,'aux_Lie_symmetry\lie_sym_functions'));
+clc
 %%  SYMMETRY SEARCH ALGORITHM WITH INFINITESIMALS
 %   Code for symmetry search algorithm with infinitesimals generators.
 %   This is the procedure that is followed:
