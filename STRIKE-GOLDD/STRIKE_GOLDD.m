@@ -26,14 +26,26 @@ fprintf(' -------------------------------- \n');
 tStart = tic;
 clearvars -global
 global x f p maxstates u unidflag w wlvector 
-if nargin > 0
-    copyfile(varargin{1},"current_options.m");
-    [modelname,paths,opts,submodels,prev_ident_pars] = current_options;
-    delete("current_options.m");
-else
-    [modelname,paths,opts,submodels,prev_ident_pars] = options;
+switch nargin
+    case 0
+        [modelname,paths,opts,submodels,prev_ident_pars] = options;
+        nmf = pwd;
+    case 1
+        copyfile(varargin{1},"current_options.m");
+        [modelname,paths,opts,submodels,prev_ident_pars] = current_options;
+        delete("current_options.m");
+        nmf = pwd;
+    case 2
+        [~,paths,opts,submodels,prev_ident_pars] = options;
+        modelname = varargin{1};
+        mf = split(pwd,"\");
+        nmf=join(mf(1:end-1),"\");
+        nmf=char(nmf);
+        paths.meigo     = '/.../MEIGO';      
+        paths.models    = strcat(nmf,filesep,'models');
+        paths.results   = strcat(nmf,filesep,'results');
+        paths.functions = strcat(nmf,filesep,'functions');
 end
-nmf = pwd;
 maxstates = opts.maxstates;
 addpath(genpath(paths.meigo));
 addpath(genpath(paths.models));
@@ -454,24 +466,6 @@ else
 		else             
 			fprintf('\n >>> These parameters are identifiable:\n      %s ',char(p_id));
 		end  
-		%==========================================================================
-		% Search for identifiable parameter combinations (combos):
-		if opts.findcombos == 1 && exist('onx','var') == 1
-			% Save results first, just in case the user kills the process:
-			resultsname = sprintf('id_results_%s',modelname);
-			fullresultsname = strcat(nmf,filesep,'results',filesep,resultsname);
-			save(fullresultsname)      
-			[parpde,stringpde] = combos(p_un,onx,n);
-			if numel(parpde) == 0
-				fprintf('\n\n >>> No identifiable combinations of parameters could be found');
-			else
-				fprintf('\n\n >>> There are identifiable combinations of parameters.');
-				fprintf('\n     They can be found by solving the following PDE(s):');
-				for numpdes = 1:numel(stringpde)
-					fprintf('\n     %s \n',char(stringpde));
-				end
-			end       
-		end
 	end
 		
 	if numel(obs_states)>0,    fprintf('\n >>> These states are observable (and their initial conditions, if considered unknown, are identifiable):\n      %s ',char(obs_states)); end
