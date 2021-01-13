@@ -38,9 +38,9 @@ switch nargin
     case 2
         [~,paths,opts,submodels,prev_ident_pars] = options;
         modelname = varargin{1};
-        mf = split(pwd,"\");
-        nmf=join(mf(1:end-1),"\");
-        nmf=char(nmf);
+        mf   = pwd;
+        idcs = strfind(mf,filesep);
+        nmf  = mf(1:idcs(end)-1);
         paths.meigo     = '/.../MEIGO';      
         paths.models    = strcat(nmf,filesep,'models');
         paths.results   = strcat(nmf,filesep,'results');
