@@ -44,7 +44,7 @@ Extension for multi-experiment analysis and implementation of the ORC-DF algorit
 
 [Martínez N & Villaverde AF (2020). Nonlinear observability algorithms with known and unknown inputs: analysis and implementation. *Mathematics* 8(11), 1876, doi:10.3390/math8111876](https://doi.org/10.3390/math8111876)
 
-Extension for automatic reparameterization (STRIKE-GOLDD 3.0):
+Extension for automatic reparameterization, AutoRepar (STRIKE-GOLDD 3.0):
 
 [Massonis G, Banga JR, Villaverde AF (2020). Repairing dynamic models: a method to obtain identifiable and observable reparameterizations with mechanistic insights. *arXiv*, arXiv:2012.09826 [eess.SY]](https://arxiv.org/abs/2012.09826)
 
