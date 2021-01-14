@@ -7,7 +7,7 @@ STRIKE-GOLDD is a MATLAB toolbox that analyses nonlinear models of ordinary diff
 
 The analysis is performed symbolically, and yields results that are valid for all values of the variables, except for a set of measure zero. More information is available at the [STRIKE-GOLDD website](https://sites.google.com/site/strikegolddtoolbox/home).
 
-STRIKE-GOLDD was created by [Alejandro F. Villaverde](https://sites.google.com/site/alexfvillaverde/), <afvillaverde@iim.csic.es>. 
+STRIKE-GOLDD was created by [Alejandro F. Villaverde](https://sites.google.com/site/alexfvillaverde/), <afvillaverde@uvigo.gal>. 
 
 ## Installation and requirements
 
