@@ -55,7 +55,7 @@ addpath(genpath(paths.functions));
 %==========================================================================
 % ORC-DF algorithm (only for affine-in-inputs systems):
 if opts.affine==1
-    ORC_DF(modelname,opts);
+    ORC_DF(modelname,opts,prev_ident_pars);
     return
 end % If not, run the FISPO algorithm:
 
