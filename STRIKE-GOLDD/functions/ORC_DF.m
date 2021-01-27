@@ -2,7 +2,7 @@
 %====ORC-DF: An implementation of the Observability Rank Condition for====%
 %======================systems with Direct Feedthrough====================%
 
-function ORC_DF(modelname,opts)
+function ORC_DF(modelname,opts,prev_ident_pars)
 
 tStart=tic;
 
