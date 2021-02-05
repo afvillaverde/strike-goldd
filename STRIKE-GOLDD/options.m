@@ -30,13 +30,13 @@ opts.nnzDerW    = 1;       % numbers of nonzero derivatives of the unmeasured in
 opts.nnzDerIn   = opts.nnzDerU; % deprecated option
 
 %%% (4) AFFINE OPTIONS (to use the ORC-DF algorithm):
-opts.affine          = 0;     % use the ORC-DF algorithm for affine control systems (=1) or not(=0).
-opts.affine_tStage   = 1000;  % max. computation time for the last iteration.
-opts.affine_kmax     = 4;     % max. number of iterations.
-opts.affine_parallel = 0;     % use parallel toolbox (=1) or not (=0) to calculate partial ranks.
-opts.affine_workers  = 4;     % number of workers for parallel pool.
-opts.affine_graphics = 1;     % display graphics (=1) or not (=0)
-affine_delete_model  = 1;     % delete affine model when finished (=1) or not (=0).
+opts.affine              = 0;     % use the ORC-DF algorithm for affine control systems (=1) or not(=0).
+opts.affine_tStage       = 1000;  % max. computation time for the last iteration.
+opts.affine_kmax         = 4;     % max. number of iterations.
+opts.affine_parallel     = 0;     % use parallel toolbox (=1) or not (=0) to calculate partial ranks.
+opts.affine_workers      = 4;     % number of workers for parallel pool.
+opts.affine_graphics     = 1;     % display graphics (=1) or not (=0)
+opts.affine_delete_model = 1;     % delete affine model when finished (=1) or not (=0).
 
 %%% (5) DECOMPOSITION OPTIONS -- User-defined submodels for decomposition (may be left = []): 
 submodels = []; 
@@ -45,12 +45,16 @@ submodels = [];
 %         submodels{2}  = [1 3];
 
 %%% (6) MULTI-EXPERIMENT OPTIONS:
-opts.multiexp           = 0;    % Execute multi-experiment analysis (=1) or not (=0).
-opts.multiexp_numexp    = 2;    % Number of experiments.
-opts.multiexp_user_ics  = 0;    % Set manually the initial conditions for each experiment (=1) or not (=0).
+opts.multiexp              = 0;     % Execute multi-experiment analysis (=1) or not (=0).
+opts.multiexp_numexp       = 2;     % Number of experiments.
+opts.multiexp_user_nnzDerU = 0;     % Set manually the number of non-zero known input derivatives in each experiment (=1) or not (=0).
+opts.multiexp_nnzDerU      = [0 1]; % Number of non-zero known input derivatives in each experiment (Rows=inputs;Columns=experiments).
+opts.multiexp_user_nnzDerW = 0;     % Set manually the number of non-zero unknown input derivatives in each experiment (=1) or not (=0).
+opts.multiexp_nnzDerW      = [1 0]; % Number of non-zero unknown input derivatives in each experiment (Rows=inputs;Columns=experiments).
+opts.multiexp_user_ics     = 0;     % Set manually the initial conditions for each experiment (=1) or not (=0).
 %- Multi-experiment initial conditions (Rows=variables;Columns:experiments):
 opts.multiexp_ics       = [ [1,0,0,1,0,1,0,0,0].', [1,0,0,1,0,1,0,0,0].' ];
-%- Which initial conditions are replaced (Rows=variables;Columns:experiments):
+%- Which initial conditions are replaced (Rows=variables;Columns=experiments):
 opts.multiexp_known_ics = [ [0,1,1,0,1,0,1,1,1].', [0,1,1,0,1,0,1,1,1].' ];
 
 %%% (7) LIE SYMMETRIES & REPARAMETERIZATION OPTIONS:
