@@ -429,9 +429,8 @@ while k<opts.affine_kmax+1 && new_stage_time(k)<opts.affine_tStage
             scatter(i*ones(1,nxau(k+1)-nxau(i+1)),(nxau(k+1)+1)*ones(1,nxau(k+1)-nxau(i+1))-non_def_states,70,'.','k','LineWidth',1.5)
         end
         %Plot settings:
-        lgd=legend('Unobservable states','Observable states','Non-defined states','location','northeast');
-        lgd.FontSize=7;
-        axis([0 k+4 0 nxau(k+1)+1]);                        
+        legend('Unobservable states','Observable states','Non-defined states','location','southoutside')
+        axis([0 k+1 0 nxau(k+1)+1]);                        
         xticks(1:k);
         xlabel('Stage');
         yticks(1:nxau(k+1));
@@ -509,7 +508,7 @@ while k<opts.affine_kmax+1 && new_stage_time(k)<opts.affine_tStage
             %Print x-tick at unobservable states:
             scatter(i*ones(n_unobs,1),(nxau(k+1)+1)*ones(n_unobs,1)-unobs_i,50,'x','b','LineWidth',1)
             %Plot settings:
-            axis([0 k+4 0 nxau(k+1)+1]);                        
+            axis([0 k+1 0 nxau(k+1)+1]);                        
             xticks(1:k);
             xlabel('k');
             yticks(1:nxau(k+1));
@@ -527,7 +526,7 @@ while k<opts.affine_kmax+1 && new_stage_time(k)<opts.affine_tStage
             %Print black point at undefined states:
             scatter(i*ones(1,nxau(k+1)-nxau(i+1)),(nxau(k+1)+1)*ones(1,nxau(k+1)-nxau(i+1))-non_def_states,70,'.','k','LineWidth',1.5)
         end
-        legend('Unobservable states.','Observable states.','Non-defined states.')
+        legend('Unobservable states.','Observable states.','Non-defined states.','location','southoutside')
         hold off
         title('Observable and unobservable states VS stage number')
         
@@ -679,12 +678,12 @@ for i=1:k-1
     %Print black dot at undefined states:
     scatter(i*ones(1,nxau(k)-nxau(i+1)),(nxau(k)+1)*ones(1,nxau(k)-nxau(i+1))-non_def_states,70,'.','k','LineWidth',1.5)
 end
-legend('Unobservable states.','Observable states.','Non-defined states.')
+legend('Unobservable states.','Observable states.','Non-defined states.','location','southoutside')
 hold off
 %Plot settings:
 title('Observable and unobservable states VS stage number')
 xlabel('Stage')
-axis([0 k+4 0 nxau(k)+1]);                        
+axis([0 k+1 0 nxau(k)+1]);                        
 xticks(1:k-1);
 yticks(1:nxau(k));
 yticklabels(xau_ticks);
