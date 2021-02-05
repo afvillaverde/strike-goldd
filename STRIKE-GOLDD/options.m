@@ -33,8 +33,7 @@ opts.nnzDerIn   = opts.nnzDerU; % deprecated option
 opts.affine                = 0;     % use the ORC-DF algorithm for affine control systems (=1) or not(=0).
 opts.affine_tStage         = 1000;  % max. computation time for the last iteration.
 opts.affine_kmax           = 4;     % max. number of iterations.
-opts.affine_parallel_Lie   = 0;     % use parallel toolbox (=1) or not (=0) to calculate Lie derivatives. 
-opts.affine_parallel_rank  = 0;     % use parallel toolbox (=1) or not (=0) to calculate partial ranks.
+opts.affine_parallel       = 0;     % use parallel toolbox (=1) or not (=0) to calculate partial ranks.
 opts.affine_workers        = 4;     % number of workers for parallel pool.
 opts.affine_graphics       = 1;     % display graphics (=1) or nor (=0)
 
