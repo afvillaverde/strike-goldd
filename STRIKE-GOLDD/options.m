@@ -30,12 +30,13 @@ opts.nnzDerW    = 1;       % numbers of nonzero derivatives of the unmeasured in
 opts.nnzDerIn   = opts.nnzDerU; % deprecated option
 
 %%% (4) AFFINE OPTIONS (to use the ORC-DF algorithm):
-opts.affine                = 0;     % use the ORC-DF algorithm for affine control systems (=1) or not(=0).
-opts.affine_tStage         = 1000;  % max. computation time for the last iteration.
-opts.affine_kmax           = 4;     % max. number of iterations.
-opts.affine_parallel       = 0;     % use parallel toolbox (=1) or not (=0) to calculate partial ranks.
-opts.affine_workers        = 4;     % number of workers for parallel pool.
-opts.affine_graphics       = 1;     % display graphics (=1) or nor (=0)
+opts.affine          = 0;     % use the ORC-DF algorithm for affine control systems (=1) or not(=0).
+opts.affine_tStage   = 1000;  % max. computation time for the last iteration.
+opts.affine_kmax     = 4;     % max. number of iterations.
+opts.affine_parallel = 0;     % use parallel toolbox (=1) or not (=0) to calculate partial ranks.
+opts.affine_workers  = 4;     % number of workers for parallel pool.
+opts.affine_graphics = 1;     % display graphics (=1) or not (=0)
+affine_delete_model  = 1;     % delete affine model when finished (=1) or not (=0).
 
 %%% (5) DECOMPOSITION OPTIONS -- User-defined submodels for decomposition (may be left = []): 
 submodels = []; 
