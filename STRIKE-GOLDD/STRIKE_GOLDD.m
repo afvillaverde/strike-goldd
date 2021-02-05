@@ -107,7 +107,11 @@ if size(p,2)>size(p,1),p=p.';end
 if exist('w','var')
     nw = numel(w); % number of unknown inputs
     if opts.multiexp == 1
-        opts.nnzDerW=repmat(opts.nnzDerW,1,opts.multiexp_numexp);
+        if opts.multiexp_user_nnzDerW
+            opts.nnzDerW=opts.multiexp_nnzDerW;
+        else
+            opts.nnzDerW=repmat(opts.nnzDerW,1,opts.multiexp_numexp);
+        end
     end
 else 
     nw = 0;
@@ -116,7 +120,11 @@ end
 if exist('u','var')
     nu = numel(u); % number of known inputs
     if opts.multiexp == 1
-        opts.nnzDerU=repmat(opts.nnzDerU,1,opts.multiexp_numexp);
+        if opts.multiexp_user_nnzDerU
+            opts.nnzDerU=opts.multiexp_nnzDerU;
+        else
+            opts.nnzDerU=repmat(opts.nnzDerU,1,opts.multiexp_numexp);
+        end
     end
 else 
     nu = 0;
