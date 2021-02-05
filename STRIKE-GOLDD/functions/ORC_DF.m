@@ -419,8 +419,7 @@ while k<=opts.affine_kmax && stage_time(k+1)-stage_time(k)<opts.affine_tStage
             %Print black point at undefined states:
             scatter(i*ones(1,nxau(k+1)-nxau(i+1)),(nxau(k+1)+1)*ones(1,nxau(k+1)-nxau(i+1))-non_def_states,70,'.','k','LineWidth',1.5)
         end
-        lgd=legend('Unobservable states','Observable states','Non-defined states','location','southoutside','Orientation','horizontal');
-        lgd.FontSize=7;
+        legend('Unobservable states','Observable states','Non-defined states','location','southoutside','Orientation','horizontal');
         axis([0 k+1 0 nxau(k+1)+1]);                        
         xticks(1:k);
         xlabel('Stage');
