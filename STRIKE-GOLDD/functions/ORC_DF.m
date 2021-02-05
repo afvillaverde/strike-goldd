@@ -44,7 +44,7 @@ end
 if exist('w','var')&&numel(w)>0 %#ok<*NODEF>
     nw=numel(w);
     if opts.multiexp
-        if multiexp_user_nnzDerW
+        if opts.multiexp_user_nnzDerW
             opts.nnzDerW=opts.multiexp_nnzDerW;
         else
             opts.nnzDerW=repmat(opts.nnzDerW,1,opts.multiexp_numexp);
