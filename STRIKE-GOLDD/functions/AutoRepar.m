@@ -246,6 +246,8 @@ for it=1:num_repar
             aux2=subs(aux2,epsilon,chh_2(1,2));
         end
         %------------------------------------------------------------------
+        aux2=simp(allVar,aux2,chh(1,2));
+        %------------------------------------------------------------------
         f_s=simplify(subs(f,allVar,aux3));
         h_s=simplify(subs(h,allVar,aux3));
         fprintf('>>> Transformed variables: \n')
@@ -289,6 +291,8 @@ for it=1:num_repar
             end
             aux2=subs(aux2,epsilon,chh_2(1,2));
         end
+        %------------------------------------------------------------------
+        aux1=simp(allVar,aux1,chh(1,2));
         %------------------------------------------------------------------
         f_s=simplify(subs(f,allVar,aux3));
         h_s=simplify(subs(h,allVar,aux3));        
