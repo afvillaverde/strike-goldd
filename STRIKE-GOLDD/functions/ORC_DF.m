@@ -372,12 +372,12 @@ while k<=opts.affine_kmax && stage_time(k+1)-stage_time(k)<opts.affine_tStage
 
     fprintf('\n     Rank = %d (calculated in %d seconds)',rango(k),last_rank_time)
 
-    %Actualization of partial ranks matrix:
+    %Update partial ranks matrix:
     partial_ranks(1:nxau(k+1),k)=rango(k)-1;
-    %Almacenate indexes of unobservable states:
+    %Store indices of unobservable states:
     [nf_unobs,~]=find(unobs_states_ind(1:nxau(k+1),k));
 
-    %Comprobate if the model is FISPO:
+    %Check if the model is FISPO:
     if rango(k)==nxau(k+1)
         %Print results if the model is FISPO:
         stage_time(k+1)=stage_time(k)+toc(tStage);
@@ -652,7 +652,7 @@ while k<=opts.affine_kmax && stage_time(k+1)-stage_time(k)<opts.affine_tStage
             elim_dif_omega(:,nf_unobs(i))=[];     
             new_rank(i)=rank(elim_dif_omega);
         end
-        %Actualization of obs-unobs states array:
+        %Update obs-unobs states array:
         for i=1:numel(nf_unobs)
             if new_rank(i)<rango(k)
                 unobs_states_ind(nf_unobs(i),k)=0;
@@ -675,15 +675,15 @@ while k<=opts.affine_kmax && stage_time(k+1)-stage_time(k)<opts.affine_tStage
 
 %==================Actualization of system dynamics=======================%
 
-    %Almacenate unobs-obs. indexes at the k-th stage:
+    %Store unobs-obs. indices at the k-th stage:
     unobs_states_ind(:,k+1)=unobs_states_ind(:,k); 
-    %Actualization of state-unknown inputs system dynamics:
+    %Update state-unknown inputs system dynamics:
     fxw=[fxw;w_der(nz_r,k+1)];
-    %Actualization of known inputs contribution to system dynamics:
+    %Update known inputs contribution to system dynamics:
     fu=[fu;zeros(nxau(k+1)-nxau(k),nu)];
-    %Actualization of stage computation time:
+    %Update stage computation time:
     stage_time(k+1)=stage_time(k)+toc(tStage);
-    %Index actualization:
+    %Update index:
     k=k+1;
 end 
 
@@ -792,19 +792,19 @@ fprintf('\n\n ------------------------ \n');
 fprintf(' >>> RESULTS SUMMARY:\n');
 fprintf(' ------------------------ \n');
 
-% Almacenate indexes of observable states:
+% Store indices of observable states:
 [nf_obs_states,~]=find(unobs_states_ind(1:ns,k)==0);
 obs_states=xaug(nf_obs_states);
 
 unobs_states_ind(1:ns,k)=1;
 
-% Almacenate indexes of identifiable parameters:
+% Store indices of identifiable parameters:
 [nf_obs_par,~]=find(unobs_states_ind(1:(ns+np),k)==0);
 obs_par=xaug(nf_obs_par);
 
 unobs_states_ind((ns+1):(ns+np),k)=1;
 
-% Almacenate indexes of observable inputs:
+% Store indices of observable inputs:
 if nw>0
     [nf_obs_inputs,~]=find(unobs_states_ind(:,k)==0);
     obs_inputs=xaug(nf_obs_inputs);
