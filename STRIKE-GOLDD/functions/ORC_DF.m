@@ -309,8 +309,8 @@ stage_time(1)=toc(tStage);
 %(Optional) Define numerical equivalents of the symbolic variables:
 if opts.numeric == 1
     [~,~,nz_w_der]=find(w_der);
-    xaug=[xaug;[f;zeros(np,1);reshape(nz_w_der,[],1)];h;u];
-    allvariables = symvar(xaug);
+    xau=[xaug;[f;zeros(np,1);reshape(nz_w_der,[],1)];h;u];
+    allvariables = symvar(xau);
     numbers = vpa(0.1+rand(size(allvariables)));
 end  
 
