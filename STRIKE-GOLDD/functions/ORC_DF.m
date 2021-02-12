@@ -378,7 +378,7 @@ while k<=opts.affine_kmax && stage_time(k+1)-stage_time(k)<opts.affine_tStage
     [nf_unobs,~]=find(unobs_states_ind(1:nxau(k+1),k));
 
     %Comprobate if the model is FISPO:
-    if rank_dif_omega(k)==nxau(k+1)
+    if rango(k)==nxau(k+1)
         %Print results if the model is FISPO:
         stage_time(k+1)=stage_time(k)+toc(tStage);
 
