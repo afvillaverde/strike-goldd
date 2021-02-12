@@ -297,7 +297,7 @@ unobs_states_ind=ones(max_ns,opts.affine_kmax);
 Delta_Omega=[hxw;hu];
 tDer=tic;
 %First derivative of codistribution vector:
-dif_Delta_omega=jacobian(Delta_Omega,xau);
+dif_Delta_omega=jacobian(Delta_Omega,xaug);
 dif_time(1)=toc(tDer);
 %Initialize observability matrix:
 dif_Omega=dif_Delta_omega;
@@ -309,7 +309,7 @@ stage_time(1)=toc(tStage);
 %(Optional) Define numerical equivalents of the symbolic variables:
 if opts.numeric == 1
     [~,~,nz_w_der]=find(w_der);
-    xaug=[xau;[f;zeros(np,1);reshape(nz_w_der,[],1)];h;u];
+    xaug=[xaug;[f;zeros(np,1);reshape(nz_w_der,[],1)];h;u];
     allvariables = symvar(xaug);
     numbers = vpa(0.1+rand(size(allvariables)));
 end  
@@ -330,13 +330,13 @@ while k<=opts.affine_kmax && stage_time(k+1)-stage_time(k)<opts.affine_tStage
     Delta_Omega=reshape(Delta_Omega,[],1);
     %Including as states only nonzero kth derivatives of unknown inputs:
     [nz_r,~,nz_w_der] = find(w_der(:,k)); 
-    xau=[xau;nz_w_der];
+    xaug=[xaug;nz_w_der];
     %Number of states of k-augmented system:
-    nxau(k+1)=numel(xau);
+    nxau(k+1)=numel(xaug);
     %Calculate the differential of Omega:
     tDer=tic;
     %Calculate the differential of Delta_Omega:
-    dif_Delta_omega=jacobian(Delta_Omega,xau);
+    dif_Delta_omega=jacobian(Delta_Omega,xaug);
     %Actualization of the differential of Omega:
     dif_Omega=[dif_Omega zeros(numel(dif_Omega(:,1)),nxau(k+1)-nxau(k)); dif_Delta_omega];
     %Computation time of the differential of Omega:
