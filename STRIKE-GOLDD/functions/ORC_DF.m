@@ -274,7 +274,7 @@ nxau(1)=ns+np+nw;
 %Maximum number of states:
 max_ns=nxau(1)+numel(find(w_der));
 %Initialize rank of Omega for each stage:
-rank_dif_omega=zeros(1,opts.affine_kmax);
+rango=zeros(1,opts.affine_kmax);
 %Initialize matrix whose components are the values of partial ranks for each state and iteration:
 partial_ranks=zeros(max_ns,opts.affine_kmax);
 
@@ -282,7 +282,7 @@ tStage=tic;
 %Stage counter:
 k=0;
 %0-augmented system state:
-xau=[x;p;w];
+xaug=[x;p;w];
 %Reshape hu as a column vector:
 hu=reshape(hu,[],1); 
 %System dynamics of 0-augmented system:
@@ -364,16 +364,16 @@ while k<=opts.affine_kmax && stage_time(k+1)-stage_time(k)<opts.affine_tStage
 
     %Calculate rank of k-observability matrix:
     tRank=tic;
-    rank_dif_omega(k)=rank(num_dif_omega);
+    rango(k)=rank(num_dif_omega);
     %Actualization of rank computation time:
     last_rank_time=toc(tRank);
     rank_time(k)=rank_time(k)+last_rank_time;
     rank_time(k+1)=rank_time(k);
 
-    fprintf('\n     Rank = %d (calculated in %d seconds)',rank_dif_omega(k),last_rank_time)
+    fprintf('\n     Rank = %d (calculated in %d seconds)',rango(k),last_rank_time)
 
     %Actualization of partial ranks matrix:
-    partial_ranks(1:nxau(k+1),k)=rank_dif_omega(k)-1;
+    partial_ranks(1:nxau(k+1),k)=rango(k)-1;
     %Almacenate indexes of unobservable states:
     [nf_unobs,~]=find(unobs_states_ind(1:nxau(k+1),k));
 
@@ -396,7 +396,7 @@ while k<=opts.affine_kmax && stage_time(k+1)-stage_time(k)<opts.affine_tStage
         %All states are k-row observable:
         unobs_states_ind(:,k)=zeros(max_ns,1);
         %Ticks including system states for labelling y-axis:
-        xau_ticks=flip(arrayfun(@char, xau, 'uniform',0));                                     
+        xau_ticks=flip(arrayfun(@char, xaug, 'uniform',0));                                     
         for i=1:k
             %Unobservable states at k=i:
             unobs_i=find(unobs_states_ind(1:nxau(i+1),i));
@@ -498,7 +498,7 @@ while k<=opts.affine_kmax && stage_time(k+1)-stage_time(k)<opts.affine_tStage
 
         return 
 
-    elseif nw==0 && k>1 && rank_dif_omega(k)==rank_dif_omega(k-1)
+    elseif nw==0 && k>1 && rango(k)==rango(k-1)
 
         %If rank(Omega_k)=rank(Omega_k-1), the rank will not increase anymore and system is not observable:
         stage_time(k+1)=stage_time(k)+toc(tStage);
@@ -508,7 +508,7 @@ while k<=opts.affine_kmax && stage_time(k+1)-stage_time(k)<opts.affine_tStage
 
         if opts.affine_graphics
         %Ticks including system states for labelling y-axis:
-        xau_ticks=flip(arrayfun(@char, xau, 'uniform',0)); 
+        xau_ticks=flip(arrayfun(@char, xaug, 'uniform',0)); 
         for i=1:k
             %Unobservable states at k=i:
             unobs_i=find(unobs_states_ind(1:nxau(i+1),i));
@@ -598,21 +598,21 @@ while k<=opts.affine_kmax && stage_time(k+1)-stage_time(k)<opts.affine_tStage
 
         %Observable and unobservable states:
         [nf_obs_states,~]=find(unobs_states_ind(1:ns,k)==0);
-        obs_states=xau(nf_obs_states);
+        obs_states=xaug(nf_obs_states);
 
         [nf_unobs_states,~]=find(unobs_states_ind(1:ns,k));
-        unobs_states=xau(nf_unobs_states);
+        unobs_states=xaug(nf_unobs_states);
 
         unobs_states_ind(1:ns,k)=1;
 
         %Identifiable and unidentifiable parameters:
         [nf_obs_par,~]=find(unobs_states_ind(1:(ns+np),k)==0);
-        obs_par=xau(nf_obs_par);
+        obs_par=xaug(nf_obs_par);
 
         unobs_states_ind(1:ns,k)=0;
 
         [nf_unobs_par,~]=find(unobs_states_ind(1:(ns+np),k));
-        unobs_par=xau(nf_unobs_par);
+        unobs_par=xaug(nf_unobs_par);
 
         fprintf('\n\n ------------------------ \n');
         fprintf(' >>> RESULTS SUMMARY:\n');
@@ -654,7 +654,7 @@ while k<=opts.affine_kmax && stage_time(k+1)-stage_time(k)<opts.affine_tStage
         end
         %Actualization of obs-unobs states array:
         for i=1:numel(nf_unobs)
-            if new_rank(i)<rank_dif_omega(k)
+            if new_rank(i)<rango(k)
                 unobs_states_ind(nf_unobs(i),k)=0;
                 partial_ranks(nf_unobs(i),k)=new_rank(i);
             end
@@ -667,7 +667,7 @@ while k<=opts.affine_kmax && stage_time(k+1)-stage_time(k)<opts.affine_tStage
             elim_dif_omega=num_dif_omega; 
             elim_dif_omega(:,nf_unobs(i))=[];      
             partial_ranks(nf_unobs(i),k)=rank(elim_dif_omega);
-            if partial_ranks(nf_unobs(i),k)<rank_dif_omega(k), unobs_states_ind(nf_unobs(i),k)=0;end
+            if partial_ranks(nf_unobs(i),k)<rango(k), unobs_states_ind(nf_unobs(i),k)=0;end
         end
         partial_rank_time(k)=partial_rank_time(k)+toc(tPartial);
         partial_rank_time(k+1)=partial_rank_time(k);
@@ -691,7 +691,7 @@ end
 
 if opts.affine_graphics
     %Ticks with states for labelling y-axis:
-    xau_ticks=flip(arrayfun(@char, xau, 'uniform',0));
+    xau_ticks=flip(arrayfun(@char, xaug, 'uniform',0));
     %Plot unobservable and observable states for k=1,...,opts.kmax:
     figure(1)
     for i=1:k-1
@@ -794,20 +794,20 @@ fprintf(' ------------------------ \n');
 
 % Almacenate indexes of observable states:
 [nf_obs_states,~]=find(unobs_states_ind(1:ns,k)==0);
-obs_states=xau(nf_obs_states);
+obs_states=xaug(nf_obs_states);
 
 unobs_states_ind(1:ns,k)=1;
 
 % Almacenate indexes of identifiable parameters:
 [nf_obs_par,~]=find(unobs_states_ind(1:(ns+np),k)==0);
-obs_par=xau(nf_obs_par);
+obs_par=xaug(nf_obs_par);
 
 unobs_states_ind((ns+1):(ns+np),k)=1;
 
 % Almacenate indexes of observable inputs:
 if nw>0
     [nf_obs_inputs,~]=find(unobs_states_ind(:,k)==0);
-    obs_inputs=xau(nf_obs_inputs);
+    obs_inputs=xaug(nf_obs_inputs);
 end
 
 if numel(obs_states)>0, fprintf('\n >>> The original observable states are: \n   %s', char(obs_states));end
