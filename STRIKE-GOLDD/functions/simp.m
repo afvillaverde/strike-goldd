@@ -18,9 +18,14 @@ function [sim_vec] = simp(allVar,vec,eps_var)
         ch=num2cell(ch);
     end
     for i=1:ncol
-       [~,ncol_2]=size(ch{1,i}); 
+       [~,ncol_2]=size(ch{1,i});
+       if iscell(ch{1,i})==1 %For R2020b
+           aux_v=[ch{1,i}{:}];
+       else
+           aux_v=[ch{1,i}(:)];
+       end
        for j=1:ncol_2
-          [n,d]=numden(ch{1,i}(1,j));
+          [n,d]=numden(aux_v(j));
           if n==1 %% Only denominator 
               [c,p]=coeffs(d,allVar);
               if (numel(unique(abs(p)))==1 && abs(c)~=1) % Some expression contains exp(ep)

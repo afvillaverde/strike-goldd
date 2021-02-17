@@ -99,7 +99,7 @@ for it=1:num_repar
        num=expand(num);
        ind=[];
        for i=1:l
-           temp1=children(num(i));
+           temp1=children(collect(num(i),epsilon));
            l_temp1=length(temp1);
            if l_temp1 <3
                for k=1:l_temp1
@@ -117,7 +117,7 @@ for it=1:num_repar
        col(ind)=[];
        cnb(ind)=[];
        %% DELETE INFINITESIMAL GENERATOR OF IDENTIFIABLE PARAMATERS
-       if (isempty(p_id)==0 && isempty(col)==0)
+       if (exist('p_id')==1 && isempty(p_id)==0 && isempty(col)==0)
            [ind_p_id,~]=find(allVar==p_id);
            [~,ind_p_id_col]=find(col==ind_p_id);
            if (isempty(ind_p_id_col)==0)
@@ -295,7 +295,7 @@ for it=1:num_repar
         aux1=simp(allVar,aux1,chh(1,2));
         %------------------------------------------------------------------
         f_s=simplify(subs(f,allVar,aux3));
-        h_s=simplify(subs(h,allVar,aux3));        
+        h_s=simplify(subs(h,allVar,aux3));
         fprintf('>>> Transformed variables: \n')
         for ii=1:length(aux1)
             fprintf('%s <-- %s \n',allVar(ii),aux1(ii))
