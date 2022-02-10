@@ -78,6 +78,9 @@ for ind=1:qreal % only the first 'qreal' elements of pred are parameters; the fo
         else
             if opts.unidentif == 0
             	fprintf('\n    => Parameter %s is structurally identifiable',char(pred(ind)));
+                if size(new_ident_pars,2) ~= size(pred(ind),2)
+                    new_ident_pars = new_ident_pars.';               
+                end 
             	new_ident_pars = [new_ident_pars; pred(ind)];  
             else
             	fprintf('\n    => We cannot decide about parameter %s at the moment',char(pred(ind)));
@@ -111,6 +114,9 @@ if nargin == 4 || 7 % if there is no decomposition
                 else
                     if opts.unidentif == 0
                         fprintf('\n    => State %s is observable',char(xred(original_index)));
+                        if size(new_obs_states,2) ~= size(xred(original_index),2)
+                            new_obs_states = new_obs_states.';                       
+                        end 
                         new_obs_states = [new_obs_states; xred(original_index)];  
                     else
                         fprintf('\n    => We cannot decide about state %s at the moment',char(xred(original_index)));
