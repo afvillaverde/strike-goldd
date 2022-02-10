@@ -485,7 +485,10 @@ function [identifiables,nonidentif,obs_states,unobs_states] = decomp(modelname,o
        % And of states / initial conditions:
         if size(new_obs_states,2) ~= 1
             new_obs_states = transpose(new_obs_states);
-        end  
+        end
+        if size(obs_states,2) ~= size(new_obs_states,2)
+            obs_states = obs_states.';
+        end   
         obs_states   = [obs_states; new_obs_states];
         obs_states   = symvar(obs_states);
         if size(new_unobs_states,2) ~= 1
