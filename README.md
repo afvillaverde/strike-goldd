@@ -46,7 +46,7 @@ Extension for multi-experiment analysis and implementation of the ORC-DF algorit
 
 Extension for automatic reparameterization, AutoRepar (STRIKE-GOLDD 3.0):
 
-[Massonis G, Banga JR, Villaverde AF (2022). AutoRepar: A method to obtain identifiable and observable reparameterizations of dynamic models with mechanistic insight. *International Journal of Robust and Nonlinear Control*, in press](https://doi.org/10.1002/rnc.5887)
+[Massonis G, Banga JR, Villaverde AF (2022). AutoRepar: A method to obtain identifiable and observable reparameterizations of dynamic models with mechanistic insight. *International Journal of Robust and Nonlinear Control*, in press, doi:10.1002/rnc.5887](https://doi.org/10.1002/rnc.5887)
 
 
 ## Disclaimer
