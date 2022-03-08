@@ -282,6 +282,16 @@ tStage=tic;
 %Stage counter:
 k=0;
 %0-augmented system state:
+[dim_x_f,dim_x_c] = size(x); [dim_p_f,dim_p_c] = size(p); [dim_w_f,dim_w_c] = size(w);
+if dim_x_c > dim_x_f
+    x = transpose(x);
+end
+if dim_p_c > dim_p_f
+    p = transpose(p);
+end
+if dim_w_c > dim_w_f
+    w = transpose(w);
+end
 xaug=[x;p;w];
 %Reshape hu as a column vector:
 hu=reshape(hu,[],1); 
