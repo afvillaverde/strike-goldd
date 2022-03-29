@@ -17,11 +17,15 @@ function [new_var] =sol(allVar, transf)
     snv=[];
     AA=sym('aa', [l 1]);
     AA=string(AA);
-    S=orderfields(S,AA);
-    v=fieldnames(S);
-    for j=1:length(v)
-        myVar=S.(v{j});
-        snv=[snv,myVar];
+    if isstruct(S)==1
+        S=orderfields(S,AA);
+        v=fieldnames(S);
+        for j=1:length(v)
+            myVar=S.(v{j});
+            snv=[snv,myVar];
+        end
+    else
+        snv=S;
     end
     new_var=allVar;
     new_var(k)=snv;
