@@ -48,10 +48,19 @@ switch nargin
 end
 r  = size(numonx,2); % before: q+n+nw; but with unknown inputs there may also be derivatives
 new_ident_pars   = identifiables;
+if size(new_ident_pars,2)>size(new_ident_pars,1)
+    new_ident_pars = transpose(new_ident_pars);
+end
 new_nonid_pars   = [];
 new_obs_states   = obs_states;
+if size(new_obs_states,2)>size(new_obs_states,1)
+    new_obs_states = transpose(new_obs_states);
+end
 new_unobs_states = [];
 new_obs_in       = obs_inputs;
+if size(new_obs_in,2)>size(new_obs_in,1)
+    new_obs_in = transpose(new_obs_in);
+end
 new_unobs_in     = [];
     
 
@@ -78,9 +87,6 @@ for ind=1:qreal % only the first 'qreal' elements of pred are parameters; the fo
         else
             if opts.unidentif == 0
             	fprintf('\n    => Parameter %s is structurally identifiable',char(pred(ind)));
-                if size(new_ident_pars,2) ~= size(pred(ind),2)
-                    new_ident_pars = new_ident_pars.';               
-                end 
             	new_ident_pars = [new_ident_pars; pred(ind)];  
             else
             	fprintf('\n    => We cannot decide about parameter %s at the moment',char(pred(ind)));
@@ -114,9 +120,6 @@ if nargin == 4 || 7 % if there is no decomposition
                 else
                     if opts.unidentif == 0
                         fprintf('\n    => State %s is observable',char(xred(original_index)));
-                        if size(new_obs_states,2) ~= size(xred(original_index),2)
-                            new_obs_states = new_obs_states.';                       
-                        end 
                         new_obs_states = [new_obs_states; xred(original_index)];  
                     else
                         fprintf('\n    => We cannot decide about state %s at the moment',char(xred(original_index)));
