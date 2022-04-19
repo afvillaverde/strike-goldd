@@ -9,6 +9,9 @@
 ![GitHub top language](https://img.shields.io/github/languages/top/Xabo-RB/strike-goldd?color=blue&label=Matlab)
 ![GitHub issues](https://img.shields.io/github/issues-raw/Xabo-RB/strike-goldd?color=orange&label=Open%20issues)
 
+![GitHub forks](https://img.shields.io/github/forks/Xabo-RB/strike-goldd?style=social)
+![GitHub Repo stars](https://img.shields.io/github/stars/Xabo-RB/strike-goldd?style=social)
+![GitHub watchers](https://img.shields.io/github/watchers/Xabo-RB/strike-goldd?style=social)
 
 STRIKE-GOLDD is a MATLAB toolbox that analyses nonlinear models of ordinary differential equations. It performs a simultaneous assessment of:
 - state **observability**,
