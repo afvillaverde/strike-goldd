@@ -1,6 +1,6 @@
 # About STRIKE-GOLDD
 
-![GitHub commit activity](https://img.shields.io/github/commit-activity/y/Xabo-RB/strike-goldd?style=plastic)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/y/Xabo-RB/strike-goldd?label=Commit%20activity&style=plastic)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Xabo-RB/strike-goldd?color=yellow&label=Last%20commit&style=plastic)
 
 STRIKE-GOLDD is a MATLAB toolbox that analyses nonlinear models of ordinary differential equations. It performs a simultaneous assessment of:
