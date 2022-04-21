@@ -6,15 +6,19 @@
 STRIKE-GOLDD is a MATLAB toolbox that analyses nonlinear models of ordinary differential equations. It performs a simultaneous assessment of:
 - state **observability**,
 - parameter structural local **identifiability**,  
-- unknown **input observability** (supported since v2.1.1). 
+- unknown **input observability**. 
 
-The analysis is performed symbolically, and yields results that are valid for all values of the variables, except for a set of measure zero. More information is available at the [STRIKE-GOLDD website](https://sites.google.com/site/strikegolddtoolbox/home).
+Additional features include:
+- search for the **Lie symmetries** that underlie non-observability and non-identifiability, 
+- automatic **reparameterization** to obtain a fully observable and identifiable model. 
 
-STRIKE-GOLDD was created by [Alejandro F. Villaverde](https://sites.google.com/site/alexfvillaverde/), <afvillaverde@uvigo.gal>. 
+Most of these analyses are performed symbolically, and yield results that are valid for all values of the variables, except for a set of measure zero.
+
+STRIKE-GOLDD was created by [Alejandro F. Villaverde](http://afvillaverde.webs.uvigo.gal/), <afvillaverde@uvigo.gal>. 
 
 ## Installation and requirements
 
-STRIKE-GOLDD requires a MATLAB installation with the Symbolic toolbox. Additionally, if one wishes to use optimization-based decomposition, the MATLAB version of the [MEIGO](http://nautilus.iim.csic.es/~gingproc/meigo.html) toolbox is required.
+STRIKE-GOLDD requires a MATLAB installation with the Symbolic Math Toolbox. 
 
 To use STRIKE-GOLDD you just need to:
 1. download the code
@@ -23,7 +27,9 @@ To use STRIKE-GOLDD you just need to:
 4. define the problem by editing `options.m`
 5. run `STRIKE-GOLDD`
 
-More information can be found in the [STRIKE-GOLDD manual](STRIKE-GOLDD/doc/STRIKE-GOLDD_manual.pdf)
+If one wishes to use optimization-based decomposition (which is seldom necessary), the MATLAB version of the [MEIGO](http://nautilus.iim.csic.es/~gingproc/meigo.html) toolbox is also required.
+
+More information can be found in the [STRIKE-GOLDD manual](STRIKE-GOLDD/doc/STRIKE-GOLDD_manual.pdf).
 
 ## Publications
 
