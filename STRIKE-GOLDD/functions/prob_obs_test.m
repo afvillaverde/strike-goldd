@@ -62,6 +62,7 @@ else
     nu = 0;
     u = [];
 end
+if size(u,2)>size(u,1),u=u.';end
 fprintf('\n >>> The model contains:\n %d states:\n %s',n,char(x));
 fprintf('\n %d outputs:\n %s',m,char(h));
 fprintf('\n %d known inputs:\n %s',nu,char(u));
