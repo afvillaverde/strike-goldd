@@ -2,7 +2,7 @@
 %====ORC-DF: An implementation of the Observability Rank Criterion for====%
 %=====================systems with Direct Feedthrough=====================%
 
-function ORC_DF(modelname,opts,prev_ident_pars)
+function ORC_DF(modelname,opts,prev_ident_pars,nmf)
 
 tStart=tic;
 
@@ -25,7 +25,7 @@ end
 
 load(modelname) %#ok<*LOAD>
 
-fprintf('\n >>> Analyzing observability of %s with affine in control system algorithm\n',modelname);
+fprintf('\n >>> Analyzing the %s model with the ORC-DF algorithm...\n',modelname);
 
 %======================Dimensions of the problem==========================%
 
@@ -829,8 +829,9 @@ totaltime=toc(tStart);
 fprintf('\n\n Total execution time: %d \n\n',totaltime);
 
 % Save results:
-resultsname = sprintf('id_results_%s',modelname);
-fullresultsname = strcat(pwd,filesep,'results',filesep,resultsname,'_',date);
+
+resultsname = sprintf('id_results_%s_%s',modelname,date);
+fullresultsname = strcat(nmf,filesep,'results',filesep,resultsname);
 warning off 'parallel:cluster:CannotSaveCorrectly'
 save(fullresultsname);
 

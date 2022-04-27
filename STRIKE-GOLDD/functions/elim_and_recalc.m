@@ -100,34 +100,33 @@ if nargin == 4 || 7 % if there is no decomposition
     % ELIMINATE A STATE:
     %==========================================================================
     % At each iteration we try removing a different state from 'xred':
-    if opts.checkObser == 1
-        for ind=1:numel(unmeas_xred_indices) % for each unmeasured state
-            original_index = unmeas_xred_indices(ind); % in this script, 'original_index' refers to xred
-            isobservable = ismember(xred(original_index),obs_states);
-            if isobservable
-                fprintf('\n State %s has already been classified as observable.',char(xred(original_index)))
-            else              
-                indices = 1:r;
-                indices(original_index) = []; %indices(original_index==unmeas_xred_indices) = [];
-                num_rank = rank(numonx(:,indices));
-                if num_rank == rangoinicial
-                    if (opts.unidentif == 1) || (opts.forcedecomp == 0 && opts.decomp == 0 && unidflag == 1) %%%
-                        fprintf('\n    => State %s is unobservable',char(xred(original_index)));
-                        new_unobs_states = [new_unobs_states; xred(original_index)];
-                    else
-                        fprintf('\n    => We cannot decide about state %s at the moment',char(xred(original_index)));
-                    end 
+    for ind=1:numel(unmeas_xred_indices) % for each unmeasured state
+        original_index = unmeas_xred_indices(ind); % in this script, 'original_index' refers to xred
+        isobservable = ismember(xred(original_index),obs_states);
+        if isobservable
+            fprintf('\n State %s has already been classified as observable.',char(xred(original_index)))
+        else              
+            indices = 1:r;
+            indices(original_index) = []; %indices(original_index==unmeas_xred_indices) = [];
+            num_rank = rank(numonx(:,indices));
+            if num_rank == rangoinicial
+                if (opts.unidentif == 1) || (opts.forcedecomp == 0 && opts.decomp == 0 && unidflag == 1) %%%
+                    fprintf('\n    => State %s is unobservable',char(xred(original_index)));
+                    new_unobs_states = [new_unobs_states; xred(original_index)];
                 else
-                    if opts.unidentif == 0
-                        fprintf('\n    => State %s is observable',char(xred(original_index)));
-                        new_obs_states = [new_obs_states; xred(original_index)];  
-                    else
-                        fprintf('\n    => We cannot decide about state %s at the moment',char(xred(original_index)));
-                    end   
-                end
+                    fprintf('\n    => We cannot decide about state %s at the moment',char(xred(original_index)));
+                end 
+            else
+                if opts.unidentif == 0
+                    fprintf('\n    => State %s is observable',char(xred(original_index)));
+                    new_obs_states = [new_obs_states; xred(original_index)];  
+                else
+                    fprintf('\n    => We cannot decide about state %s at the moment',char(xred(original_index)));
+                end   
             end
         end
     end
+
 
     %==========================================================================
     % ELIMINATE AN UNKNOWN INPUT:

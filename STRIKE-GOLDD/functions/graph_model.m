@@ -5,7 +5,7 @@
 clear;
 
 % Choose model and way of plotting it:
-modelname = '1D_BIG';
+modelname = '1D_BIG'; % 'BachmannJAKSTAT'
 plot_states_names = 1; %1: names, 0: indices
 
 % Add paths and load model:
@@ -31,8 +31,13 @@ y = sym(zeros(m,1));
 for k = 1:numel(y)
     y(k) = sym(sprintf('y%d', k));
 end
-totsize   = n+q+m;
-totfun    = [f;h;zeros(q,1)];
+totsize = n+q+m;
+if size(f,2) ~= 1, f = transpose(f); end
+if size(h,2) ~= 1, h = transpose(h); end
+if size(x,2) ~= 1, x = transpose(x); end
+if size(y,2) ~= 1, y = transpose(y); end
+if size(p,2) ~= 1, p = transpose(p); end
+totfun = [f;h;zeros(q,1)];
 totnames  = [x;y;p];
 nodenames = cell(1,totsize);  
 for numvar = 1:totsize

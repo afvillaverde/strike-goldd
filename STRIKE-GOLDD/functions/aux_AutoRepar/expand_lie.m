@@ -1,5 +1,5 @@
 function [exp_e,exp_p] = expand_lie(pMax,p)
-%% Expand, as a Taylor series, the paramter to be removed and exp(epsilon)
+%% Expand, as a Taylor series, the parameter to be removed and exp(epsilon)
 % Input:    pMax --> Maximum degree of Lie series
 %           p --> Parameter
 % Output:   exp_e --> Vector with coefficients of Taylor series of exp(epsilon)
