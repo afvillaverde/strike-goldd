@@ -30,8 +30,8 @@ end
 
 %==========================================================================
 % Dimensions of the problem:
-m    = numel(h);                  % number of outputs
-n    = numel(x);                  % number of states
+m    = numel(h);                  %#ok<NODEF> % number of outputs
+n    = numel(x);                  %#ok<NODEF> % number of states
 q    = numel(p);                  % number of unknown parameters
 if size(h,2)>size(h,1),h=h.';end
 if size(x,2)>size(x,1),x=x.';end
@@ -77,7 +77,7 @@ fprintf('\n >>> Computations are done modulo: %d \n',Myprime);
 %==========================================================================
 % Build Oi, the observability-identifiability matrix:
 tic
-[onx]=build_OI_sed(Myprime,x,p,u,h,f,n,q,nu,m);
+[onx]=build_OI_sed(Myprime,x,p,u,h,f,n,q,nu,m,opts);
 timematrix=toc;
 fprintf('\n >>> Observability-Identifiability matrix calculated in %d seconds. \n',timematrix);
 

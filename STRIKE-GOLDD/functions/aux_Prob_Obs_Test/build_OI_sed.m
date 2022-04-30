@@ -4,7 +4,7 @@
 % built using Sedoglavic's probabilistic approach.
 %--------------------------------------------------------------------------
 
-function [onx]=build_OI_sed(Myprime,x,p,u,h,f,n,q,nu,m)
+function [onx]=build_OI_sed(Myprime,x,p,u,h,f,n,q,nu,m,opts)
 
 % variable t
 t=sym('t');
@@ -14,8 +14,26 @@ Sol = randi([0,Myprime],n,1);
 p_esp = randi([0,Myprime],q,1);
 
 if nu~=0
-    u_esp_coef = randi([0,Myprime],nu,2+n+q);
-    u_esp=sum(t.^[1+n+q:-1:0].*u_esp_coef,2); %#ok<NBRAK> 
+    if length(opts.nnzDerU) == 1
+        if opts.nnzDerU == inf
+            u_esp_coef = randi([0,Myprime],nu,1+n+q);
+            u_esp=sum(t.^[n+q:-1:0].*u_esp_coef,2); %#ok<NBRAK>
+        else
+            u_esp_coef=randi([0,Myprime],nu,opts.nnzDerU+1);
+            u_esp=sum(t.^[opts.nnzDerU:-1:0].*u_esp_coef,2); %#ok<NBRAK> 
+        end
+    else
+        u_esp=sym('u_esp',[nu,1]);
+        for ind_u=1:nu
+            if opts.nnzDerU(ind_u) == inf
+                u_esp_coef = randi([0,Myprime],nu,1+n+q);
+                u_esp=sum(t.^[n+q:-1:0].*u_esp_coef,2); %#ok<NBRAK>
+            else
+                u_esp_coef=randi([0,Myprime],1,opts.nnzDerU(ind_u)+1);
+                u_esp(ind_u)=sum(t.^[opts.nnzDerU(ind_u):-1:0].*u_esp_coef,2); %#ok<NBRAK> 
+            end
+        end 
+    end
 else
     u_esp=[];
 end

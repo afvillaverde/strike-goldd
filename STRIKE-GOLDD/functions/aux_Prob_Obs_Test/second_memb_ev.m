@@ -10,6 +10,15 @@ SLP_ev=subs(SLP,[xd;x],[Sold;Sol]);
 SLP_ev=subs(SLP_ev,VSM,SM);
 SLP_ev=subs(SLP_ev,VSMd,SMd);
 
+% check for mesured values
+k=conj(symvar(SLP_ev))';
+[~, original_index] = ismember(t,k); 
+k(original_index)=[]; 
+if ~isempty(k)
+    k_esp = randi([0,Myprime],length(k),1);
+    SLP_ev=subs(SLP_ev,k,k_esp);
+end
+
 % disp(SLP_ev)
 
  SLP_ev=taylor(SLP_ev,t,'order',Order);  
