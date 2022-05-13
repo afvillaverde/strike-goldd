@@ -3,7 +3,7 @@
 % Gives a matrix with the system, the inverse of A, the inverse of A&*B
 % (logarithmic derivative) and partial derivatives of System w.r.t. initial
 % conditions end parameters.
-function LVS=calcLVS(x,xd,p,w,f,VSM,VSMd,n,q,nw)
+function LVS=calcLVS(x,xd,p,w,f,VSM,VSMd,n,nw,q)
 
 tic
 %--------------------------------------------------------------------------

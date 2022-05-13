@@ -49,6 +49,7 @@ else
     nw = 0;
     w = [];
 end
+if size(w,2)>size(w,1),w=w.';end
 if exist('u','var')
     nu = numel(u); %#ok<NODEF> % number of known inputs
     if opts.multiexp == 1
@@ -67,7 +68,7 @@ fprintf('\n >>> The model contains:\n %d states:\n %s',n,char(x));
 fprintf('\n %d outputs:\n %s',m,char(h));
 fprintf('\n %d known inputs:\n %s',nu,char(u));
 fprintf('\n %d unknown inputs:\n %s',nw,char(w));
-fprintf('\n %d parameters:\n %s',q,char(p));
+                                                                                    fprintf('\n %d parameters:\n %s',q,char(p));
 
 %==========================================================================
 % Assignment of the prime numer used by the method:
@@ -77,14 +78,14 @@ fprintf('\n >>> Computations are done modulo: %d \n',Myprime);
 %==========================================================================
 % Build Oi, the observability-identifiability matrix:
 tic
-[onx]=build_OI_sed(Myprime,x,p,u,h,f,n,q,nu,m,opts);
+[onx]=build_OI_sed(Myprime,x,p,u,w,h,f,n,q,nu,nw,m,opts);
 timematrix=toc;
 fprintf('\n >>> Observability-Identifiability matrix calculated in %d seconds. \n',timematrix);
 
 %==========================================================================
-% Analysis of identifiability and observability:
+    % Analysis of identifiability and observability:
 tic
-[observable,unobservable] = ObservabilityAnalysis(x,p,onx,Myprime,n,q);
+ [observable,unobservable] = ObservabilityAnalysis(x,p,w,onx,Myprime,n,q,nw);
 timeAnalysis=toc;
 fprintf('\n >>> Matrix analyzed in %d seconds. \n',timeAnalysis);
 
