@@ -3,15 +3,15 @@
 % matrix that was previously calculated.
 %--------------------------------------------------------------------------
 
-function [observable,unobservable] = ObservabilityAnalysis(x,p,w,ObservabilityMatrix,prime,n,q,nw)
+function [observable,unobservable] = ObservabilityAnalysis(X,Theta,ObservabilityMatrix,p,n,l)
 
 observable   = [];
 unobservable = [];
-xtw          = [p;w;x];
+xtw          = [Theta;X];
 
-r=gfrank2(ObservabilityMatrix,prime);
+r=gfrank2(ObservabilityMatrix,p);
 fprintf('The rank of the observability matrix is %d \n', r);
-trnsdeg=n+q+nw-r;
+trnsdeg=n+l-r;
 fprintf('transcendence degree of k(U,Y) --> k(U,Y,x,p) is %d \n', trnsdeg);
 
 if trnsdeg==0
@@ -19,10 +19,10 @@ if trnsdeg==0
     observable = xtw;
 else
     fprintf('\n >>> The model is not fully structurally identifiable/observable.\n');
-    for i=1:n+q+nw
+    for i=1:n+l
             O=ObservabilityMatrix;
             O(:,i)=[];
-        if gfrank2(O,prime)==r
+        if gfrank2(O,p)==r
             unobservable=[unobservable,xtw(i)];
         else
             observable=[observable,xtw(i)];

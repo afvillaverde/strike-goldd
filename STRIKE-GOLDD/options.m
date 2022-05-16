@@ -6,7 +6,7 @@ function [modelname,paths,opts,submodels,prev_ident_pars] = options()
 
 %=================== BASIC OPTIONS ("CHOOSE WHAT TO DO") ==================
 %%% (1) CHOOSE MODEL TO ANALYSE: 
-modelname ='C2M_unknown_input_known_b';    % Name of a .mat file placed in the 'models' folder 
+modelname ='C2M';    % Name of a .mat file placed in the 'models' folder 
   
 %%% (2) CHOOSE TYPE OF ANALYSIS:
 opts.algorithm = 2;  % Choose one of the following:
@@ -22,7 +22,7 @@ opts.algorithm = 2;  % Choose one of the following:
 %%% (3) MAIN STRUCTURAL IDENTIFIABILITY & OBSERVABILITY (SIO) OPTIONS:
 opts.maxLietime = 100;     % In FISPO, max. time allowed for calculating 1 Lie derivative.
 opts.nnzDerU    = inf;     % In FISPO, numbers of nonzero derivatives of the measured inputs (u); may be 'inf'
-opts.nnzDerW    = 0;       % In FISPO and ORC-DF, numbers of nonzero derivatives of the unmeasured inputs (w); may be 'inf'
+opts.nnzDerW    = 1;       % In FISPO and ORC-DF, numbers of nonzero derivatives of the unmeasured inputs (w); may be 'inf'
 opts.numeric    = 0;       % In FISPO and ORC-DF, calculate rank numerically (= 1) or symbolically (= 0)
 opts.replaceICs = 0;       % In FISPO and ORC-DF, replace states with specific initial conditions (= 1) or use generic values (= 0) when calculating rank
 prev_ident_pars = [];      % parameters assumed known, or already classified as identifiable. Example:

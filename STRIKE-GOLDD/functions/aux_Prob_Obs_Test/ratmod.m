@@ -17,10 +17,10 @@ else
             b=1;
             tol=1/p;
             ex=10;
-            while a/b~=x && tol~=0
+            while a/b~=x
                 [a,b]=rat(x,tol);
                 tol=10^-ex;
-                ex=ex*10;
+                ex=ex^2;
             end
             [~,sol]=gcd(b,p);
             sol=mod(sol*a,p);
