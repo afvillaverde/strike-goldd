@@ -49,6 +49,7 @@ else
     nw = 0;
     w = [];
 end
+if size(w,2)>size(w,1),w=w.';end
 if exist('u','var')
     nu = numel(u); %#ok<NODEF> % number of known inputs
     if opts.multiexp == 1
@@ -68,6 +69,48 @@ fprintf('\n %d outputs:\n %s',m,char(h));
 fprintf('\n %d known inputs:\n %s',nu,char(u));
 fprintf('\n %d unknown inputs:\n %s',nw,char(w));
 fprintf('\n %d parameters:\n %s',q,char(p));
+
+%==========================================================================
+% Create array of unknown inputs vector and derivatives
+if nw~=0
+    if length(opts.nnzDerW) == 1
+        if opts.nnzDerW == inf
+            error('not able to do calculations with infinite number of unknown input derivatives')
+        elseif opts.nnzDerW == 0
+            wlvector=w;
+            wlvector_dot = zeros(nw,1);
+        else
+            w_der=sym('w_der',[nw*opts.nnzDerW,1]);
+            for ind_w=1:nw 
+                w_der(ind_w:nw:end-nw+ind_w) = sym(strcat(char(w(ind_w)),sprintf('_d')),[1 opts.nnzDerW]);  
+            end 
+            wlvector     = [w;w_der];  % reshape array as a column vector
+            wlvector_dot = [w_der;zeros(nw,1)];    % vector of derivatives of the unknown inputs 
+        end
+    else
+        wlvector=sym('w_der',[nw+sum(opts.nnzDerW),1]);
+        wlvector_dot=sym('wlvector_dot',[nw+sum(opts.nnzDerW),1]);
+        ind=1;
+        for ind_w=1:nw
+            if opts.nnzDerW(ind_w) == inf
+                error('not able to do calculations with infinite number of unknown input derivatives')
+            else   
+                wlvector(ind)=w(ind_w);
+                wlvector(ind+1:ind+opts.nnzDerW(ind_w)) = sym(strcat(char(w(ind_w)),sprintf('_d')),[1 opts.nnzDerW(ind_w)]); 
+                wlvector_dot(ind:ind+opts.nnzDerW(ind_w)-1)=wlvector(ind+1:ind+opts.nnzDerW(ind_w));
+                wlvector_dot(opts.nnzDerW(ind_w)+ind)=0;
+                ind=ind+opts.nnzDerW(ind_w)+1;
+            end
+        end 
+    end
+    % Construct augmented state vector and state function by taking unknown
+    % inputs ass state variables
+    x = [x;wlvector];
+    f = [f;wlvector_dot];
+    n = numel(x);
+end
+
+
 
 %==========================================================================
 % Assignment of the prime numer used by the method:

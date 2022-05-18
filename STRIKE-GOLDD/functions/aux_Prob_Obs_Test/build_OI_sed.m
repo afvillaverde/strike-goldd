@@ -60,8 +60,29 @@ SLP=subs(SLP,u,u_esp);
 SM=[zeros(n,q),eye(n)];
 Order=2;
 
+% derivation of variables and sensibility matrix
+Sold=diff(Sol,t);
+SMd=diff(SM,t);
+
+%substitutions
+SLP_ev=subs(SLP,[xd;x],[Sold;Sol]);
+SLP_ev=subs(SLP_ev,VSM,SM);
+SLP_ev=subs(SLP_ev,VSMd,SMd);
+
+% check for mesured values
+k=conj(symvar(SLP_ev))';
+[ch, original_index] = ismember(t,k); 
+if ch~=0
+    k(original_index)=[]; 
+end
+k_esp=[];
+if ~isempty(k)
+    k_esp = randi([0,Myprime],length(k),1);
+    SLP_ev=subs(SLP_ev,k,k_esp);
+end
+
 %evaluation of the power series Sol(...) on SLP
-[invsep_esp,logder_esp,sndmem_esp]=second_memb_ev(Sol,SM,xd,x,VSM,VSMd,SLP,t,Myprime,n,q,Order);
+[invsep_esp,logder_esp,sndmem_esp]=second_memb_ev(SLP_ev,t,Myprime,n,q,Order);
 
 %==========================================================================
 % Loop
@@ -97,8 +118,18 @@ while OneMoreLoop==1
         Order=Bound;
     end
     NewOrder=Order;
+
+    % derivation of variables and sensibility matrix
+    Sold=diff(Sol,t);
+    SMd=diff(SM,t);
+
+    %substitutions
+    SLP_ev=subs(SLP,[xd;x],[Sold;Sol]);
+    SLP_ev=subs(SLP_ev,VSM,SM);
+    SLP_ev=subs(SLP_ev,VSMd,SMd);
+    SLP_ev=subs(SLP_ev,k,k_esp);
     
-    [invsep_esp,logder_esp,sndmem_esp,system_esp]=second_memb_ev(Sol,SM,xd,x,VSM,VSMd,SLP,t,Myprime,n,q,Order);
+    [invsep_esp,logder_esp,sndmem_esp,system_esp]=second_memb_ev(SLP_ev,t,Myprime,n,q,Order);
 
     Order=OldOrder;
 
@@ -118,7 +149,7 @@ end
 VSMOut=sym('VSMOut',[n,n+q]);
 Output=contructOutput(h,x,p,m,n,q,VSMOut);
 
-SLPOut=OutputSLP(Output,p,p_esp,u,u_esp,x,Sol,VSMOut,SM,t,Order,Myprime);
+SLPOut=OutputSLP(Output,p,p_esp,u,u_esp,k,k_esp,x,Sol,VSMOut,SM,t,Order,Myprime);
 
 
 %==========================================================================
