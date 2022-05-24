@@ -836,6 +836,10 @@ warning off 'parallel:cluster:CannotSaveCorrectly'
 save(fullresultsname);
 
 % Delete affine model (optional):
-if opts.affine_delete_model, delete(affine_model_file);end
+if opts.affine_delete_model
+    if isfile(affine_model_file)
+        delete(affine_model_file);
+    end
+end
 
 end
