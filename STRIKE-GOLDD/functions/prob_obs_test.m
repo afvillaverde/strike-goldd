@@ -45,7 +45,7 @@ if exist('w','var')
             opts.nnzDerW=repmat(opts.nnzDerW,1,opts.multiexp_numexp);
         end
     end
-else 
+else
     nw = 0;
     w = [];
 end
@@ -71,11 +71,25 @@ fprintf('\n %d unknown inputs:\n %s',nw,char(w));
 fprintf('\n %d parameters:\n %s',q,char(p));
 
 %==========================================================================
-% Create array of unknown inputs vector and derivatives
+% Create array of unknown inputs vector and derivatives 
+nwl=0;
 if nw~=0
     if length(opts.nnzDerW) == 1
         if opts.nnzDerW == inf
-            error('not able to do calculations with infinite number of unknown input derivatives')
+             fprintf('\n\n ------------------------ \n');
+            fprintf(' >>> WARNING:\n');
+            fprintf(' ------------------------ \n');
+            fprintf(' Not able to do calculations with infinite number of unknown input derivatives:\n')
+            fprintf('     Number of derivatives for unknown input fixed to 3.\n')
+            fprintf('     To increse number of unknown input derivatives change number on file options.\n')
+            fprintf('     To try the analysis with an infinite number of unknown input derivatives use FISPO algorithm.\n')
+            opts.nnzDerW = 3;
+            w_der=sym('w_der',[nw*opts.nnzDerW,1]);
+            for ind_w=1:nw 
+                w_der(ind_w:nw:end-nw+ind_w) = sym(strcat(char(w(ind_w)),sprintf('_d')),[1 opts.nnzDerW]);  
+            end 
+            wlvector     = [w;w_der];  % reshape array as a column vector
+            wlvector_dot = [w_der;zeros(nw,1)];    % vector of derivatives of the unknown inputs
         elseif opts.nnzDerW == 0
             wlvector=w;
             wlvector_dot = zeros(nw,1);
@@ -88,21 +102,30 @@ if nw~=0
             wlvector_dot = [w_der;zeros(nw,1)];    % vector of derivatives of the unknown inputs 
         end
     else
+        for ind_w=1:nw
+            if opts.nnzDerW(ind_w) == inf
+                fprintf('\n\n ------------------------ \n');
+                fprintf(' >>> WARNING:\n');
+                fprintf(' ------------------------ \n');
+                fprintf(' Not able to do calculations with infinite number of unknown input derivatives:\n')
+                fprintf('     Number of derivatives for unknown input fixed to 3.\n')
+                fprintf('     To increse number of unknown input derivatives change number on file options.\n')
+                fprintf('     To try the analysis with an infinite number of unknown input derivatives use FISPO algorithm.\n')
+                opts.nnzDerW(ind_w)=3;
+            end 
+        end
         wlvector=sym('w_der',[nw+sum(opts.nnzDerW),1]);
         wlvector_dot=sym('wlvector_dot',[nw+sum(opts.nnzDerW),1]);
         ind=1;
-        for ind_w=1:nw
-            if opts.nnzDerW(ind_w) == inf
-                error('not able to do calculations with infinite number of unknown input derivatives')
-            else   
-                wlvector(ind)=w(ind_w);
-                wlvector(ind+1:ind+opts.nnzDerW(ind_w)) = sym(strcat(char(w(ind_w)),sprintf('_d')),[1 opts.nnzDerW(ind_w)]); 
-                wlvector_dot(ind:ind+opts.nnzDerW(ind_w)-1)=wlvector(ind+1:ind+opts.nnzDerW(ind_w));
-                wlvector_dot(opts.nnzDerW(ind_w)+ind)=0;
-                ind=ind+opts.nnzDerW(ind_w)+1;
-            end
+        for ind_w=1:nw  
+            wlvector(ind)=w(ind_w);
+            wlvector(ind+1:ind+opts.nnzDerW(ind_w)) = sym(strcat(char(w(ind_w)),sprintf('_d')),[1 opts.nnzDerW(ind_w)]); 
+            wlvector_dot(ind:ind+opts.nnzDerW(ind_w)-1)=wlvector(ind+1:ind+opts.nnzDerW(ind_w));
+            wlvector_dot(opts.nnzDerW(ind_w)+ind)=0;
+            ind=ind+opts.nnzDerW(ind_w)+1;
         end 
     end
+    nwl=numel(wlvector);
     % Construct augmented state vector and state function by taking unknown
     % inputs ass state variables
     x = [x;wlvector];
@@ -122,17 +145,22 @@ fprintf('\n >>> Computations are done modulo: %d \n',Myprime);
 tic
 [onx]=build_OI_sed(Myprime,x,p,u,h,f,n,q,nu,m,opts);
 timematrix=toc;
-fprintf('\n >>> Observability-Identifiability matrix calculated in %d seconds. \n',timematrix);
+% Report results:
+fprintf('\n\n ------------------------ \n');
+fprintf(' >>> RESULTS SUMMARY:\n');
+fprintf(' ------------------------ \n');
+fprintf('\n Observability-Identifiability matrix calculated in %d seconds. \n\n',timematrix);
 
 %==========================================================================
 % Analysis of identifiability and observability:
 tic
-[observable,unobservable] = ObservabilityAnalysis(x,p,onx,Myprime,n,q);
+[p_id,  p_un, obs_states, unobs_states, obs_inputs, unobs_inputs,meas_x] = ObservabilityAnalysis(x,p,onx,Myprime,n,q,nwl,h,u);
 timeAnalysis=toc;
+
 fprintf('\n >>> Matrix analyzed in %d seconds. \n',timeAnalysis);
 
 totaltime=timematrix+timeAnalysis;
-fprintf('\n >>> Total time: %d seconds. \n',totaltime);
+fprintf('\n Total execution time: %d seconds. \n',totaltime);
 
 resultsname = sprintf('id_results_%s_%s',modelname,date);
 fullresultsname = strcat(nmf,filesep,'results',filesep,resultsname);
