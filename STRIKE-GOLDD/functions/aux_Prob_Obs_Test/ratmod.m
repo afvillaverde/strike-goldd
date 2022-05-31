@@ -17,7 +17,7 @@ else
             b=1;
             tol=1/p;
             ex=10;
-            while a/b~=x
+            while a/b~=x && ex<=10^8
                 [a,b]=rat(x,tol);
                 tol=10^-ex;
                 ex=ex^2;

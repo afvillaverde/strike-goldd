@@ -45,7 +45,21 @@ if lexp==1
             b=b*aux2;
         end
     else
-        error('The model is not rational: it cannot be analysed with this algorithm. To use the FISPO algorithm instead, set in options.m: opts.algorithm = 1')
+        try
+            c=children(exp);
+            c=[c{:}];
+            a=taylor(exp,c,0);
+            b=1;
+        catch
+            try
+                c=children(exp);
+                c=[c{:}];
+                a=taylor(exp,c,1);
+                b=1;
+            catch
+                error('The model is not rational: it cannot be analysed with this algorithm. To use the FISPO algorithm instead, set in options.m: opts.algorithm = 1')
+            end
+        end
     end
 else
     error('Argument must be just one equation in rational2polinomial')
