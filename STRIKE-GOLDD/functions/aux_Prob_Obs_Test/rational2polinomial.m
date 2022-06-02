@@ -9,6 +9,11 @@ if lexp==1
         c=children(exp);
         c=[c{:}];
         if isSymType(c(2),'number')
+            if round(c(2))~=c(2)
+                c(2)=round(c(2));
+                warning('MATLAB:exponetial','Found noninteger exponents in the equations replaced with their rounded value')
+                warning('off','MATLAB:exponetial')
+            end
             if c(2)<0
                 [aux1,aux2]=rational2polinomial(c(1));
                 a=aux2^(-c(2));
@@ -50,12 +55,16 @@ if lexp==1
             c=[c{:}];
             a=taylor(exp,c,0);
             b=1;
+            warning('MATLAB:Taylor','Found nonrational functions in the equations and replaced them with their Taylor expansion')
+            warning("off",'MATLAB:Taylor')
         catch
             try
                 c=children(exp);
                 c=[c{:}];
                 a=taylor(exp,c,1);
                 b=1;
+                warning('MATLAB:Taylor','Found nonrational functions in the equations and replaced them with their Taylor expansion')
+                warning("off",'MATLAB:Taylor')
             catch
                 error('The model is not rational: it cannot be analysed with this algorithm. To use the FISPO algorithm instead, set in options.m: opts.algorithm = 1')
             end

@@ -104,7 +104,7 @@ else
 	        if numel(obs_inputs)>0,    fprintf('\n >>> These unmeasured inputs are observable:\n      %s ',char(obs_inputs)); end
             fprintf('\n >>> These unmeasured inputs are unobservable:\n      %s ',char(unobs_inputs));
         else
-            fprintf('\n >>> The model is structurally identifiable, observable and reconstrutible.');
+            fprintf('\n >>> The model is reconstrutible.');
             fprintf('\n     All its unknown inputs are observable.')
         end
     end
