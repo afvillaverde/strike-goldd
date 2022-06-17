@@ -1,5 +1,8 @@
+%--------------------------------------------------------------------------
 % function that calculates the derivatives of polynomials as vectors
 % on columns of a matrix
+%--------------------------------------------------------------------------
+
 function sol=dermatpoly(Mat,Order)
 
 [~,n]=size(Mat);

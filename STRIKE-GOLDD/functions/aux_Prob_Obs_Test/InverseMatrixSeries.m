@@ -1,5 +1,9 @@
-% use of newton operator for computation of calcInvHomSolInvA
+%--------------------------------------------------------------------------
+% use of newton operator for computation of InvHomSolInvA
+%--------------------------------------------------------------------------
+
 function sol=InverseMatrixSeries(Mat,LocalOrder,MatSize,MyPrime)
+
 if LocalOrder==1
     sol=Mat(end,:);
     aux=zeros(MatSize,MatSize);

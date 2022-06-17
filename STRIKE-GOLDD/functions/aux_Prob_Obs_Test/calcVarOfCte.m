@@ -1,5 +1,9 @@
-%computation of the variation of constants
-function VarOfCte=calcVarOfCte(HomSol,InvHomSolInvA,sndmem_esp,nr1,nc1,nr2,nc2,Order,Myprime)
+%--------------------------------------------------------------------------
+% computation of the variation of constants
+%--------------------------------------------------------------------------
+
+function VarOfCte=calcVarOfCte(HomSol,InvHomSolInvA,sndmem_esp,nr1, ...
+    nc1,nr2,nc2,Order,Myprime)
 
 aux=mod(multmatpolytrun( HomSol, ...
         ratmod(-intmatpoly(mod( ...

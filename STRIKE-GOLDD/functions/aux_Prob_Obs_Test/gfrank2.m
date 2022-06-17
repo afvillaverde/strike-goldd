@@ -1,4 +1,7 @@
+%--------------------------------------------------------------------------
 % compute the rank of a matrix over a Galois field.
+%--------------------------------------------------------------------------
+
 function rk = gfrank2(a, p)
 
 if nargin < 1
@@ -51,9 +54,6 @@ while (i <= n) && (k <= m)
     % clear all nonzero elements in the column except the major element.
     if (a(i,k) ~= 0)
      % to make major element into 1
-%         if (a(i,k) ~= 1)
-%            a(i,:) = rem(a(i,k)^(p-2) * a(i,:), p);
-%         end;
         ind = find(a(:,k) ~= 0)';
         ii = [ii i];
         kk = [kk k];
@@ -61,18 +61,17 @@ while (i <= n) && (k <= m)
         for j = ind
             if j > i
                 % to make sure the column will be zero except the major element.
-%                 a(j, vec) = rem(a(j, vec) + a(i, vec) * (p - a(j, k)), p);
                 a(j, vec) = rem(a(i,k)*a(j, vec) + a(i,vec)*(p - a(j, k)), p);
             end
         end
         k = k + 1;
     end
     i = i + 1;
-end;
+end
 
 rk = find(sum(a')>0,1,'last');
 if isempty(rk)
     rk = 0;
 end
 
-% eof
+

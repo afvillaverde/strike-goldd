@@ -9,7 +9,7 @@ function [onx]=build_OI_sed(Myprime,x,p,u,h,f,n,q,nu,m,opts)
 % variable t
 t=sym('t');
 
-% random values for parameters, varibles and known imputs
+% random values for parameters, state varibles and known imputs
 Sol = randi([0,Myprime],n,1); 
 p_esp = randi([0,Myprime],q,1);
 
@@ -30,7 +30,8 @@ if nu~=0
                 u_esp=sum(t.^[n+q:-1:0].*u_esp_coef,2); %#ok<NBRAK>
             else
                 u_esp_coef=randi([0,Myprime],1,opts.nnzDerU(ind_u)+1);
-                u_esp(ind_u)=sum(t.^[opts.nnzDerU(ind_u):-1:0].*u_esp_coef,2); %#ok<NBRAK> 
+                u_esp(ind_u)=sum(t.^[opts.nnzDerU(ind_u):-1:0].* ...
+                    u_esp_coef,2); %#ok<NBRAK> 
             end
         end 
     end
@@ -52,7 +53,7 @@ VSM = sym('VSM_%d_%d',[n,n+q]);
 % computation of linear variational system
 LVS=calcLVS(x,xd,p,f,VSM,VSMd,n,q);
 
-%computation of SLP
+% computation of SLP
 SLP=subs(LVS,p,p_esp);
 SLP=subs(SLP,u,u_esp);
 
@@ -64,7 +65,7 @@ Order=2;
 Sold=diff(Sol,t);
 SMd=diff(SM,t);
 
-%substitutions
+% substitutions with initial conditions
 SLP_ev=subs(SLP,[xd;x],[Sold;Sol]);
 SLP_ev=subs(SLP_ev,VSM,SM);
 SLP_ev=subs(SLP_ev,VSMd,SMd);
@@ -78,11 +79,14 @@ end
 k_esp=[];
 if ~isempty(k)
     k_esp = randi([0,Myprime],length(k),1);
+    SLP=subs(SLP,k,k_esp);
     SLP_ev=subs(SLP_ev,k,k_esp);
 end
 
-%evaluation of the power series Sol(...) on SLP
-[invsep_esp,logder_esp,sndmem_esp]=second_memb_ev(SLP_ev,t,Myprime,n,q,Order);
+% Obtein power series Sol(...) on SLP with polynomials as vectors on
+% columns of a matrix
+[invsep_esp,logder_esp,sndmem_esp]= ...
+    second_memb_ev(SLP_ev,t,Myprime,n,q,Order);
 
 %==========================================================================
 % Loop
@@ -102,15 +106,35 @@ while OneMoreLoop==1
     if Order==Bound
         OneMoreLoop=0;
     end
+    
+    %----------------------------------------------------------------------
+    % Homogeneous resolution
 
-    HomSol=calcHomSol(logder_esp,Order,n,Myprime);
+    % integration of polynomials in a matrix
+    HomSol=-intmatpoly(logder_esp,Order);
 
-    InvHomSolInvA=calcInvHomSolInvA(HomSol,invsep_esp,Order,n,Myprime,t);
+    % computation using a newton operator
+    HomSol=ExpMatrixSeries(HomSol,Order,n,Myprime);
 
-    VarOfCte=calcVarOfCte(HomSol,InvHomSolInvA,sndmem_esp,n,n,n,1,Order,Myprime);
+    %----------------------------------------------------------------------
+    % Computation of InvHomSolInvA
+
+    % computation using a newton operator
+    InvHomSolInvA=InverseMatrixSeries(HomSol,Order,n,Myprime);
+    
+    % multiplication of InvHomSolInvA and inssep_esp
+    InvHomSolInvA= ...
+        mod(multmatpolytrun(InvHomSolInvA,invsep_esp,Order,n),Myprime);
+
+    %----------------------------------------------------------------------
+    % Computation of variation of constants for states
+    VarOfCte= ...
+        calcVarOfCte(HomSol,InvHomSolInvA,sndmem_esp,n,n,n,1,Order,Myprime);
 
     Sol=Sol+VarOfCte;
 
+    %----------------------------------------------------------------------
+    % New order
     OldOrder=Order;
     if 2*Order<Bound
         Order=2*Order;
@@ -119,21 +143,29 @@ while OneMoreLoop==1
     end
     NewOrder=Order;
 
+    %----------------------------------------------------------------------
     % derivation of variables and sensibility matrix
     Sold=diff(Sol,t);
     SMd=diff(SM,t);
 
-    %substitutions
+    %----------------------------------------------------------------------
+    % substitutions with actualiced values
     SLP_ev=subs(SLP,[xd;x],[Sold;Sol]);
     SLP_ev=subs(SLP_ev,VSM,SM);
     SLP_ev=subs(SLP_ev,VSMd,SMd);
-    SLP_ev=subs(SLP_ev,k,k_esp);
     
-    [invsep_esp,logder_esp,sndmem_esp,system_esp]=second_memb_ev(SLP_ev,t,Myprime,n,q,Order);
+    %----------------------------------------------------------------------
+    % Obtein power series Sol(...) on SLP with polynomials as vectors on
+    % columns of a matrix
+    [invsep_esp,logder_esp,sndmem_esp,system_esp]= ...
+        second_memb_ev(SLP_ev,t,Myprime,n,q,Order);
 
     Order=OldOrder;
 
-    VarOfCte=calcVarOfCte(HomSol,InvHomSolInvA,system_esp,n,n,n,n+q,Order,Myprime);
+    %----------------------------------------------------------------------
+    % Computation of variation of constants for variational systems
+    VarOfCte=calcVarOfCte(HomSol,InvHomSolInvA,system_esp,n,n,n,n+q, ...
+        Order,Myprime);
 
     SM=SM+VarOfCte;
 
@@ -145,11 +177,11 @@ end
 
 %==========================================================================
 % Construct output
-
 VSMOut=sym('VSMOut',[n,n+q]);
-Output=contructOutput(h,x,p,m,n,q,VSMOut);
+Output=constructOutput(h,x,p,m,n,q,VSMOut);
 
-SLPOut=OutputSLP(Output,p,p_esp,u,u_esp,k,k_esp,x,Sol,VSMOut,SM,t,Order,Myprime);
+SLPOut=OutputSLP(Output,p,p_esp,u,u_esp,k,k_esp,x,Sol,VSMOut,SM,t, ...
+    Order,Myprime);
 
 
 %==========================================================================

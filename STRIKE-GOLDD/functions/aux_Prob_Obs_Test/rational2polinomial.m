@@ -1,5 +1,9 @@
+%--------------------------------------------------------------------------
 % Function that changes a rational equation into a polynomial one
+%--------------------------------------------------------------------------
+
 function [a,b]=rational2polinomial(exp)
+
 lexp=length(exp);
 if lexp==1
     if isSymType(exp,'number') || isSymType(exp,'variable')
@@ -11,7 +15,9 @@ if lexp==1
         if isSymType(c(2),'number')
             if round(c(2))~=c(2)
                 c(2)=round(c(2));
-                warning('MATLAB:exponetial','Found noninteger exponents in the equations replaced with their rounded value')
+                warning('MATLAB:exponetial',['Found noninteger ' ...
+                    'exponents in the equations replaced with their' ...
+                    ' rounded value'])
                 warning('off','MATLAB:exponetial')
             end
             if c(2)<0
@@ -27,7 +33,9 @@ if lexp==1
                 b=aux2^(c(2));
             end
         else
-            error('The model is not rational: it cannot be analysed with this algorithm. To use the FISPO algorithm instead, set in options.m: opts.algorithm = 1')
+            error(['The model is not rational: it cannot be analysed' ...
+                ' with this algorithm. To use the FISPO algorithm' ...
+                ' instead, set in options.m: opts.algorithm = 1'])
         end
     elseif isSymType(exp,'times')
         c=children(exp);
@@ -55,7 +63,9 @@ if lexp==1
             c=[c{:}];
             a=taylor(exp,c,0);
             b=1;
-            warning('MATLAB:Taylor','Found nonrational functions in the equations and replaced them with their Taylor expansion')
+            warning('MATLAB:Taylor',['Found nonrational functions in' ...
+                ' the equations and replaced them with their' ...
+                ' Taylor expansion'])
             warning("off",'MATLAB:Taylor')
         catch
             try
@@ -63,10 +73,15 @@ if lexp==1
                 c=[c{:}];
                 a=taylor(exp,c,1);
                 b=1;
-                warning('MATLAB:Taylor','Found nonrational functions in the equations and replaced them with their Taylor expansion')
+                warning('MATLAB:Taylor',['Found nonrational functions' ...
+                    ' in the equations and replaced them with their' ...
+                    ' Taylor expansion'])
                 warning("off",'MATLAB:Taylor')
             catch
-                error('The model is not rational: it cannot be analysed with this algorithm. To use the FISPO algorithm instead, set in options.m: opts.algorithm = 1')
+                error(['The model is not rational: it cannot be' ...
+                    ' analysed with this algorithm. To use the FISPO' ...
+                    ' algorithm instead, set in' ...
+                    ' options.m: opts.algorithm = 1'])
             end
         end
     end

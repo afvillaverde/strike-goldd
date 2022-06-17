@@ -1,6 +1,10 @@
+%--------------------------------------------------------------------------
 % application of the mod function (as in maple) to the coefficients of a
 % symbolic ecuation
+%--------------------------------------------------------------------------
+
 function sol=polmod(x,p)
+
 [row,col]=size(x);
 if (row>1) || (col>1)
     sol=sym('sol',[row,col]);

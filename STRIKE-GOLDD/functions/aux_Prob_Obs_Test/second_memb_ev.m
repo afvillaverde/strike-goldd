@@ -1,19 +1,17 @@
-% evaluation and decomposition in submatrix of the SLP
-function [invsep_esp,logder_esp,sndmem_esp,system_esp]=second_memb_ev(SLP_ev,t,Myprime,n,q,Order)
+%--------------------------------------------------------------------------
+% decomposition in submatrix of the SLP
+%--------------------------------------------------------------------------
 
-
-
+function [invsep_esp,logder_esp,sndmem_esp,system_esp]= ...
+    second_memb_ev(SLP_ev,t,Myprime,n,q,Order)
 
 SLP_ev=taylor(SLP_ev,t,'order',Order);  
-
-% disp(SLP_ev)
 
 %allocate memory
 invsep_esp=zeros(Order,n*n);
 logder_esp=zeros(Order,n*n);
 sndmem_esp=zeros(Order,n);
 system_esp=zeros(Order,n*(n+q));
-
 
 % inverse of separent
 ind=1;
@@ -29,6 +27,7 @@ for i=1:n
         ind=ind+1;
     end
 end
+
 % logarithmic derivative
 ind=1;
 for i=1:n
@@ -43,6 +42,7 @@ for i=1:n
         ind=ind+1;
     end
 end
+
 % second member
 ind=1;
 for i=1:n

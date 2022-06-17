@@ -1,6 +1,10 @@
+%--------------------------------------------------------------------------
 % function that fixes the form of SLPOut to obtain the observability -
 % identifiability matrix
+%--------------------------------------------------------------------------
+
 function onx=constructonx(SLPOut,OldOrder)
+
 [nr,nc]=size(SLPOut);
 onx=zeros(nr*nc,OldOrder);
  for i=1:nr

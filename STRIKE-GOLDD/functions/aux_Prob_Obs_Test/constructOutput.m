@@ -1,5 +1,8 @@
+%--------------------------------------------------------------------------
 % construction of the output
-function Output=contructOutput(h,x,p,m,n,q,VSMOut)
+%--------------------------------------------------------------------------
+
+function Output=constructOutput(h,x,p,m,n,q,VSMOut)
 
 aux=jacobian(h,[x;p]);
 dSysOndV=aux(1:m,1:n);

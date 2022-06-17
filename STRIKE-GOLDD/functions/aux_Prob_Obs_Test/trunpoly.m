@@ -1,5 +1,9 @@
+%--------------------------------------------------------------------------
+% restrict the order of polynomials as vector on the columns of a matrix
+%--------------------------------------------------------------------------
 
 function T=trunpoly(Mat,Order)
+
 [r,c]=size(Mat);
 if r==Order
     T=Mat;

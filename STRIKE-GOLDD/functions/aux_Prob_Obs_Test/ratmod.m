@@ -1,5 +1,9 @@
+%--------------------------------------------------------------------------
 % function that replicates the behavior of the function mod in maple
+%--------------------------------------------------------------------------
+
 function sol=ratmod(x,p)
+
 [row,col]=size(x);
 if (row>1) || (col>1)
     sol=zeros(row,col);
