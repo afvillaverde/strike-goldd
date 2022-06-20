@@ -138,17 +138,10 @@ function [identifiables,nonidentif,obs_states,unobs_states] = decomp(modelname,o
                     stateslist = [stateslist otherx(i)];
                 end 
             end
-        end        
-        
-        if opts.unidentif == 1
-            % The 'parameters' in the submodel are the parameters;
-            % the states are considered as inputs:
-            pred = transpose(parslist);
-        else
-            % The 'parameters' in the submodel include the parameters, AND
-            % the UNMEASURED states considered as additional parameters:            
-            pred = transpose([parslist,stateslist]);            
-        end
+        end     
+        % The 'parameters' in the submodel include the parameters, AND
+        % the UNMEASURED states considered as additional parameters:            
+        pred = transpose([parslist,stateslist]);            
 
         %==========================================================================
         % Dimensions of the reduced problem: 
@@ -307,11 +300,9 @@ function [identifiables,nonidentif,obs_states,unobs_states] = decomp(modelname,o
                     rango = double(rank(numonx));
                     fprintf('\n >>> Rank = %d (calculated in %d seconds)',rango,toc);                 
                     if rango == numel(xaugred)%r  % The submodel is full rank 
-                        if opts.unidentif == 0
-                            obs_states     = xred(unmeas_xred_indices); 
-                            new_ident_pars = pred;
-                            new_obs_inputs = wred;  
-                        end
+                        obs_states     = xred(unmeas_xred_indices); 
+                        new_ident_pars = pred;
+                        new_obs_inputs = wred;  
                         increaseLie = 0;
                     else % With that number of Lie derivatives the array is not full rank.
                         %----------------------------------------------------------
@@ -409,13 +400,7 @@ function [identifiables,nonidentif,obs_states,unobs_states] = decomp(modelname,o
                                     nd = nd - 1;
                                 else
                                     if lasttime >= opts.maxLietime
-                                        if opts.unidentif == 1
-                                            fprintf('\n    => More Lie derivatives would be needed to see if the submodel is structurally unidentifiable.');
-                                            skip_elim = 1;
-                                            increaseLie = 0;
-                                        else
-                                            fprintf('\n    => More Lie derivatives would be needed to see if the submodel is structurally identifiable.');
-                                        end
+                                        fprintf('\n    => More Lie derivatives would be needed to see if the submodel is structurally identifiable.');
                                         fprintf('\n    However, the maximum computation time allowed for calculating each of them has been reached.');
                                         fprintf('\n    You can increase it by changing <<opts.maxLietime>> (currently opts.maxLietime = %d)',opts.maxLietime);
 
@@ -434,32 +419,30 @@ function [identifiables,nonidentif,obs_states,unobs_states] = decomp(modelname,o
 
             else% If the maxLietime has been reached, but the minimum of Lie derivatives has not been calculated:
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                if opts.unidentif == 0
-                    fprintf('\n    More Lie derivatives would be needed to analyse the submodel.');
-                    fprintf('\n    However, the maximum computation time allowed for calculating each of them has been reached.');
-                    fprintf('\n    You can increase it by changing <<opts.maxLietime>> (currently opts.maxLietime = %d)',opts.maxLietime);
-                    fprintf('\n >>> Calculating rank...');
-                    tic
-                    if opts.replaceICs == 1
-                        xind = find(known_ics);
-                        if size(ics) ~= size(x)
-                            ics = transpose(ics);
-                        end
-                        onx = subs(onx,x(xind),ics(xind));
-                    end  
-                    if opts.numeric == 1
-                        allvariables = symvar(onx);
-                        numeros = vpa(0.1+rand(size(allvariables)));
-                        numonx = subs(onx,allvariables,numeros); 
-                    else
-                        numonx = onx;
+                fprintf('\n    More Lie derivatives would be needed to analyse the submodel.');
+                fprintf('\n    However, the maximum computation time allowed for calculating each of them has been reached.');
+                fprintf('\n    You can increase it by changing <<opts.maxLietime>> (currently opts.maxLietime = %d)',opts.maxLietime);
+                fprintf('\n >>> Calculating rank...');
+                tic
+                if opts.replaceICs == 1
+                    xind = find(known_ics);
+                    if size(ics) ~= size(x)
+                        ics = transpose(ics);
                     end
-                    rango = double(rank(numonx));
-                    fprintf('\n  Rank = %d (calculated in %d seconds)',rango,toc); 
-                    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                    [new_ident_pars,new_nonid_pars,new_obs_states,new_unobs_states,new_obs_inputs,new_unobs_inputs] = ...
-                        elim_and_recalc(unmeas_xred_indices,rango,numonx,opts,qreal,pred,xred,identifiables,obs_states,obs_inputs,wred); 
+                    onx = subs(onx,x(xind),ics(xind));
+                end  
+                if opts.numeric == 1
+                    allvariables = symvar(onx);
+                    numeros = vpa(0.1+rand(size(allvariables)));
+                    numonx = subs(onx,allvariables,numeros); 
+                else
+                    numonx = onx;
                 end
+                rango = double(rank(numonx));
+                fprintf('\n  Rank = %d (calculated in %d seconds)',rango,toc); 
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                [new_ident_pars,new_nonid_pars,new_obs_states,new_unobs_states,new_obs_inputs,new_unobs_inputs] = ...
+                    elim_and_recalc(unmeas_xred_indices,rango,numonx,opts,qreal,pred,xred,identifiables,obs_states,obs_inputs,wred); 
             end          
         
         %==========================================================================

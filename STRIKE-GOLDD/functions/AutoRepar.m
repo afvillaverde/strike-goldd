@@ -31,7 +31,6 @@ addpath(modelspath);
 addpath(resultspath);
 
 
-
 %% STRIKE-GOLDD
 [modelname,paths,opts,submodels,prev_ident_pars] = options();
 if (opts.use_existing_results==0)

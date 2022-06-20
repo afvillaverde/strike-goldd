@@ -31,3 +31,7 @@ f = [dx1;
      1/m2*( k2*(x1-x2)+c2*(dx1-dx2)+F2 )];
 
 save('2DOF','x','p','u','w','h','f','ics','known_ics');
+
+u = [];
+w = [F1,F2];
+save('2DOF_2unknown_inputs','x','p','u','w','h','f','ics','known_ics');

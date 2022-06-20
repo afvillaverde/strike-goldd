@@ -1,24 +1,22 @@
 %==========================================================================
 % StrIkE-GOLDD (Structural Identifiability taken as Extended-Generalized
-% Observability with Lie Derivatives and Decomposition)
+% Observability with Lie Derivatives and Decomposition):
+% a Matlab toolbox for structural identifiability and observability (SIO)
+% analysis of nonlinear models.
 %--------------------------------------------------------------------------
 %
-% A Matlab toolbox for structural identifiability and observability 
-% analysis of nonlinear models
-%--------------------------------------------------------------------------
-%
-% User input can be specified in file 'options.m'
-% Documentation available in the 'doc' folder
+% User input can be specified in file 'options.m'.
+% Documentation available in the 'doc' folder.
 %--------------------------------------------------------------------------
 % 
-% Version 3.0, last modified: 19/10/2020
-% Alejandro Fernandez Villaverde (afvillaverde@iim.csic.es)
+% Version 4.0, last modified: 25/04/2022
+% Contact: Alejandro F. Villaverde (afvillaverde@uvigo.gal)
 %==========================================================================
 
 function STRIKE_GOLDD(varargin)
 
 fprintf('\n\n -------------------------------- \n');
-fprintf(' >>> STRIKE-GOLDD toolbox 3.0 \n');
+fprintf(' >>> STRIKE-GOLDD toolbox 4.0 \n');
 fprintf(' -------------------------------- \n');
 
 %==========================================================================
@@ -36,6 +34,7 @@ switch nargin
         delete("current_options.m");
         nmf = pwd;
     case 2
+        % when STRIKE_GOLDD.m is called by AutoRepar, add extra paths:
         [~,paths,opts,submodels,prev_ident_pars] = options;
         modelname = varargin{1};
         mf   = pwd;
@@ -53,13 +52,28 @@ addpath(genpath(paths.results));
 addpath(genpath(paths.functions));
 
 %==========================================================================
-% ORC-DF algorithm (only for affine-in-inputs systems):
-if opts.affine==1
-    ORC_DF(modelname,opts,prev_ident_pars);
-    return
-end % If not, run the FISPO algorithm:
+% Read the algorithm chosen in the options file:
+switch opts.algorithm
+    case 1
+        % Run the FISPO algorithm (remainder of this file)
+    case 2
+        prob_obs_test(modelname,opts,prev_ident_pars,nmf);
+        return
+    case 3
+        ORC_DF(modelname,opts,prev_ident_pars,nmf);
+        return
+    case 4
+        Lie_Symmetry
+        return
+    case 5
+        if nargin < 2 % (if nargin == 2, STRIKE-GOLDD is being called by AutoRepar => avoid recursive loop)
+            AutoRepar
+            return
+        end
+end
 
 %==========================================================================
+% If this line is executed, it means that the FISPO algorithm was chosen.
 % Load model:
 
 % Convert model to multi-experiment form (Optional):
@@ -70,7 +84,7 @@ end
 
 load(modelname);
 
-fprintf('\n Analyzing the %s model... \n', modelname);
+fprintf('\n Analyzing the %s model with the FISPO algorithm...\n',modelname);
 
 tic
 %==========================================================================
@@ -369,10 +383,6 @@ if opts.forcedecomp == 0
                                 fprintf('\n    However, the maximum computation time allowed for calculating each of them has been reached.');
                                 fprintf('\n    You can increase it by changing <<opts.maxLietime>> (currently opts.maxLietime = %d)',opts.maxLietime);
                                 unidflag = 0; 
-                                if opts.unidentif == 1
-                                    skip_elim = 1;
-                                    increaseLie = 0;
-                                end
                             end
                         end
                     end  
@@ -394,7 +404,6 @@ if opts.forcedecomp == 0
             end
         end        
     else% If the maxLietime has been reached, but the minimum of Lie derivatives has not been calculated:
-        if opts.unidentif == 0
             if opts.decomp == 0
                 fprintf('\n    More Lie derivatives would be needed to analyse the model.');
                 fprintf('\n    However, the maximum computation time allowed for calculating each of them has been reached.');
@@ -420,7 +429,6 @@ if opts.forcedecomp == 0
             else
                 decomp_flag = 1; 
             end
-        end
     end
 end % end of 'if opts.forcedecomp == 0'
 
