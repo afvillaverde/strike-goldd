@@ -23,9 +23,16 @@ STRIKE-GOLDD requires a MATLAB installation with the Symbolic Math Toolbox.
 To use STRIKE-GOLDD you just need to:
 1. download the code
 2. open a MATLAB session
-3. run `install` from the STRIKE-GOLDD directory
+3. run `install.m` from the STRIKE-GOLDD directory
 4. define the problem by editing `options.m`
-5. run `STRIKE-GOLDD`
+5. run `STRIKE_GOLDD.m`
+
+Alternatively, since v4.0 you can also use it as a Matlab app with a graphical interface:
+1. download the code
+2. open a MATLAB session
+3. right click on `STRIKE_GOLDD_APP.mlapp` and press Run
+4. define the problem, method, and options in the pop-up window
+5. press the Run button in the pop-up window
 
 If one wishes to use optimization-based decomposition (which is seldom necessary), the MATLAB version of the [MEIGO](http://nautilus.iim.csic.es/~gingproc/meigo.html) toolbox is also required.
 
@@ -39,7 +46,7 @@ Publication of the methodology (first version of STRIKE-GOLDD):
 
 Extension for time-varying inputs (STRIKE-GOLDD 2):
 
-[Villaverde AF, Evans ND, Chappell MJ, Banga JR (2019). Input-dependent structural identifiability of nonlinear systems. *IEEE Control Systems Letters* 3(2):1–6, doi:10.1109/LCSYS.2018.2868608](http://dx.doi.org/doi:10.1109/LCSYS.2018.2868608)
+[Villaverde AF, Evans ND, Chappell MJ, Banga JR (2018). Input-dependent structural identifiability of nonlinear systems. *IEEE Control Systems Letters* 3(2):1–6, doi:10.1109/LCSYS.2018.2868608](http://dx.doi.org/doi:10.1109/LCSYS.2018.2868608)
 
 Extension for unknown inputs; FISPO analysis (STRIKE-GOLDD 2.1):
 
@@ -55,8 +62,11 @@ Extension for multi-experiment analysis and implementation of the ORC-DF algorit
 
 Extension for automatic reparameterization, AutoRepar (STRIKE-GOLDD 3.0):
 
-[Massonis G, Banga JR, Villaverde AF (2022). AutoRepar: A method to obtain identifiable and observable reparameterizations of dynamic models with mechanistic insight. *International Journal of Robust and Nonlinear Control*, in press, doi:10.1002/rnc.5887](https://doi.org/10.1002/rnc.5887)
+[Massonis G, Banga JR, Villaverde AF (2021). AutoRepar: A method to obtain identifiable and observable reparameterizations of dynamic models with mechanistic insight. *International Journal of Robust and Nonlinear Control*, in press, doi:10.1002/rnc.5887](https://doi.org/10.1002/rnc.5887)
 
+Extension for graphical interface & new algorithm, ProbObsTest (STRIKE-GOLDD 4.0):
+
+[Díaz-Seoane S, Rey Barreiro X, Villaverde AF (2022). STRIKE-GOLDD 4.0: user-friendly, efficient analysis of structural identifiability and observability. *arxiv preprint*.]
 
 ## Disclaimer
 
