@@ -66,7 +66,7 @@ Extension for automatic reparameterization, AutoRepar (STRIKE-GOLDD 3.0):
 
 Extension for graphical interface & new algorithm, ProbObsTest (STRIKE-GOLDD 4.0):
 
-[Díaz-Seoane S, Rey Barreiro X, Villaverde AF (2022). STRIKE-GOLDD 4.0: user-friendly, efficient analysis of structural identifiability and observability. *arxiv preprint*.]
+[Díaz-Seoane S, Rey Barreiro X, Villaverde AF (2022). STRIKE-GOLDD 4.0: user-friendly, efficient analysis of structural identifiability and observability. *arxiv preprint*, arXiv:2207.07346 [eess.SY]](https://arxiv.org/abs/2207.07346)
 
 ## Disclaimer
 
