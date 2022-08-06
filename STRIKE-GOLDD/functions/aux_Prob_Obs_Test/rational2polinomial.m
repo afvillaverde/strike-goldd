@@ -39,7 +39,9 @@ if lexp==1
         end
     elseif isSymType(exp,'times')
         c=children(exp);
-        c=[c{:}];
+        if iscellstr(c)==1
+            c=[c{:}];
+        end
         a=1;
         b=1;
         for j=1:length(c)
@@ -49,7 +51,9 @@ if lexp==1
         end
     elseif isSymType(exp,'plus')
         c=children(exp);
-        c=[c{:}];
+        if iscellstr(c)==1
+            c=[c{:}];
+        end
         a=0;
         b=1;
         for j=1:length(c)
@@ -60,7 +64,9 @@ if lexp==1
     else
         try
             c=children(exp);
-            c=[c{:}];
+            if iscellstr(c)==1
+                c=[c{:}];
+            end
             a=taylor(exp,c,0);
             b=1;
             warning('MATLAB:Taylor',['Found nonrational functions in' ...
@@ -70,7 +76,9 @@ if lexp==1
         catch
             try
                 c=children(exp);
-                c=[c{:}];
+                if iscellstr(c)==1
+                    c=[c{:}];
+                 end
                 a=taylor(exp,c,1);
                 b=1;
                 warning('MATLAB:Taylor',['Found nonrational functions' ...
