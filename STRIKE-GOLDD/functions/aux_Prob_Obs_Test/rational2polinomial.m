@@ -11,7 +11,9 @@ if lexp==1
         b=1;
     elseif isSymType(exp,'power')
         c=children(exp);
-        c=[c{:}];
+        if iscell(c)==1
+            c=[c{:}];
+        end
         if isSymType(c(2),'number')
             if round(c(2))~=c(2)
                 c(2)=round(c(2));
@@ -39,7 +41,7 @@ if lexp==1
         end
     elseif isSymType(exp,'times')
         c=children(exp);
-        if iscellstr(c)==1
+        if iscell(c)==1
             c=[c{:}];
         end
         a=1;
@@ -51,7 +53,7 @@ if lexp==1
         end
     elseif isSymType(exp,'plus')
         c=children(exp);
-        if iscellstr(c)==1
+        if iscell(c)==1
             c=[c{:}];
         end
         a=0;
@@ -64,7 +66,7 @@ if lexp==1
     else
         try
             c=children(exp);
-            if iscellstr(c)==1
+            if iscell(c)==1
                 c=[c{:}];
             end
             a=taylor(exp,c,0);
@@ -76,7 +78,7 @@ if lexp==1
         catch
             try
                 c=children(exp);
-                if iscellstr(c)==1
+                if iscell(c)==1
                     c=[c{:}];
                  end
                 a=taylor(exp,c,1);

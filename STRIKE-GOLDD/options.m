@@ -6,7 +6,7 @@ function [modelname,paths,opts,submodels,prev_ident_pars] = options()
 
 %=================== BASIC OPTIONS ("CHOOSE WHAT TO DO") ==================
 %%% (1) CHOOSE MODEL TO ANALYSE: 
-modelname ='CHO_117p';    % Name of a .mat file placed in the 'models' folder 
+modelname ='C2M';    % Name of a .mat file placed in the 'models' folder 
   
 %%% (2) CHOOSE TYPE OF ANALYSIS:
 opts.algorithm = 2;  % Choose one of the following:
