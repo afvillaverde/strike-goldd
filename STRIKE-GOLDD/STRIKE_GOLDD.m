@@ -34,16 +34,28 @@ switch nargin
         delete("current_options.m");
         nmf = pwd;
     case 2
-        % when STRIKE_GOLDD.m is called by AutoRepar, add extra paths:
-        [~,paths,opts,submodels,prev_ident_pars] = options;
-        modelname = varargin{1};
-        mf   = pwd;
-        idcs = strfind(mf,filesep);
-        nmf  = mf(1:idcs(end)-1);
-        paths.meigo     = '/.../MEIGO';      
-        paths.models    = strcat(nmf,filesep,'models');
-        paths.results   = strcat(nmf,filesep,'results');
-        paths.functions = strcat(nmf,filesep,'functions');
+        if exist("options_aux.m",'file') == 2
+            [~,paths,opts,submodels,prev_ident_pars] = options_aux;
+            modelname = varargin{1};
+            mf   = pwd;
+            idcs = strfind(mf,filesep);
+            nmf  = mf(1:idcs(end)-1);
+            paths.meigo     = '/.../MEIGO';      
+            paths.models    = strcat(nmf,filesep,'models');
+            paths.results   = strcat(nmf,filesep,'results');
+            paths.functions = strcat(nmf,filesep,'functions');
+        else
+            % when STRIKE_GOLDD.m is called by AutoRepar, add extra paths:
+            [~,paths,opts,submodels,prev_ident_pars] = options;
+            modelname = varargin{1};
+            mf   = pwd;
+            idcs = strfind(mf,filesep);
+            nmf  = mf(1:idcs(end)-1);
+            paths.meigo     = '/.../MEIGO';      
+            paths.models    = strcat(nmf,filesep,'models');
+            paths.results   = strcat(nmf,filesep,'results');
+            paths.functions = strcat(nmf,filesep,'functions');
+        end
 end
 maxstates = opts.maxstates;
 addpath(genpath(paths.meigo));
