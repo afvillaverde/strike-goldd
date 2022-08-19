@@ -1,6 +1,24 @@
 
 function [transf,nuevas_variables,allVar,z_v]=Lie_Symmetry(varargin)
 
+if exist("options_aux.m",'file') == 2
+    if nargin > 0
+        modelname = varargin;
+        load(modelname{1});
+        [~,paths,opts,submodels,prev_ident_pars] = options_aux();
+        ansatz=opts.ansatz;
+        pMax=opts.degree;
+        tmax=opts.tmax;
+        ode_n=opts.ode_n;
+    else
+        [modelname,paths,opts,submodels,prev_ident_pars] = options_aux();
+        load(modelname);
+        ansatz=opts.ansatz;
+        pMax=opts.degree;
+        tmax=opts.tmax;
+        ode_n=opts.ode_n;
+    end
+else
     if nargin > 0
         modelname = varargin;
         load(modelname{1});
@@ -17,6 +35,7 @@ function [transf,nuevas_variables,allVar,z_v]=Lie_Symmetry(varargin)
         tmax=opts.tmax;
         ode_n=opts.ode_n;
     end
+end
 
 %clc
 %%  SYMMETRY SEARCH ALGORITHM WITH INFINITESIMALS
