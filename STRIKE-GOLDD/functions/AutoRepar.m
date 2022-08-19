@@ -32,14 +32,23 @@ addpath(resultspath);
 
 
 %% STRIKE-GOLDD
-[modelname,paths,opts,submodels,prev_ident_pars] = options();
+if exist("options_aux.m",'file') == 2
+    [modelname,paths,opts,submodels,prev_ident_pars] = options_aux();
+else
+    [modelname,paths,opts,submodels,prev_ident_pars] = options();
+end
+
 if (opts.use_existing_results==0)
     STRIKE_GOLDD(modelname,1);
     resultsname = sprintf('id_results_%s_%s',modelname,date);
     load(resultsname);
 else
     load(opts.results_file);
-    [modelname,paths,opts,submodels,prev_ident_pars] = options();
+    if exist("options_aux.m",'file') == 2
+        [modelname,paths,opts,submodels,prev_ident_pars] = options_aux();
+    else
+        [modelname,paths,opts,submodels,prev_ident_pars] = options();
+    end
 end
 
 %% 
@@ -188,7 +197,7 @@ for it=1:num_repar
     else
         num_par=sum_num_par(num_gen);
     end
-    %   Imprimir por pantalla el par·metro del generador que se elimina
+    %   Imprimir por pantalla el par√°metro del generador que se elimina
     fprintf('   You have chosen the parameter ')
     if num_gen ~=1
         fprintf('%s',allVar(cols(num_par+sum(dim(1:num_gen-1)))))
@@ -318,12 +327,21 @@ for it=1:num_repar
         %   There are still pending repairs
         STRIKE_GOLDD('New_Model',1);
         modelname='New_Model';
-        [~,paths,opts,submodels,prev_ident_pars] = options();
-        resultsname = sprintf('id_results_%s_%s',modelname,date);
-        load(resultsname);
-        fprintf(' -------------------------------------------------- \n');
-        fprintf('Searching for symmetries of %s...\n', modelname);
-        [transf,nuevas_variables,allVar]=Lie_Symmetry('New_Model');      
+        if exist("options_aux.m",'file') == 2
+            [~,paths,opts,submodels,prev_ident_pars] = options_aux();
+            resultsname = sprintf('id_results_%s_%s',modelname,date);
+            load(resultsname);
+            fprintf(' -------------------------------------------------- \n');
+            fprintf('Searching for symmetries of %s...\n', modelname);
+            [transf,nuevas_variables,allVar]=Lie_Symmetry('New_Model');  
+        else
+            [~,paths,opts,submodels,prev_ident_pars] = options();
+            resultsname = sprintf('id_results_%s_%s',modelname,date);
+            load(resultsname);
+            fprintf(' -------------------------------------------------- \n');
+            fprintf('Searching for symmetries of %s...\n', modelname);
+            [transf,nuevas_variables,allVar]=Lie_Symmetry('New_Model');             
+        end    
         
         % Verify that the transformation vector is not empty
         if (isempty(transf)==1)
