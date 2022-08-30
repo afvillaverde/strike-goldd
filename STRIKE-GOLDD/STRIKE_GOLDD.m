@@ -81,7 +81,10 @@ switch opts.algorithm
         if nargin < 2 % (if nargin == 2, STRIKE-GOLDD is being called by AutoRepar => avoid recursive loop)
             AutoRepar
             return
-        end
+        else
+            prob_obs_test(modelname,opts,prev_ident_pars,nmf);
+            return
+	end
 end
 
 %==========================================================================
