@@ -164,6 +164,8 @@ else
     end
 end
 %% NUMERATOR AND DENOMINATOR
+f=expand(f,'IgnoreAnalyticConstraints',true);
+h=expand(h,'IgnoreAnalyticConstraints',true);
 [num_f,den_f]= numden(f);
 [num_h,den_h]= numden(h);
 

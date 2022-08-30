@@ -128,8 +128,8 @@ if nw~=0
                 opts.nnzDerW(ind_w)=3;
             end 
         end
-        wlvector=sym('w_der',[nw+sum(opts.nnzDerW),1]);
-        wlvector_dot=sym('wlvector_dot',[nw+sum(opts.nnzDerW),1]);
+        wlvector=sym('w_der',[nw+sum(opts.nnzDerW(1:nw)),1]);
+        wlvector_dot=sym('wlvector_dot',[nw+sum(opts.nnzDerW(1:nw)),1]);
         ind=1;
         for ind_w=1:nw  
             wlvector(ind)=w(ind_w);
@@ -173,7 +173,7 @@ fprintf(['\n Observability-Identifiability matrix calculated in %d ' ...
 %==========================================================================
 % Analysis of identifiability and observability:
 tic
-[p_id,  p_un, obs_states, unobs_states, obs_inputs, unobs_inputs,meas_x]...
+[p_id,  p_un, obs_states, unobs_states, obs_inputs, unobs_inputs,meas_x,rango]...
     = ObservabilityAnalysis(x,p,onx,Myprime,n,q,nwl,h,u); %#ok<ASGLU> 
 timeAnalysis=toc;
 
@@ -181,6 +181,8 @@ fprintf('\n >>> Matrix analyzed in %d seconds. \n',timeAnalysis);
 
 totaltime=timematrix+timeAnalysis;
 fprintf('\n Total execution time: %d seconds. \n',totaltime);
+
+xaug=[x;p]; %#ok<NASGU> 
 
 resultsname = sprintf('id_results_%s_%s',modelname,date);
 fullresultsname = strcat(nmf,filesep,'results',filesep,resultsname);
