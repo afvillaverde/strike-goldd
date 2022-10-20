@@ -14,7 +14,7 @@ if lexp==1
         if iscell(c)==1
             c=[c{:}];
         end
-        if isSymType(c(2),'number')
+        if isnumeric(eval(c(2)))
             if round(c(2))~=c(2)
                 c(2)=round(c(2));
                 warning('MATLAB:exponetial',['Found noninteger ' ...
@@ -69,7 +69,7 @@ if lexp==1
             if iscell(c)==1
                 c=[c{:}];
             end
-            a=taylor(exp,c,0);
+            a=taylor(exp,c,0,'Order',100);
             b=1;
             warning('MATLAB:Taylor',['Found nonrational functions in' ...
                 ' the equations and replaced them with their' ...
@@ -81,17 +81,49 @@ if lexp==1
                 if iscell(c)==1
                     c=[c{:}];
                  end
-                a=taylor(exp,c,1);
+                a=taylor(exp,c,1,'Order',100);
                 b=1;
                 warning('MATLAB:Taylor',['Found nonrational functions' ...
                     ' in the equations and replaced them with their' ...
                     ' Taylor expansion'])
                 warning("off",'MATLAB:Taylor')
             catch
-                error(['The model is not rational: it cannot be' ...
-                    ' analysed with this algorithm. To use the FISPO' ...
-                    ' algorithm instead, set in' ...
-                    ' options.m: opts.algorithm = 1'])
+                try
+                    c=children(exp);
+                    if iscell(c)==1
+                        c=[c{:}];
+                    end
+                    syms cs
+                    exp=subs(exp,c,cs);
+                    a=taylor(exp,cs,0,'Order',100);
+                    a=subs(a,cs,c);
+                    b=1;
+                    warning('MATLAB:Taylor',['Found nonrational functions' ...
+                        ' in the equations and replaced them with their' ...
+                        ' Taylor expansion'])
+                    warning("off",'MATLAB:Taylor')
+                catch
+                    try
+                        c=children(exp);
+                        if iscell(c)==1
+                            c=[c{:}];
+                        end
+                        syms cs
+                        exp=subs(exp,c,cs);
+                        a=taylor(exp,cs,1,'Order',100);
+                        a=subs(a,cs,c);
+                        b=1;
+                        warning('MATLAB:Taylor',['Found nonrational functions' ...
+                        ' in the equations and replaced them with their' ...
+                        ' Taylor expansion'])
+                        warning("off",'MATLAB:Taylor')
+                    catch
+                        error(['The model is not rational: it cannot be' ...
+                            ' analysed with this algorithm. To use the FISPO' ...
+                            ' algorithm instead, set in' ...
+                            ' options.m: opts.algorithm = 1'])
+                    end
+                end
             end
         end
     end

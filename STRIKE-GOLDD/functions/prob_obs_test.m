@@ -145,9 +145,9 @@ if nw~=0
     nwl=numel(wlvector);
     % Construct augmented state vector and state function by taking unknown
     % inputs ass state variables
-    x = [x;wlvector];
-    f = [f;wlvector_dot]; %#ok<NODEF> 
-    n = numel(x);
+    xw = [x;wlvector];
+    fw = [f;wlvector_dot]; 
+    n = numel(xw);
 end
 
 
@@ -160,7 +160,7 @@ fprintf('\n >>> Computations are done modulo: %d \n',Myprime);
 %==========================================================================
 % Build Oi, the observability-identifiability matrix:
 tic
-[onx]=build_OI_sed(Myprime,x,p,u,h,f,n,q,nu,m,opts);
+[onx]=build_OI_sed(Myprime,xw,p,u,h,fw,n,q,nu,m,opts);
 timematrix=toc;
 
 % Report results:
@@ -174,7 +174,7 @@ fprintf(['\n Observability-Identifiability matrix calculated in %d ' ...
 % Analysis of identifiability and observability:
 tic
 [p_id,  p_un, obs_states, unobs_states, obs_inputs, unobs_inputs,meas_x,rango]...
-    = ObservabilityAnalysis(x,p,onx,Myprime,n,q,nwl,h,u); %#ok<ASGLU> 
+    = ObservabilityAnalysis(xw,p,onx,Myprime,n,q,nwl,h,u); %#ok<ASGLU> 
 timeAnalysis=toc;
 
 fprintf('\n >>> Matrix analyzed in %d seconds. \n',timeAnalysis);
@@ -182,7 +182,7 @@ fprintf('\n >>> Matrix analyzed in %d seconds. \n',timeAnalysis);
 totaltime=timematrix+timeAnalysis;
 fprintf('\n Total execution time: %d seconds. \n',totaltime);
 
-xaug=[x;p]; %#ok<NASGU> 
+xaug=[xw;p]; %#ok<NASGU> 
 
 resultsname = sprintf('id_results_%s_%s',modelname,date);
 fullresultsname = strcat(nmf,filesep,'results',filesep,resultsname);
