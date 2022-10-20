@@ -83,7 +83,10 @@ function [infi,rs_k] = create_multi(allVar,m_aux,l_p,l_x,p,pMax,nw,x)
                s=d-1;
                nv=[nv,sym(allVar(k)^(s))];
             end
-            m_aux=[m_aux,nv];   
+            %-- avoid concatenation errors:
+            nv = transpose(nv);
+            m_aux=[m_aux;nv]; % m_aux=[m_aux,nv]; 
+            %--
         end
         m_aux=unique(m_aux);
         s_m_aux=length(m_aux);
