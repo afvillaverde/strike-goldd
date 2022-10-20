@@ -148,9 +148,9 @@ if nw~=0
     xw = [x;wlvector];
     fw = [f;wlvector_dot]; 
     n = numel(xw);
+else 
+    xw = x; fw = f;
 end
-
-
 
 %==========================================================================
 % Assignment of the prime numer used by the method:
