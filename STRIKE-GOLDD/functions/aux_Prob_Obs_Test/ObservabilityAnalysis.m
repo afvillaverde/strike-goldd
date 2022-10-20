@@ -22,8 +22,7 @@ fprintf(['     transcendence degree of k(U,Y) --> k(U,Y,x,p)' ...
     ' is %d \n'], trnsdeg);
 
 if trnsdeg==0
-    fprintf(['\n >>> The model is structurally identifiable, ' ...
-        'observable and reconstrutible.']);
+    fprintf(['\n >>> The model is FISPO.']);
     if nwl>0, fprintf('\n     All its unknown inputs are observable.'); end
 	fprintf('\n     All its states are observable.');
 	fprintf(['\n     All its parameters are locally structurally' ...
@@ -44,8 +43,7 @@ if trnsdeg==0
     meas_x = obs_states(ismeasured~=0);     % names of the measured states
     obs_states=obs_states(ismeasured==0);
 else
-    fprintf(['\n >>> The model is not observable, identifiable or' ...
-        ' reconstructible:']);
+    fprintf(['\n >>> The model is not FISPO:']);
     for i=1:l
             O=ObservabilityMatrix;
             O(:,i)=[];
@@ -128,7 +126,7 @@ else
             fprintf(['\n >>> These unmeasured inputs are ' ...
                 'unobservable:\n      %s '],char(unobs_inputs));
         else
-            fprintf('\n >>> The model is reconstrutible.');
+            fprintf('\n >>> The model is input observable:');
             fprintf('\n     All its unknown inputs are observable.')
         end
     end
