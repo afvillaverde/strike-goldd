@@ -4,12 +4,8 @@
 % a Matlab toolbox for structural identifiability and observability (SIO)
 % analysis of nonlinear models.
 %--------------------------------------------------------------------------
-%
-% User input can be specified in file 'options.m'.
-% Documentation available in the 'doc' folder.
-%--------------------------------------------------------------------------
 % 
-% Version 4.0, last modified: 25/04/2022
+% Version 4.0.2, last modified: 20/10/2022
 % Contact: Alejandro F. Villaverde (afvillaverde@uvigo.gal)
 %==========================================================================
 
