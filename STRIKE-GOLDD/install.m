@@ -19,4 +19,4 @@ else
     addpath(fullfile(strikegoldd_path,'results'))
     fprintf('\n A results folder has been created. ');
 end
-fprintf('\n STRIKE-GOLDD (v4.0) folders have been added to the path.\n You can now use the toolbox. \n\n');
+fprintf('\n STRIKE-GOLDD folders have been added to the path.\n You can now use the toolbox. \n\n');
