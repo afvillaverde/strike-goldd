@@ -18,10 +18,10 @@ if lexp==1
             eval(c(2));
             if round(c(2))~=c(2)
                 c(2)=round(c(2));
-                warning('MATLAB:exponetial',['Found noninteger ' ...
+                warning('MATLAB:exponential',['Found noninteger ' ...
                     'exponents in the equations replaced with their' ...
                     ' rounded value'])
-                warning('off','MATLAB:exponetial')
+                warning('off','MATLAB:exponential')
             end
             if c(2)<0
                 [aux1,aux2]=rational2polinomial(c(1));
