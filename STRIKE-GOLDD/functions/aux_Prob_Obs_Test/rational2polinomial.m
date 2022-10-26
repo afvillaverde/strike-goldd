@@ -14,7 +14,8 @@ if lexp==1
         if iscell(c)==1
             c=[c{:}];
         end
-        if isnumeric(eval(c(2)))
+        try 
+            eval(c(2));
             if round(c(2))~=c(2)
                 c(2)=round(c(2));
                 warning('MATLAB:exponetial',['Found noninteger ' ...
@@ -34,7 +35,7 @@ if lexp==1
                 a=aux1^(c(2));
                 b=aux2^(c(2));
             end
-        else
+        catch
             error(['The model is not rational: it cannot be analysed' ...
                 ' with this algorithm. To use the FISPO algorithm' ...
                 ' instead, set in options.m: opts.algorithm = 1'])
