@@ -178,10 +178,10 @@ end
 %==========================================================================
 % Construct output
 VSMOut=sym('VSMOut',[n,n+q]);
-Output=constructOutput(h,x,p,m,n,q,VSMOut);
+[Output,logic]=constructOutput(h,x,p,m,n,q,VSMOut);
 
 SLPOut=OutputSLP(Output,p,p_esp,u,u_esp,k,k_esp,x,Sol,VSMOut,SM,t, ...
-    Order,Myprime);
+    Order,Myprime,logic);
 
 
 %==========================================================================
