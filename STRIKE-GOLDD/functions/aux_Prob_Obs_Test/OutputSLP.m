@@ -20,7 +20,6 @@ end
 if ~isempty(kout)
     kout_esp = randi([0,Myprime],length(kout),1);
     SLPOut=subs(SLPOut,kout,kout_esp);
-    SLPOut=subs(SLPOut,kout,kout_esp);
 end
 
 SLPOut=taylor(SLPOut,t,'order',Order); 
