@@ -62,11 +62,11 @@ Extension for multi-experiment analysis and implementation of the ORC-DF algorit
 
 Extension for automatic reparameterization, AutoRepar (STRIKE-GOLDD 3.0):
 
-[Massonis G, Banga JR, Villaverde AF (2021). AutoRepar: A method to obtain identifiable and observable reparameterizations of dynamic models with mechanistic insight. *International Journal of Robust and Nonlinear Control*, in press, doi:10.1002/rnc.5887](https://doi.org/10.1002/rnc.5887)
+[Massonis G, Banga JR, Villaverde AF (2021). AutoRepar: A method to obtain identifiable and observable reparameterizations of dynamic models with mechanistic insight. *International Journal of Robust and Nonlinear Control*, 33(9):5039-5057, doi:10.1002/rnc.5887](https://doi.org/10.1002/rnc.5887)
 
 Extension for graphical interface & new algorithm, ProbObsTest (STRIKE-GOLDD 4.0):
 
-[Díaz-Seoane S, Rey Barreiro X, Villaverde AF (2022). STRIKE-GOLDD 4.0: user-friendly, efficient analysis of structural identifiability and observability. *arxiv preprint*, arXiv:2207.07346 [eess.SY]](https://arxiv.org/abs/2207.07346)
+[Díaz-Seoane S, Rey Barreiro X, Villaverde AF (2023). STRIKE-GOLDD 4.0: user-friendly, efficient analysis of structural identifiability and observability. *Bioinformatics*, 39(1), btac748](https://doi.org/10.1093/bioinformatics/btac748)
 
 ## Disclaimer
 
