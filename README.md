@@ -10,11 +10,13 @@ STRIKE-GOLDD is a MATLAB toolbox that analyses nonlinear models of ordinary diff
 
 Additional features include:
 - search for the **Lie symmetries** that underlie non-observability and non-identifiability, 
-- automatic **reparameterization** to obtain a fully observable and identifiable model. 
+- automatic **reparameterization** to obtain a fully observable and identifiable model.
+
+Since v4.1.0, it also provides tests for **accessibility** and **controllability**, by integrating the code of the [NLcontrollability](https://github.com/afvillaverde/NLcontrollability/tree/main) toolbox. 
 
 Most of these analyses are performed symbolically, and yield results that are valid for all values of the variables, except for a set of measure zero.
 
-STRIKE-GOLDD was created by [Alejandro F. Villaverde](http://afvillaverde.webs.uvigo.gal/), <afvillaverde@uvigo.gal>. 
+STRIKE-GOLDD was originally created by [Alejandro F. Villaverde](http://afvillaverde.webs.uvigo.gal/), <afvillaverde@uvigo.gal>. It now includes contributions from a number of collaborators.
 
 ## Installation and requirements
 
@@ -34,7 +36,7 @@ Alternatively, since v4.0 you can also use it as a Matlab app with a graphical i
 4. define the problem, method, and options in the pop-up window
 5. press the Run button in the pop-up window
 
-If one wishes to use optimization-based decomposition (which is seldom necessary), the MATLAB version of the [MEIGO](http://nautilus.iim.csic.es/~gingproc/meigo.html) toolbox is also required.
+If one wishes to use optimization-based decomposition (which is seldom necessary, and currently not recommended), the MATLAB version of the [MEIGO](http://nautilus.iim.csic.es/~gingproc/meigo.html) toolbox is also required.
 
 More information can be found in the [STRIKE-GOLDD manual](STRIKE-GOLDD/doc/STRIKE-GOLDD_manual.pdf).
 
@@ -67,6 +69,11 @@ Extension for automatic reparameterization, AutoRepar (STRIKE-GOLDD 3.0):
 Extension for graphical interface & new algorithm, ProbObsTest (STRIKE-GOLDD 4.0):
 
 [Díaz-Seoane S, Rey Barreiro X, Villaverde AF (2023). STRIKE-GOLDD 4.0: user-friendly, efficient analysis of structural identifiability and observability. *Bioinformatics*, 39(1), btac748](https://doi.org/10.1093/bioinformatics/btac748)
+
+Description of the accessibility and controllability tests provided with the NLcontrollability tool (STRIKE-GOLDD 4.1):
+
+[Díaz-Seoane S, Barreiro Blas A, Villaverde AF (2023). Controllability and accessibility analysis of nonlinear biosystems. *Computer Methods and Programs in Biomedicine*, 242:107837](https://doi.org/10.1016/j.cmpb.2023.107837)
+
 
 ## Disclaimer
 
