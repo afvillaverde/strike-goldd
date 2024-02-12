@@ -184,7 +184,7 @@ fprintf('\n Total execution time: %d seconds. \n',totaltime);
 
 xaug=[xw;p]; %#ok<NASGU> 
 
-resultsname = sprintf('id_results_%s_%s',modelname,date);
+resultsname = sprintf('id_results_%s_%s',modelname,datetime("today"));
 fullresultsname = strcat(nmf,filesep,'results',filesep,resultsname);
 save(fullresultsname);
 

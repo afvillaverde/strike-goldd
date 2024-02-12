@@ -5,13 +5,13 @@ if exist("options_aux.m",'file') == 2
     if nargin > 0
         modelname = varargin;
         load(modelname{1});
-        [~,paths,opts,submodels,prev_ident_pars] = options_aux();
+        [~,~,opts,~] = options_aux();
         ansatz=opts.ansatz;
         pMax=opts.degree;
         tmax=opts.tmax;
         ode_n=opts.ode_n;
     else
-        [modelname,paths,opts,submodels,prev_ident_pars] = options_aux();
+        [modelname,~,opts,~] = options_aux();
         load(modelname);
         ansatz=opts.ansatz;
         pMax=opts.degree;
@@ -22,13 +22,13 @@ else
     if nargin > 0
         modelname = varargin;
         load(modelname{1});
-        [~,paths,opts,submodels,prev_ident_pars] = options();
+        [~,~,opts,~] = options();
         ansatz=opts.ansatz;
         pMax=opts.degree;
         tmax=opts.tmax;
         ode_n=opts.ode_n;
     else
-        [modelname,paths,opts,submodels,prev_ident_pars] = options();
+        [modelname,~,opts,~] = options();
         load(modelname);
         ansatz=opts.ansatz;
         pMax=opts.degree;
@@ -194,7 +194,7 @@ else
     end
 end    
 
-%% CONSTRUCTION OF POLYNOMIES AND SYSTEM
+%% CONSTRUCTION OF POLYNOMIALS AND SYSTEM
 l_in=length(infi);
 %   POL. STATES
 if (ansatz==3)

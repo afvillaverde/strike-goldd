@@ -6,7 +6,6 @@ strikegoldd_path = fileparts(mfilename('fullpath'));
 addpath(strikegoldd_path)
 addpath(fullfile(strikegoldd_path,'functions'))
 addpath(fullfile(strikegoldd_path,'functions',filesep,'aux_AutoRepar'))
-addpath(fullfile(strikegoldd_path,'functions',filesep,'aux_Decomposition'))
 addpath(fullfile(strikegoldd_path,'functions',filesep,'aux_Lie_symmetry',filesep,'lie_sym_functions'))
 addpath(fullfile(strikegoldd_path,'functions',filesep,'aux_Lie_symmetry',filesep,'lie_sym_models'))
 addpath(fullfile(strikegoldd_path,'functions',filesep,'aux_Prob_Obs_Test'))

@@ -33,21 +33,21 @@ addpath(resultspath);
 
 %% STRIKE-GOLDD
 if exist("options_aux.m",'file') == 2
-    [modelname,paths,opts,submodels,prev_ident_pars] = options_aux();
+    [modelname,paths,opts,prev_ident_pars] = options_aux();
 else
-    [modelname,paths,opts,submodels,prev_ident_pars] = options();
+    [modelname,paths,opts,prev_ident_pars] = options();
 end
 
 if (opts.use_existing_results==0)
     STRIKE_GOLDD(modelname,1);
-    resultsname = sprintf('id_results_%s_%s',modelname,date);
+    resultsname = sprintf('id_results_%s_%s',modelname,datetime("today"));
     load(resultsname);
 else
     load(opts.results_file);
     if exist("options_aux.m",'file') == 2
-        [modelname,paths,opts,submodels,prev_ident_pars] = options_aux();
+        [modelname,paths,opts,prev_ident_pars] = options_aux();
     else
-        [modelname,paths,opts,submodels,prev_ident_pars] = options();
+        [modelname,paths,opts,prev_ident_pars] = options();
     end
 end
 
@@ -72,7 +72,7 @@ else
     fprintf('>>> The %s model requires %d transformation(s).\n', modelname,num_repar);
 end
 
-%% SYMMETRY STUDY
+%% SYMMETRY SEARCH
 fprintf('Searching for symmetries of %s...\n', modelname);
 [transf,nuevas_variables,allVar,z_v]=Lie_Symmetry();
 
@@ -197,7 +197,7 @@ for it=1:num_repar
     else
         num_par=sum_num_par(num_gen);
     end
-    %   Imprimir por pantalla el parámetro del generador que se elimina
+    % Print the parameter to be removed from the generator:
     fprintf('   You have chosen the parameter ')
     if num_gen ~=1
         fprintf('%s',allVar(cols(num_par+sum(dim(1:num_gen-1)))))
@@ -319,24 +319,24 @@ for it=1:num_repar
     f=f_s;
     h=h_s;
     % Save the new model
-    resultsname = sprintf('New_Model',modelname,date);
+    resultsname = sprintf('New_Model',modelname,datetime("today"));
     fullresultsname = strcat(nmf,filesep,'results',filesep,resultsname);
-    save(fullresultsname,'x','p','u','w','h','f','ics','known_ics');
+    save(fullresultsname,'x','p','u','w','h','f');
     if it<num_repar
         
-        %   There are still pending repairs
+        % There are still pending repairs
         STRIKE_GOLDD('New_Model',1);
         modelname='New_Model';
         if exist("options_aux.m",'file') == 2
-            [~,paths,opts,submodels,prev_ident_pars] = options_aux();
-            resultsname = sprintf('id_results_%s_%s',modelname,date);
+            [~,paths,opts,prev_ident_pars] = options_aux();
+            resultsname = sprintf('id_results_%s_%s',modelname,datetime("today"));
             load(resultsname);
             fprintf(' -------------------------------------------------- \n');
             fprintf('Searching for symmetries of %s...\n', modelname);
             [transf,nuevas_variables,allVar]=Lie_Symmetry('New_Model');  
         else
-            [~,paths,opts,submodels,prev_ident_pars] = options();
-            resultsname = sprintf('id_results_%s_%s',modelname,date);
+            [~,paths,opts,prev_ident_pars] = options();
+            resultsname = sprintf('id_results_%s_%s',modelname,datetime("today"));
             load(resultsname);
             fprintf(' -------------------------------------------------- \n');
             fprintf('Searching for symmetries of %s...\n', modelname);
@@ -348,7 +348,7 @@ for it=1:num_repar
            return 
         end
     else
-        %   Reparametrized model
+        % Reparametrized model
         fprintf('\n------------------------------------------------------------------\n');
         fprintf('>>> The model reparameterization has been completed successfully \n');
         fprintf('------------------------------------------------------------------\n');

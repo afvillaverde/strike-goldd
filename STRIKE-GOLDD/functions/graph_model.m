@@ -72,7 +72,7 @@ gp = plot(G,'Layout','force');
 % Edit properties (color, size, shape):
 gp.EdgeColor = 'k';
 colormap lines 
-caxis([0 10])
+clim([0 10])
 gp.NodeCData = zeros(1,totsize);
 markersizes  = zeros(1,totsize);
 markershapes = cell(1,totsize);
