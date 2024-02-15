@@ -5,7 +5,7 @@
 clear;
 
 % Choose model and way of plotting it:
-modelname = '1D_BIG'; % 'BachmannJAKSTAT'
+modelname = '1D_BIG'; % 'BIG_unknown_input';
 plot_states_names = 1; %1: names, 0: indices
 
 % Add paths and load model:
@@ -27,18 +27,32 @@ load(modelname,'-mat')
 n = numel(x);
 q = numel(p);
 m = numel(h);
+if exist('u','var')
+    nu = numel(u);
+else 
+    nu = 0;
+    u = [];
+end
+if exist('w','var')
+    nw = numel(w);
+else 
+    nw = 0;
+    w = [];
+end
 y = sym(zeros(m,1));
 for k = 1:numel(y)
     y(k) = sym(sprintf('y%d', k));
 end
-totsize = n+q+m;
+totsize = n+q+m+nu+nw;
 if size(f,2) ~= 1, f = transpose(f); end
 if size(h,2) ~= 1, h = transpose(h); end
 if size(x,2) ~= 1, x = transpose(x); end
 if size(y,2) ~= 1, y = transpose(y); end
 if size(p,2) ~= 1, p = transpose(p); end
-totfun = [f;h;zeros(q,1)];
-totnames  = [x;y;p];
+if size(u,2) ~= 1, u = transpose(u); end
+if size(w,2) ~= 1, w = transpose(w); end
+totfun = [f;h;zeros(q+nu+nw,1)];
+totnames  = [x;y;p;u;w];
 nodenames = cell(1,totsize);  
 for numvar = 1:totsize
     nodenames{numvar} = char(totnames(numvar));
@@ -65,7 +79,7 @@ if plot_states_names == 0
 end
 
 % Plot graph:
-figure(2)
+figure()
 G = digraph(con,nodenames,'OmitSelfLoops'); 
 gp = plot(G,'Layout','force');
 
@@ -90,6 +104,16 @@ for i=(n+m+1):(n+m+q)
     gp.NodeCData(i) = 5; % parameters
     markersizes(i)= 5;
     markershapes{i} = 'o';
+end
+for i=(n+m+q+1):(n+m+q+nu)
+    gp.NodeCData(i) = 15; % inputs
+    markersizes(i)= 10;
+    markershapes{i} = '^';
+end
+for i=(n+m+q+nu+1):(n+m+q+nu+nw)
+    gp.NodeCData(i) = 3; % inputs
+    markersizes(i)= 10;
+    markershapes{i} = '^';
 end
 gp.MarkerSize = markersizes;
 gp.Marker = markershapes;
