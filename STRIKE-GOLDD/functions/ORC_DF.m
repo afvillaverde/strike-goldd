@@ -348,7 +348,7 @@ while k<=opts.affine_kmax && stage_time(k+1)-stage_time(k)<opts.affine_tStage
 
     % Calculate rank of k-observability matrix:
     tRank=tic;
-    rango(k)=rank(dif_omega);
+    rango(k)=rank(dif_Omega);
     % Update rank computation time:
     last_rank_time=toc(tRank);
     rank_time(k)=rank_time(k)+last_rank_time;
@@ -470,7 +470,7 @@ while k<=opts.affine_kmax && stage_time(k+1)-stage_time(k)<opts.affine_tStage
 
         % Save results if model is FISPO:
         resultsname = sprintf('id_results_%s',modelname);
-        fullresultsname = strcat(pwd,filesep,'results',filesep,resultsname,'_',datetime("today"));
+        fullresultsname = strcat(pwd,filesep,'results',filesep,resultsname,'_',date);
         warning off 'parallel:cluster:CannotSaveCorrectly'
         save(fullresultsname);
 
@@ -609,7 +609,7 @@ while k<=opts.affine_kmax && stage_time(k+1)-stage_time(k)<opts.affine_tStage
 
         % Save results:
         resultsname = sprintf('id_results_%s',modelname);
-        fullresultsname = strcat(pwd,filesep,'results',filesep,resultsname,'_',datetime("today"));
+        fullresultsname = strcat(pwd,filesep,'results',filesep,resultsname,'_',date);
         warning off 'parallel:cluster:CannotSaveCorrectly'
         save(fullresultsname);
 
@@ -645,7 +645,7 @@ while k<=opts.affine_kmax && stage_time(k+1)-stage_time(k)<opts.affine_tStage
     else
         % Partial rank calculation (without parallel toolbox):
         for i=1:numel(nf_unobs)
-            elim_dif_omega=dif_omega; 
+            elim_dif_omega=dif_Omega; 
             elim_dif_omega(:,nf_unobs(i))=[];      
             partial_ranks(nf_unobs(i),k)=rank(elim_dif_omega);
             if partial_ranks(nf_unobs(i),k)<rango(k), unobs_states_ind(nf_unobs(i),k)=0;end
@@ -798,7 +798,7 @@ totaltime=toc(tStart);
 fprintf('\n\n Total execution time: %d \n\n',totaltime);
 
 % Save results:
-resultsname = sprintf('id_results_%s_%s',modelname,datetime("today"));
+resultsname = sprintf('id_results_%s_%s',modelname,date);
 fullresultsname = strcat(nmf,filesep,'results',filesep,resultsname);
 warning off 'parallel:cluster:CannotSaveCorrectly'
 save(fullresultsname);

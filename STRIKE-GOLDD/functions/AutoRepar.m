@@ -40,7 +40,7 @@ end
 
 if (opts.use_existing_results==0)
     STRIKE_GOLDD(modelname,1);
-    resultsname = sprintf('id_results_%s_%s',modelname,datetime("today"));
+    resultsname = sprintf('id_results_%s_%s',modelname,date);
     load(resultsname);
 else
     load(opts.results_file);
@@ -319,7 +319,7 @@ for it=1:num_repar
     f=f_s;
     h=h_s;
     % Save the new model
-    resultsname = sprintf('New_Model',modelname,datetime("today"));
+    resultsname = sprintf('New_Model',modelname,date);
     fullresultsname = strcat(nmf,filesep,'results',filesep,resultsname);
     save(fullresultsname,'x','p','u','w','h','f');
     if it<num_repar
@@ -329,14 +329,14 @@ for it=1:num_repar
         modelname='New_Model';
         if exist("options_aux.m",'file') == 2
             [~,paths,opts,prev_ident_pars] = options_aux();
-            resultsname = sprintf('id_results_%s_%s',modelname,datetime("today"));
+            resultsname = sprintf('id_results_%s_%s',modelname,date);
             load(resultsname);
             fprintf(' -------------------------------------------------- \n');
             fprintf('Searching for symmetries of %s...\n', modelname);
             [transf,nuevas_variables,allVar]=Lie_Symmetry('New_Model');  
         else
             [~,paths,opts,prev_ident_pars] = options();
-            resultsname = sprintf('id_results_%s_%s',modelname,datetime("today"));
+            resultsname = sprintf('id_results_%s_%s',modelname,date);
             load(resultsname);
             fprintf(' -------------------------------------------------- \n');
             fprintf('Searching for symmetries of %s...\n', modelname);
