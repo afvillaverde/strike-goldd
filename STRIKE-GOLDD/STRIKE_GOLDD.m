@@ -4,13 +4,12 @@
 % a Matlab toolbox for structural identifiability and observability (SIO)
 % analysis of nonlinear models.
 %--------------------------------------------------------------------------
-% 
-% Version 4.2.0, last modified: 12/02/2024
+% % Version 4.2.0
 % Contact: Alejandro F. Villaverde (afvillaverde@uvigo.gal)
 %==========================================================================
 
 function STRIKE_GOLDD(varargin)
-
+clc
 fprintf('\n\n -------------------------------- \n');
 fprintf(' >>> STRIKE-GOLDD toolbox 4.2.0 \n');
 fprintf(' -------------------------------- \n');
@@ -26,30 +25,19 @@ switch nargin
         nmf = pwd;
     case 1
         copyfile(varargin{1},"current_options.m");
-        [modelname,paths,opts,prev_ident_pars] = current_options;
-        delete("current_options.m");
+        [modelname,paths,opts,prev_ident_pars] = current_options; 
         nmf = pwd;
-    case 2
-        if exist("options_aux.m",'file') == 2
-            [~,paths,opts,prev_ident_pars] = options_aux;
-            modelname = varargin{1};
-            mf   = pwd;
-            idcs = strfind(mf,filesep);
-            nmf  = mf(1:idcs(end)-1);     
-            paths.models    = strcat(nmf,filesep,'models');
-            paths.results   = strcat(nmf,filesep,'results');
-            paths.functions = strcat(nmf,filesep,'functions');
-        else
-            % when STRIKE_GOLDD.m is called by AutoRepar, add extra paths:
-            [~,paths,opts,prev_ident_pars] = options;
-            modelname = varargin{1};
-            mf   = pwd;
-            idcs = strfind(mf,filesep);
-            nmf  = mf(1:idcs(end)-1);    
-            paths.models    = strcat(nmf,filesep,'models');
-            paths.results   = strcat(nmf,filesep,'results');
-            paths.functions = strcat(nmf,filesep,'functions');
-        end
+    case 4  % STRIKE_GOLDD.m is called by AutoRepar -> add extra paths:
+        modelname       = varargin{1};
+        paths           = varargin{2};
+        opts            = varargin{3};
+        prev_ident_pars = varargin{4};
+        mf   = pwd;
+        idcs = strfind(mf,filesep);
+        nmf  = mf(1:idcs(end)-1);    
+        paths.models    = strcat(nmf,filesep,'models');
+        paths.results   = strcat(nmf,filesep,'results');
+        paths.functions = strcat(nmf,filesep,'functions');
 end
 addpath(genpath(paths.models));
 addpath(genpath(paths.results));
@@ -70,10 +58,10 @@ switch opts.algorithm
         Lie_Symmetry
         return
     case 5
-        if nargin < 2 % (if nargin == 2, STRIKE-GOLDD is being called by AutoRepar => avoid recursive loop)
+        if nargin < 2 
             AutoRepar
             return
-        else
+        else % if nargin == 4, STRIKE-GOLDD is being called by AutoRepar => avoid recursive loop
             prob_obs_test(modelname,opts,prev_ident_pars,nmf);
             return
 	    end
@@ -436,5 +424,11 @@ fprintf('\n Total execution time: %d \n\n',totaltime);
 resultsname = sprintf('id_results_%s_%s',modelname,date);   
 fullresultsname = strcat(nmf,filesep,'results',filesep,resultsname);
 save(fullresultsname);
+
+%==========================================================================
+% Delete auxiliary files:
+if exist("current_options.m",'file')
+    delete("current_options.m")
+end
 
 end    

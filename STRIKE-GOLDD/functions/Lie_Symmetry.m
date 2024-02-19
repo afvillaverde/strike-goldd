@@ -1,43 +1,18 @@
 
-function [transf,nuevas_variables,allVar,z_v]=Lie_Symmetry(varargin)
+function [transf,nuevas_variables,allVar,z_v] = Lie_Symmetry(varargin)
 
-if exist("options_aux.m",'file') == 2
-    if nargin > 0
-        modelname = varargin;
-        load(modelname{1});
-        [~,~,opts,~] = options_aux();
-        ansatz=opts.ansatz;
-        pMax=opts.degree;
-        tmax=opts.tmax;
-        ode_n=opts.ode_n;
-    else
-        [modelname,~,opts,~] = options_aux();
-        load(modelname);
-        ansatz=opts.ansatz;
-        pMax=opts.degree;
-        tmax=opts.tmax;
-        ode_n=opts.ode_n;
-    end
+if nargin > 0
+    modelname = varargin{1};
+    opts      = varargin{2};
 else
-    if nargin > 0
-        modelname = varargin;
-        load(modelname{1});
-        [~,~,opts,~] = options();
-        ansatz=opts.ansatz;
-        pMax=opts.degree;
-        tmax=opts.tmax;
-        ode_n=opts.ode_n;
-    else
-        [modelname,~,opts,~] = options();
-        load(modelname);
-        ansatz=opts.ansatz;
-        pMax=opts.degree;
-        tmax=opts.tmax;
-        ode_n=opts.ode_n;
-    end
+    [modelname,~,opts,~] = options();
 end
+load(modelname);
+ansatz = opts.ansatz;
+pMax   = opts.degree;
+tmax   = opts.tmax;
+ode_n  = opts.ode_n;
 
-%clc
 %%  SYMMETRY SEARCH ALGORITHM WITH INFINITESIMALS
 %   Code for symmetry search algorithm with infinitesimals generators.
 %   This is the procedure that is followed:
@@ -54,7 +29,7 @@ end
 if exist('u') && isempty(u)==0
     assume(u,'real');
 end
-%   Check if are columns or rows
+% Check if vectors are columns or rows
 if isrow(p)==1
     p=transpose(p);
 end
@@ -105,7 +80,7 @@ if exist('ics','var') && isempty(ics)==0
             end
         end
     end
-    %   Obtaining the variables within ICS
+    %   Obtain the variables within ICS
     ind=nonzeros(ind);
     nics=length(ind);
     ics_n=subs(ics,x(ind),ic);
@@ -120,8 +95,7 @@ else
     nics=0;
 end
 
-
-%   Creation variables and constants
+%   Create variables and constants
 l_x=length(x);              %   States vector length
 l_p=length(p)+nics;         %   Parameters vector length
 l_f=length(f);              %   f function vector length
@@ -163,6 +137,7 @@ else
         diffini=[diffini,diff(infi(i),allVar(i))];
     end
 end
+
 %% NUMERATOR AND DENOMINATOR
 f=expand(f,'IgnoreAnalyticConstraints',true);
 h=expand(h,'IgnoreAnalyticConstraints',true);
@@ -174,6 +149,9 @@ diff_num_f = [];
 diff_num_h = [];
 diff_den_f = [];
 diff_den_h = [];
+if exist('ics','var') == 0
+    ics = []; % avoid error if 'ics' does not exist
+end 
 if isempty(ics)==0
     diff_num_ics=[];
     diff_den_ics=[];

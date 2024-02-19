@@ -13,8 +13,9 @@
 %         compute the observability and symmetry study.
 %
 %%
-clear all
-clc
+clear %all
+% clc
+
 %%  LOAD DATA
 %   Path for data  
 parentpath = cd(cd('..'));
@@ -32,23 +33,18 @@ addpath(resultspath);
 
 
 %% STRIKE-GOLDD
-if exist("options_aux.m",'file') == 2
-    [modelname,paths,opts,prev_ident_pars] = options_aux();
+if exist("current_options.m",'file') == 2
+    [modelname,paths,opts,prev_ident_pars] = current_options();
 else
     [modelname,paths,opts,prev_ident_pars] = options();
 end
 
 if (opts.use_existing_results==0)
-    STRIKE_GOLDD(modelname,1);
+    STRIKE_GOLDD(modelname,paths,opts,prev_ident_pars);
     resultsname = sprintf('id_results_%s_%s',modelname,date);
     load(resultsname);
 else
     load(opts.results_file);
-    if exist("options_aux.m",'file') == 2
-        [modelname,paths,opts,prev_ident_pars] = options_aux();
-    else
-        [modelname,paths,opts,prev_ident_pars] = options();
-    end
 end
 
 %% 
@@ -74,7 +70,7 @@ end
 
 %% SYMMETRY SEARCH
 fprintf('Searching for symmetries of %s...\n', modelname);
-[transf,nuevas_variables,allVar,z_v]=Lie_Symmetry();
+[transf,nuevas_variables,allVar,z_v] = Lie_Symmetry(modelname,opts);
 
 % Verify that the transformation vector is not empty
 if (isempty(transf)==1)
@@ -325,23 +321,13 @@ for it=1:num_repar
     if it<num_repar
         
         % There are still pending repairs
-        STRIKE_GOLDD('New_Model',1);
+        STRIKE_GOLDD('New_Model',paths,opts,prev_ident_pars);
         modelname='New_Model';
-        if exist("options_aux.m",'file') == 2
-            [~,paths,opts,prev_ident_pars] = options_aux();
-            resultsname = sprintf('id_results_%s_%s',modelname,date);
-            load(resultsname);
-            fprintf(' -------------------------------------------------- \n');
-            fprintf('Searching for symmetries of %s...\n', modelname);
-            [transf,nuevas_variables,allVar]=Lie_Symmetry('New_Model');  
-        else
-            [~,paths,opts,prev_ident_pars] = options();
-            resultsname = sprintf('id_results_%s_%s',modelname,date);
-            load(resultsname);
-            fprintf(' -------------------------------------------------- \n');
-            fprintf('Searching for symmetries of %s...\n', modelname);
-            [transf,nuevas_variables,allVar]=Lie_Symmetry('New_Model');             
-        end    
+        resultsname = sprintf('id_results_%s_%s',modelname,date);
+        load(resultsname);
+        fprintf(' -------------------------------------------------- \n');
+        fprintf('Searching for symmetries of %s...\n', modelname);
+        [transf,nuevas_variables,allVar]=Lie_Symmetry('New_Model',opts);              
         
         % Verify that the transformation vector is not empty
         if (isempty(transf)==1)
@@ -358,4 +344,12 @@ for it=1:num_repar
         fprintf('h:\n')
         disp(h)
     end
+end
+
+cd .. % go back to root dir
+
+%==========================================================================
+% Delete auxiliary files:
+if exist("current_options.m",'file')
+    delete("current_options.m")
 end
