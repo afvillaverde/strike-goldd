@@ -1,4 +1,4 @@
-% running example for NLcontrollability
+% Main file for analysing NonLinear controllability & accessibility
 
 clear; clc;
 addpath(genpath('models'))
