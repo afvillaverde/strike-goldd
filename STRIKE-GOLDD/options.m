@@ -42,11 +42,6 @@ opts.multiexp_user_nnzDerU = 0;     % Set manually the number of non-zero known 
 opts.multiexp_nnzDerU      = [0 1]; % Number of non-zero known input derivatives in each experiment (Rows=inputs;Columns=experiments).
 opts.multiexp_user_nnzDerW = 0;     % Set manually the number of non-zero unknown input derivatives in each experiment (=1) or not (=0).
 opts.multiexp_nnzDerW      = [1 0]; % Number of non-zero unknown input derivatives in each experiment (Rows=inputs;Columns=experiments).
-opts.multiexp_user_ics     = 0;     % Set manually the initial conditions for each experiment (=1) or not (=0).
-%- Multi-experiment initial conditions (Rows=variables;Columns:experiments):
-   opts.multiexp_ics       = [ [1,0,0,1,0,1,0,0,0].', [1,0,0,1,0,1,0,0,0].' ];
-%- Which initial conditions are replaced (Rows=variables;Columns=experiments):
-   opts.multiexp_known_ics = [ [0,1,1,0,1,0,1,1,1].', [0,1,1,0,1,0,1,1,1].' ];
 
 %=========== LIE SYMMETRIES & REPARAMETERIZATION OPTIONS: =================  
 opts.ansatz     = 2; % Type of Ansatz: %  uni -> Univariate (1)
@@ -76,6 +71,9 @@ opts.decomp     = 0;            % decompose model if the whole model is too larg
 opts.decomp_user= 0;            % when decomposing model, use submodels specified by the user (= 1) or found by optimization (= 0). 
 opts.maxOpttime = 30;           % max. time allowed for every optimization (if optimization-based decomposition is used).
 opts.maxstates  = 6;            % max. number of states in the submodels (if optimization-based decomposition is used).
+opts.multiexp_user_ics  = 0;                 % Set manually the initial conditions for each experiment (=1) or not (=0).
+opts.multiexp_ics       = [[1,0].',[1,0].']; %- Multi-experiment initial conditions (Rows=variables;Columns:experiments):
+opts.multiexp_known_ics = [[0,1].',[1,0].']; %- Which initial conditions are replaced (Rows=variables;Columns=experiments):
 submodels       = [];           % User-defined submodels for decomposition (may be left = [], or specified as a vector of states, as e.g.:)
 
 end
