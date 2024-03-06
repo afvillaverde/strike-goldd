@@ -27,12 +27,12 @@ To use STRIKE-GOLDD you just need to:
 2. open a MATLAB session
 3. run `install.m` from the STRIKE-GOLDD directory
 4. define the problem by editing `options.m`
-5. run `STRIKE_GOLDD.m`
+5. run `STRIKE_GOLDD.m` or `NLcontrollability.m`, depending on the analysis
 
 Alternatively, since v4.0 you can also use it as a Matlab app with a graphical interface:
 1. download the code
 2. open a MATLAB session
-3. right click on `STRIKE_GOLDD_APP.mlapp` and press Run
+3. right click on `MainApp.mlapp` and press Run
 4. define the problem, method, and options in the pop-up window
 5. press the Run button in the pop-up window
 
