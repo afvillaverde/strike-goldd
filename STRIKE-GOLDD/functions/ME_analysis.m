@@ -61,15 +61,9 @@ f=me_f;
 h=me_h;
 
 % Initial conditions:
-if exist('ics','var')
-    if opts.multiexp_user_ics == 0
-        % Replicate initial conditions:
-        ics=repmat(ics,1,opts.multiexp_numexp);
-        known_ics=repmat(known_ics,1,opts.multiexp_numexp);
-    else
-        ics=reshape(opts.multiexp_ics,1,[]);
-        known_ics=reshape(opts.multiexp_known_ics,1,[]);
-    end
+if opts.multiexp_user_ics == 1
+    ics=reshape(opts.multiexp_ics,1,[]);
+    known_ics=reshape(opts.multiexp_known_ics,1,[]);
 else
     ics=[];
     known_ics=[];

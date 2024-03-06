@@ -6,10 +6,10 @@ tStart = tic;
 %=== Read options, add folders to path, and load model: ===================
 switch nargin
     case 0
-        [modelname,~,opts,~,~] = options;
+        [modelname,~,opts,~] = options;
     case 1
         copyfile(varargin{1},"current_options.m");
-        [modelname,~,opts,~,~] = current_options;
+        [modelname,~,opts,~] = current_options;
         delete("current_options.m");
     case 4
         tests     = varargin{1};

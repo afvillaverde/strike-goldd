@@ -13,8 +13,9 @@
 %         compute the observability and symmetry study.
 %
 %%
-clear all
-clc
+clear %all
+% clc
+
 %%  LOAD DATA
 %   Path for data  
 parentpath = cd(cd('..'));
@@ -32,23 +33,18 @@ addpath(resultspath);
 
 
 %% STRIKE-GOLDD
-if exist("options_aux.m",'file') == 2
-    [modelname,paths,opts,submodels,prev_ident_pars] = options_aux();
+if exist("current_options.m",'file') == 2
+    [modelname,paths,opts,prev_ident_pars] = current_options();
 else
-    [modelname,paths,opts,submodels,prev_ident_pars] = options();
+    [modelname,paths,opts,prev_ident_pars] = options();
 end
 
 if (opts.use_existing_results==0)
-    STRIKE_GOLDD(modelname,1);
+    STRIKE_GOLDD(modelname,paths,opts,prev_ident_pars);
     resultsname = sprintf('id_results_%s_%s',modelname,date);
     load(resultsname);
 else
     load(opts.results_file);
-    if exist("options_aux.m",'file') == 2
-        [modelname,paths,opts,submodels,prev_ident_pars] = options_aux();
-    else
-        [modelname,paths,opts,submodels,prev_ident_pars] = options();
-    end
 end
 
 %% 
@@ -72,9 +68,9 @@ else
     fprintf('>>> The %s model requires %d transformation(s).\n', modelname,num_repar);
 end
 
-%% SYMMETRY STUDY
+%% SYMMETRY SEARCH
 fprintf('Searching for symmetries of %s...\n', modelname);
-[transf,nuevas_variables,allVar,z_v]=Lie_Symmetry();
+[transf,nuevas_variables,allVar,z_v] = Lie_Symmetry(modelname,opts);
 
 % Verify that the transformation vector is not empty
 if (isempty(transf)==1)
@@ -197,7 +193,7 @@ for it=1:num_repar
     else
         num_par=sum_num_par(num_gen);
     end
-    %   Imprimir por pantalla el parámetro del generador que se elimina
+    % Print the parameter to be removed from the generator:
     fprintf('   You have chosen the parameter ')
     if num_gen ~=1
         fprintf('%s',allVar(cols(num_par+sum(dim(1:num_gen-1)))))
@@ -321,34 +317,24 @@ for it=1:num_repar
     % Save the new model
     resultsname = sprintf('New_Model',modelname,date);
     fullresultsname = strcat(nmf,filesep,'results',filesep,resultsname);
-    save(fullresultsname,'x','p','u','w','h','f','ics','known_ics');
+    save(fullresultsname,'x','p','u','w','h','f');
     if it<num_repar
         
-        %   There are still pending repairs
-        STRIKE_GOLDD('New_Model',1);
+        % There are still pending repairs
+        STRIKE_GOLDD('New_Model',paths,opts,prev_ident_pars);
         modelname='New_Model';
-        if exist("options_aux.m",'file') == 2
-            [~,paths,opts,submodels,prev_ident_pars] = options_aux();
-            resultsname = sprintf('id_results_%s_%s',modelname,date);
-            load(resultsname);
-            fprintf(' -------------------------------------------------- \n');
-            fprintf('Searching for symmetries of %s...\n', modelname);
-            [transf,nuevas_variables,allVar]=Lie_Symmetry('New_Model');  
-        else
-            [~,paths,opts,submodels,prev_ident_pars] = options();
-            resultsname = sprintf('id_results_%s_%s',modelname,date);
-            load(resultsname);
-            fprintf(' -------------------------------------------------- \n');
-            fprintf('Searching for symmetries of %s...\n', modelname);
-            [transf,nuevas_variables,allVar]=Lie_Symmetry('New_Model');             
-        end    
+        resultsname = sprintf('id_results_%s_%s',modelname,date);
+        load(resultsname);
+        fprintf(' -------------------------------------------------- \n');
+        fprintf('Searching for symmetries of %s...\n', modelname);
+        [transf,nuevas_variables,allVar]=Lie_Symmetry('New_Model',opts);              
         
         % Verify that the transformation vector is not empty
         if (isempty(transf)==1)
            return 
         end
     else
-        %   Reparametrized model
+        % Reparametrized model
         fprintf('\n------------------------------------------------------------------\n');
         fprintf('>>> The model reparameterization has been completed successfully \n');
         fprintf('------------------------------------------------------------------\n');
@@ -358,4 +344,12 @@ for it=1:num_repar
         fprintf('h:\n')
         disp(h)
     end
+end
+
+cd .. % go back to root dir
+
+%==========================================================================
+% Delete auxiliary files:
+if exist("current_options.m",'file')
+    delete("current_options.m")
 end
