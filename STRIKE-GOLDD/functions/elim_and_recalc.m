@@ -86,7 +86,7 @@ for ind=1:numel(unmeas_xred_indices) % for each unmeasured state
         indices(original_index) = []; %indices(original_index==unmeas_xred_indices) = [];
         num_rank = rank(numonx(:,indices));
         if num_rank == rangoinicial
-            if opts.forcedecomp == 0 && opts.decomp == 0 && unidflag == 1
+            if unidflag == 1
                 fprintf('\n    => State %s is unobservable',char(xred(original_index)));
                 new_unobs_states = [new_unobs_states; xred(original_index)];
             else
@@ -113,7 +113,7 @@ for ind=1:nw
         indices(n+q+ind) = []; % remove the column whose identifiability we want to check
         num_rank = rank(numonx(:,indices));
         if num_rank == rangoinicial
-            if opts.forcedecomp == 0 && opts.decomp == 0 && unidflag == 1
+            if unidflag == 1
                 fprintf('\n    => Input %s is unobservable',char(wred(ind)));
                 new_unobs_in = [new_unobs_in; wred(ind)];
             else
