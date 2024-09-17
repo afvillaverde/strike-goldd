@@ -34,6 +34,9 @@ me_u   = sym(zeros(nu*opts.multiexp_numexp,1));
 me_w   = sym(zeros(nw*opts.multiexp_numexp,1));
 
 %========================Multi-experiment model===========================%
+if size(x,2)~=1,x=transpose(x);end
+if size(w,2)~=1,w=transpose(w);end
+if size(u,2)~=1;u=transpose(u);end 
 
 variables=[x;w;u];
 
