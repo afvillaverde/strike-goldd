@@ -10,7 +10,7 @@ function build_OI_ext(nd)
 %==========================================================================
 % Read options, add folders to path:
 global x f p u w wlvector
-[modelname,paths,opts,submodels,prev_ident_pars] = options; %#ok<*ASGLU>
+[modelname,paths,opts,prev_ident_pars] = options; %#ok<*ASGLU>
 addpath(genpath(paths.models));
 addpath(genpath(paths.results));
 addpath(genpath(paths.functions));
@@ -18,7 +18,7 @@ addpath(genpath(paths.functions));
 %==========================================================================
 % Load model:
 load(modelname)
-fprintf('\n Analyzing identifiability of %s ... \n', modelname);
+fprintf('\n Loading model %s. \n', modelname);
     
 % ==========================================================================
 % Remove parameters that have already been classified as identifiable:
@@ -89,6 +89,8 @@ end
 
 %======================================================================
 % Augment state vector, dynamics:
+if size(x,2)~=1,x=transpose(x);end % make sure x is a column to avoid concatenation errors
+if size(p,2)~=1,p=transpose(p);end % make sure p is a column to avoid concatenation errors
 xaug = [x;p;wlvector];                      
 faug = [f;zeros(numel(p),1);wlvector_dot]; 
 
