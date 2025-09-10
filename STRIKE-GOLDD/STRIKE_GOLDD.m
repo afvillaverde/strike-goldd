@@ -11,7 +11,7 @@
 function STRIKE_GOLDD(varargin)
 
 fprintf('\n\n -------------------------------- \n');
-fprintf(' >>> STRIKE-GOLDD toolbox 4.2.0 \n');
+fprintf(' >>> STRIKE-GOLDD toolbox 4.3.0 \n');
 fprintf(' -------------------------------- \n');
 
 %==========================================================================
@@ -55,9 +55,12 @@ switch opts.algorithm
         ORC_DF(modelname,opts,prev_ident_pars,nmf);
         return
     case 4
-        Lie_Symmetry
+        SIM(modelname,opts,prev_ident_pars,nmf);
         return
     case 5
+        Lie_Symmetry
+        return
+    case 6
         if nargin < 2 
             AutoRepar
             return
