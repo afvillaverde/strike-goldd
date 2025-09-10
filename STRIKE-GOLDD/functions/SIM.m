@@ -298,7 +298,7 @@ fprintf(' >>> RESULTS SUMMARY:\n');
 fprintf(' ------------------------ \n');
 
 fprintf('\n >>> NOTE THAT THE SIM ALGORITHM PROVIDES A NECESSARY BUT NOT SUFFICIENT CONDITION FOR IDENTIFIABILITY AND OBSERVABILITY.');
-fprintf('\n     THEREFORE, CLAIMS ABOUT IDENTIFIABILITY OR OSBERVABILITY SHOULD BE TAKEN ONLY AS POSSIBILITIES, NOT GUARANTEES.');
+fprintf('\n     THEREFORE, CLAIMS ABOUT IDENTIFIABILITY OR OBSERVABILITY SHOULD BE TAKEN ONLY AS POSSIBILITIES, NOT GUARANTEES.\n');
 
 	if numel(identifiables) == numel(p)
 		fprintf('\n >>> The model is structurally identifiable:');
@@ -331,3 +331,4 @@ save(fullresultsname);
 
 
 end
+
