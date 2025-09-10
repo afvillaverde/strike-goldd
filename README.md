@@ -9,7 +9,7 @@ STRIKE-GOLDD is a MATLAB toolbox that analyses nonlinear models of ordinary diff
 - unknown **input observability**. 
 
 Additional features include:
-- search for the **Lie symmetries** that underlie non-observability and non-identifiability, 
+- search for the **scaling** and/or **Lie symmetries** that underlie non-observability and non-identifiability, 
 - automatic **reparameterization** to obtain a fully observable and identifiable model.
 
 Since v4.1.0, it also provides tests for **accessibility** and **controllability**, by integrating the code of the [NLcontrollability](https://github.com/afvillaverde/NLcontrollability/tree/main) toolbox. 
