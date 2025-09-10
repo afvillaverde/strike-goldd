@@ -9,7 +9,7 @@ function [modelname,paths,opts,prev_ident_pars] = options()
 modelname ='C2M';    % Name of a .mat file placed in the 'models' folder 
   
 %%% (2) CHOOSE TYPE OF ANALYSIS:
-opts.algorithm = 4;  % Choose one of the following:
+opts.algorithm = 2;  % Choose one of the following:
    %--- Structural Identifiability and Observability (SIO) algorithms:
       % 1: FISPO (default) -- applicable to nonlinear models in general
       % 2: Prob_Obs_Test   -- applicable to rational models
