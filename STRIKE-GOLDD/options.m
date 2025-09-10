@@ -14,9 +14,9 @@ opts.algorithm = 4;  % Choose one of the following:
       % 1: FISPO (default) -- applicable to nonlinear models in general
       % 2: Prob_Obs_Test   -- applicable to rational models
       % 3: ORC-DF          -- applicable to systems affine in the inputs
-      % 4: SIM             -- searches for scaling symmetries
-   %--- Symmetries and Reparameterization algorithms:
-      % 5: Lie_Symmetry    -- search for symmetries
+    %--- Symmetries and Reparameterization algorithms:
+      % 4: SIM             -- search for scaling symmetries
+      % 5: Lie_Symmetry    -- search for Lie symmetries
       % 6: AutoRepar       -- automatic reparameterization
 
 %================== ADDITIONAL OPTIONS FOR SIO ANALYSIS ===================     
