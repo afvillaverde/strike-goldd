@@ -297,6 +297,9 @@ fprintf('\n\n ------------------------ \n');
 fprintf(' >>> RESULTS SUMMARY:\n');
 fprintf(' ------------------------ \n');
 
+fprintf('\n >>> NOTE THAT THE SIM ALGORITHM PROVIDES A NECESSARY BUT NOT SUFFICIENT CONDITION FOR IDENTIFIABILITY AND OBSERVABILITY.');
+fprintf('\n     THEREFORE, CLAIMS ABOUT IDENTIFIABILITY OR OSBERVABILITY SHOULD BE TAKEN ONLY AS POSSIBILITIES, NOT GUARANTEES.');
+
 	if numel(identifiables) == numel(p)
 		fprintf('\n >>> The model is structurally identifiable:');
 		if numel(identifiables)>0, fprintf('\n     All its parameters are structurally identifiable:\n      %s \n',strjoin(cellfun(@char, identifiables, 'UniformOutput', false), ', ')); end
@@ -325,5 +328,6 @@ fprintf('\n Total execution time: %d \n\n',totaltime);
 resultsname = sprintf('id_results_%s_%s',modelname,date);   
 fullresultsname = strcat(nmf,filesep,'results',filesep,resultsname);
 save(fullresultsname);
+
 
 end
