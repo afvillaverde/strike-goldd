@@ -1,40 +1,43 @@
-function sumandos = split_terms_abs(ecuacion)
-    % separa los sumandos de una ecuación y los devuelve en un cell array
+function terms_abs = split_terms_abs(eq)
+    % Convert the symbolic equation to a string and remove spaces
+    equation_str = strrep(char(eq), ' ', '');
     
-    % Eliminar espacios en blanco para facilitar el procesamiento
-    ecuacion = strrep(char(ecuacion), ' ', '');
+    % Initialize variables
+    terms = {};
+    start_idx = 1;
+    parentheses = 0;
+    length_eq = length(equation_str);
     
-    % Inicializar variables
-    sumandos = {};
-    inicio = 1;
-    longitud = length(ecuacion);
-    
-    % Procesar cada carácter de la ecuación
-    for i = 1:longitud
-        % Detectar cambio de signo (excepto en el primer carácter)
-        if i > 1 && (ecuacion(i) == '+' || ecuacion(i) == '-')
-            % Guardar el sumando anterior (con su signo)
-            sumando = ecuacion(inicio:i-1);
-            sumandos{end+1} = sumando;
-            inicio = i+1;
+    % Process each character
+    for i = 1:length_eq
+        % Count parentheses to ignore signs inside them
+        if equation_str(i) == '('
+            parentheses = parentheses + 1;
+        elseif equation_str(i) == ')'
+            parentheses = parentheses - 1;
+        end
+        
+        % Detect '+' or '-' only if we are not inside parentheses
+        if parentheses == 0 && i > 1 && (equation_str(i) == '+' || equation_str(i) == '-')
+            term = equation_str(start_idx:i-1);
+            terms{end+1} = term;
+            start_idx = i;
         end
     end
     
-    % Añadir el último sumando
-    if inicio <= longitud
-        sumando = ecuacion(inicio:end);
-        sumandos{end+1} = sumando;
-       
+    % Add the last summand
+    if start_idx <= length_eq
+        term = equation_str(start_idx:end);
+        terms{end+1} = term;
     end
     
-% Eliminar signos para obtener valor absoluto
-    sumandos_abs = cell(size(sumandos));
-    for i = 1:length(sumandos)
-        sumando = sumandos{i};
-        % Eliminar signo si existe al inicio
-        if sumando(1) == '+' || sumando(1) == '-'
-            sumando = sumando(2:end);
+    % Remove leading '+' or '-' signs to obtain absolute values
+    terms_abs = cell(size(terms));
+    for i = 1:length(terms)
+        term = terms{i};
+        if ~isempty(term) && (term(1) == '+' || term(1) == '-')
+            term = term(2:end);
         end
-        sumandos_abs{i} = sumando;
+        terms_abs{i} = term;
     end
 end
