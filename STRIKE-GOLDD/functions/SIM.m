@@ -19,7 +19,7 @@ end
 load(modelname)  %#ok<LOAD> 
 fprintf('\n Analyzing the %s model with the SIM algorithm...\n',modelname);
 
-tic
+timeSIM=tic;
 %==========================================================================
 % Initialize variables:
 identifiables  = [];       % identifiable parameters.
@@ -320,7 +320,7 @@ fprintf('\n     THEREFORE, CLAIMS ABOUT IDENTIFIABILITY OR OBSERVABILITY SHOULD 
     
 %==========================================================================
 % Execution time
-totaltime = toc(tic);
+totaltime = toc(timeSIM);
 fprintf('\n Total execution time: %d \n\n',totaltime);
 
 %==========================================================================
