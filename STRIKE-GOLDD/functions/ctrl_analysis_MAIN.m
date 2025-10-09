@@ -4,6 +4,7 @@ tStart = tic;
 
 %==========================================================================
 %=== Read options, add folders to path, and load model: ===================
+logic_givenpoint = 0;
 switch nargin
     case 0
         [modelname,~,opts,~] = options;
@@ -30,10 +31,18 @@ switch nargin
         opts.numericLC = varargin{3};       % 0 or 1
         opts.maxtime = varargin{4};
         x0 = varargin{5};
+        logic_givenpoint = 1;
 end
 load(modelname) %#ok<*LOAD>
 fprintf('\n Analysing model %s ', modelname);
 fprintf('\n Preprocessing model for controllability/accessibility analysis...');
+
+%==========================================================================
+%=== For given point check if size is ok ==================
+if logic_givenpoint == 1 && any(size(x0) ~=size(x))
+    fprintf('\n The initial point given must have the same size as the state vector, \n please give a new one.\n\n')
+    return
+end
 
 %==========================================================================
 %=== Check if the model is affine in the control inputs: ==================
@@ -104,26 +113,30 @@ end
 n_x0=length(x0)/n;
 for i=1:n_x0
     x0_i=x0(i:n_x0:(n-1)*n_x0+i);
-    if logic_eq==1
-        if n_x0>1
-            fprintf('More than one equilibrium point');
-        end
-        fprintf('Condition check for the equilibrium point: \n');
-        fprintf('    %s \n',x0_i);
+    if all((str2sym(rat(x0_i))-x0_i)==0)
+       if logic_eq==1 
+            fprintf('Condition check for the equilibrium point: \n');
+            fprintf('    %s \n',x0_i);
+       else
+            fprintf('Condition check for the point: \n');
+            fprintf('    %d \n',x0_i);
+            fprintf('If the point is not an equilibrium point only the LARC results are valid. \n');
+       end
+       if opts.LC == 1
+            ctrl_LC(modelname,opts,n,f1,f2,x,x0_i)
+       end
+       if opts.ARC == 1
+            ctrl_ARC(modelname,opts,n,nu,f1,f2,jac_f1,jac_f2,x,x0_i)
+       end
+       if opts.LARC == 1 || opts.GSC == 1
+            ctrl_LARC_GSC(modelname,opts,n,nu,f1,f2,jac_f1,jac_f2,x,x0_i)
+       end
     else
-        fprintf('Condition check for the point: \n');
-        fprintf('    %d \n',x0_i);
-        fprintf('If the point is not an equilibrium point only the LARC results are valid. \n');
+        n_x0=n_x0-1;
     end
-    if opts.LC == 1
-        ctrl_LC(modelname,opts,n,f1,f2,x,x0_i)
-    end
-    if opts.ARC == 1
-        ctrl_ARC(modelname,opts,n,nu,f1,f2,jac_f1,jac_f2,x,x0_i)
-    end
-    if opts.LARC == 1 || opts.GSC == 1
-        ctrl_LARC_GSC(modelname,opts,n,nu,f1,f2,jac_f1,jac_f2,x,x0_i)
-    end
+end
+if n_x0==0
+    fprintf('No suitable point could be found, please give a different point. \n');
 end
 
 %==========================================================================

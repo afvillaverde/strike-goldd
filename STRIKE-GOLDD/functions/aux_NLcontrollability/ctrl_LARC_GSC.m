@@ -235,7 +235,7 @@ if opts.LARC == 1
             fprintf('\n    => More Lie brackets would be needed to see if the model is accessible.');
             fprintf('\n    However, the maximum computation time allowed is reached.');
             fprintf('\n    You can increase it by changing <<opts.maxtime>> (currently opts.maxtime = %d)\n',opts.maxtime);
-            fprintf('\n    GSC can not be computed since LARC stoped before getting a conclusion');
+            fprintf('\n    GSC can not be computed since LARC stoped before getting a conclusion\n');
             opts.GSC = 0;
         else
             fprintf(['   => The LARC is not fulfilled => ' ...
