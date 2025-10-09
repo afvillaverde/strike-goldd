@@ -2,6 +2,7 @@
 
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/afvillaverde/strike-goldd?label=Commit%20activity&style=plastic)
 ![GitHub last commit](https://img.shields.io/github/last-commit/afvillaverde/strike-goldd?color=yellow&label=Last%20commit&style=plastic)
+[![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=afvillaverde/strike-goldd)
 
 STRIKE-GOLDD is a MATLAB toolbox that analyses nonlinear models of ordinary differential equations. It performs a simultaneous assessment of:
 - state **observability**,
