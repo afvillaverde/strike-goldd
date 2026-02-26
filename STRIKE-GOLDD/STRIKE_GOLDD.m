@@ -4,14 +4,14 @@
 % a Matlab toolbox for structural identifiability and observability (SIO)
 % analysis of nonlinear models.
 %--------------------------------------------------------------------------
-% % Version 4.3.0
+% % Version 4.3.2
 % Contact: Alejandro F. Villaverde (afvillaverde@uvigo.gal)
 %==========================================================================
 
 function STRIKE_GOLDD(varargin)
 
 fprintf('\n\n -------------------------------- \n');
-fprintf(' >>> STRIKE-GOLDD toolbox 4.3.0 \n');
+fprintf(' >>> STRIKE-GOLDD toolbox 4.3.2 \n');
 fprintf(' -------------------------------- \n');
 
 %==========================================================================
@@ -67,7 +67,10 @@ switch opts.algorithm
         else % if nargin == 4, STRIKE-GOLDD is being called by AutoRepar => avoid recursive loop
             prob_obs_test(modelname,opts,prev_ident_pars,nmf);
             return
-	    end
+        end
+    case 7
+        SIM_PDE(modelname)
+        return        
 end
 
 %==========================================================================

@@ -6,10 +6,10 @@ function [modelname,paths,opts,prev_ident_pars] = options()
 
 %=================== BASIC OPTIONS ("CHOOSE WHAT TO DO") ==================
 %%% (1) CHOOSE MODEL TO ANALYSE: 
-modelname ='C2M';    % Name of a .mat file placed in the 'models' folder 
+modelname ='example3_1';    % Name of a .mat file placed in the 'models' folder 
   
 %%% (2) CHOOSE TYPE OF ANALYSIS:
-opts.algorithm = 2;  % Choose one of the following:
+opts.algorithm = 7;  % Choose one of the following:
    %--- Structural Identifiability and Observability (SIO) algorithms:
       % 1: FISPO (default) -- applicable to nonlinear models in general
       % 2: Prob_Obs_Test   -- applicable to rational models
@@ -18,6 +18,7 @@ opts.algorithm = 2;  % Choose one of the following:
       % 4: SIM             -- search for scaling symmetries
       % 5: Lie_Symmetry    -- search for Lie symmetries
       % 6: AutoRepar       -- automatic reparameterization
+      % 7: SIM_PDE         -- search for scaling symmetries in PDE models
 
 %================== ADDITIONAL OPTIONS FOR SIO ANALYSIS ===================     
 %%% (3) MAIN STRUCTURAL IDENTIFIABILITY & OBSERVABILITY (SIO) OPTIONS:
