@@ -12,9 +12,11 @@ observed_state = {};
 %% -------------------------------------------------
 % Load required variables from .mat file
 % (States, parameters, equations, observations, optional equations)
-load(modelFile, 'states', 'observed_vars', ...
-                'params', 'eq', ...
-                'observation_eq', 'opt_eq');
+load(modelFile, 'x', 'p', 'f', ...
+                'observed_vars', 'observation_eq', 'opt_eq');
+states         = x;
+params         = p;
+eq             = f;
 
 %% -------------------------------------------------
 % Extract model name 
