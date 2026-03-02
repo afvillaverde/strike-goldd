@@ -29,8 +29,8 @@ yI_t = diff(yI,t);
 yI_s = diff(yI,s);
 
 S_t = -S_s -beta*S*yI/kI - muS*S;
-yE_t = -yE_s + (1-epsilon)*beta*s*yI*kE/kI - (delta+muE)* yE;
-yI_t = -yI_s + epsilon*beta*s*yI + delta*yE*kI/kE - muI*yI ;
+yE_t = -yE_s + (1-epsilon)*beta*S*yI*kE/kI - (delta+muE)* yE;
+yI_t = -yI_s + epsilon*beta*S*yI + delta*yE*kI/kE - muI*yI ;
 
 f = {S_t; yE_t; yI_t};
 
