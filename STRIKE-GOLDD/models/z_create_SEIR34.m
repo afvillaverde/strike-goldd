@@ -20,8 +20,7 @@ u = A;
 
 % dynamic equations
 f = [
-    0;
-
+    
     A - r*beta*S*I/N - mu*S;
 
     r*beta*S*I/N - epsilon*E - mu*E;
