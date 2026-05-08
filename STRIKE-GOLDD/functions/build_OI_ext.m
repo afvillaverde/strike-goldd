@@ -103,11 +103,11 @@ totaltime  = toc;
 ind        = 0; % Lie derivative index (k)
 lasttime   = 0; 
 %----------------------------------------------------------------------
-past_Lie   = h;        
-extra_term = 0;       
+past_Lie   = h;              
 while ind < nd && lasttime < opts.maxLietime % 2nd and subsequent blocks
     tic
     Lieh = onx((ind*m+1):(ind+1)*m,:)*faug;
+    extra_term = 0; 
     if ind>0 
         if numel(u) > 0
             for i=1:ind 
