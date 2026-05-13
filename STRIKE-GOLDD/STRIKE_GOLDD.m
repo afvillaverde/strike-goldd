@@ -58,7 +58,7 @@ switch opts.algorithm
         SIM(modelname,opts,prev_ident_pars,nmf);
         return
     case 5
-        Lie_Symmetry
+        Lie_Symmetry(modelname,opts)
         return
     case 6
         if nargin < 2 
