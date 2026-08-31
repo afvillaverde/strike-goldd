@@ -186,6 +186,11 @@ xaug=[xw;p]; %#ok<NASGU>
 
 resultsname = sprintf('id_results_%s_%s',modelname,date);
 fullresultsname = strcat(nmf,filesep,'results',filesep,resultsname);
-save(fullresultsname);
+if exist(strcat(nmf,filesep,'results'),'dir')
+    save(fullresultsname);
+else 
+    mkdir(strcat(nmf,filesep,'results'))
+    save(fullresultsname);
+end
 
 warning('on','all')
