@@ -24,6 +24,7 @@ switch nargin
         [modelname,paths,opts,prev_ident_pars] = options;
         nmf = pwd;
     case 1
+        if exist("current_options.m",'file'), delete("current_options.m"), end
         copyfile(varargin{1},"current_options.m");
         [modelname,paths,opts,prev_ident_pars] = current_options; 
         nmf = pwd;
