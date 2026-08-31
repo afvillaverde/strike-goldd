@@ -15,7 +15,7 @@ if lexp==1
             c=[c{:}];
         end
         try 
-            eval(c(2));
+            c(2); %eval(c(2)); % ('eval' to be deprecated)
             if round(c(2))~=c(2)
                 c(2)=round(c(2));
                 warning('MATLAB:exponential',['Found noninteger ' ...
