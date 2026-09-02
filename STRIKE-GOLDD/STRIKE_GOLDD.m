@@ -381,12 +381,12 @@ end
 %==========================================================================
 % Build the vectors of identifiable / non identifiable parameters and
 % observable / unobservable state variables (avoid possible repetitions):
-p_id         = symvar(identifiables);        
-p_un         = symvar(nonidentif);          
-obs_states   = symvar(obs_states);       
-unobs_states = symvar(unobs_states); 
-obs_inputs   = symvar(obs_inputs);       
-unobs_inputs = symvar(unobs_inputs); 
+p_id         = symvar(sym(identifiables));        
+p_un         = symvar(sym(nonidentif));          
+obs_states   = symvar(sym(obs_states));       
+unobs_states = symvar(sym(unobs_states)); 
+obs_inputs   = symvar(sym(obs_inputs));       
+unobs_inputs = symvar(sym(unobs_inputs)); 
 
 %==========================================================================
 % Report results:
