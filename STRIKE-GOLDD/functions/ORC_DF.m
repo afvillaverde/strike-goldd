@@ -629,9 +629,9 @@ while k<=opts.affine_kmax && stage_time(k+1)-stage_time(k)<opts.affine_tStage
         % Partial rank computation (using parallel toolbox):
         % For the (k-1)-row unobs.states, remove its column and recalculate rank: 
         parfor i=1:numel(nf_unobs)                  
-            elim_dif_omega=dif_omega;
-            elim_dif_omega(:,nf_unobs(i))=[];     
-            new_rank(i)=rank(elim_dif_omega);
+            elim_dif_Omega=dif_Omega;
+            elim_dif_Omega(:,nf_unobs(i))=[];     
+            new_rank(i)=rank(elim_dif_Omega);
         end
         % Update obs-unobs states array:
         for i=1:numel(nf_unobs)
@@ -645,9 +645,9 @@ while k<=opts.affine_kmax && stage_time(k+1)-stage_time(k)<opts.affine_tStage
     else
         % Partial rank calculation (without parallel toolbox):
         for i=1:numel(nf_unobs)
-            elim_dif_omega=dif_Omega; 
-            elim_dif_omega(:,nf_unobs(i))=[];      
-            partial_ranks(nf_unobs(i),k)=rank(elim_dif_omega);
+            elim_dif_Omega=dif_Omega; 
+            elim_dif_Omega(:,nf_unobs(i))=[];      
+            partial_ranks(nf_unobs(i),k)=rank(elim_dif_Omega);
             if partial_ranks(nf_unobs(i),k)<rango(k), unobs_states_ind(nf_unobs(i),k)=0;end
         end
         partial_rank_time(k)=partial_rank_time(k)+toc(tPartial);
